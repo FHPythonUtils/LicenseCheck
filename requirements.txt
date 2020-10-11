@@ -1,0 +1,2 @@
+requests==2.*,>=2.24.0
+requirements-parser==0.*,>=0.2.0

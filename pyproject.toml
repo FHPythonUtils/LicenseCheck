@@ -1,0 +1,44 @@
+[tool.poetry]
+name = "licensecheck"
+version = "2020"
+description = "Output the licenses used by dependencies and check if these are compatible with the project license"
+authors = ["FredHappyface"]
+classifiers = [
+	"Environment :: Console",
+	"Environment :: MacOS X",
+	"Environment :: Win32 (MS Windows)",
+	"Development Status :: 5 - Production/Stable",
+	"Intended Audience :: Developers",
+	"Intended Audience :: Education",
+	"License :: OSI Approved :: MIT License",
+	"Natural Language :: English",
+	"Operating System :: OS Independent",
+	"Programming Language :: Python :: 3",
+	"Programming Language :: Python :: 3.7",
+	"Programming Language :: Python :: 3.8",
+	"Programming Language :: Python :: 3.9",
+	"Programming Language :: Python :: Implementation :: CPython",
+	"Topic :: Security",
+	"Topic :: Software Development :: Libraries :: Python Modules",
+	"Topic :: Utilities"
+]
+homepage = "https://github.com/FHPythonUtils/LicenseCheck"
+repository = "https://github.com/FHPythonUtils/LicenseCheck"
+documentation = "https://github.com/FHPythonUtils/LicenseCheck/blob/master/README.md"
+readme = "README.md"
+
+[tool.poetry.scripts]
+licensecheck = 'licensecheck:cli'
+
+[tool.poetry.dependencies]
+python = "^3.7"
+requirements-parser = "^0.2.0"
+requests = "^2.24.0"
+metprint = { version = "^2020.7", optional = true }
+
+[tool.poetry.extras]
+full = ["metprint"]
+
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
