@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2020"
+version = "2020.0.1"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
 classifiers = [
@@ -35,6 +35,8 @@ python = "^3.7"
 requirements-parser = "^0.2.0"
 requests = "^2.24.0"
 metprint = { version = "^2020.7", optional = true }
+pip = "^20.2.3"
+tomlkit = "^0.7.0"
 
 [tool.poetry.extras]
 full = ["metprint"]
