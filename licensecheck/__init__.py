@@ -6,7 +6,6 @@ from __future__ import annotations
 import subprocess
 import argparse
 from sys import exit as sysexit, stdout
-from shlex import split
 import warnings
 
 import requirements
@@ -17,11 +16,6 @@ from licensecheck.packagecompat import PackageCompat
 
 def _doSysExec(command: str) -> tuple[int, str]:
 	"""execute a command and check for errors
-	shlex.split can be used to make this safer.
-	see https://docs.python.org/3/library/shlex.html#shlex.quote
-	Note however, that we can still call _doSysExec with a malicious command
-	but this change mitigates command chaining. Ultimately, do not accept user
-	input or if you do, escape with shlex.quote(), shlex.join(shlex.split())
 
 	Args:
 		command (str): commands as a string
@@ -29,7 +23,7 @@ def _doSysExec(command: str) -> tuple[int, str]:
 	Raises:
 		RuntimeWarning: throw a warning should there be a non exit code
 	"""
-	with subprocess.Popen(split(command), shell=True, stdout=subprocess.PIPE,
+	with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
 	stderr=subprocess.STDOUT, universal_newlines=True) as process:
 		out = process.communicate()[0]
 		exitCode = process.returncode

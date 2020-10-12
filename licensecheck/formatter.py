@@ -146,10 +146,12 @@ heading: typing.Optional[str] = None) -> str:
 	packages = sorted(packages, key=lambda i: i["name"])
 
 	# Summary Table
-	strBuf.append("|Compatible|Package                       |")
-	strBuf.append("|----------|------------------------------|")
+	strBuf.append(f"┌{'─'*10}┬{'─'*30}┐")
+	strBuf.append("│Compatible│Package                       │")
+	strBuf.append(f"├{'─'*10}┼{'─'*30}┤")
 	for pkg in packages:
-		strBuf.append(f"|{str(pkg['license_compat']): <10}|{pkg['name'][:30]: <30}|")
+		strBuf.append(f"│{str(pkg['license_compat']): <10}│{pkg['name'][:30]: <30}│")
+	strBuf.append(f"└{'─'*10}┴{'─'*30}┘")
 	strBuf.append("")
 
 	# Details
@@ -177,15 +179,19 @@ def simple(packages: list[PackageCompat]) -> str:
 
 	# Summary Table
 	if logger is None:
-		strBuf = ["|Compatible|Package             |License             |"]
-		strBuf.append("|----------|--------------------|--------------------|")
+		strBuf = [f"┌{'─'*10}┬{'─'*20}┬{'─'*20}┐"]
+		strBuf.append("│Compatible│Package             │License             │")
+		strBuf.append(f"├{'─'*10}┼{'─'*20}┼{'─'*20}┤")
 		for pkg in packages:
-			strBuf.append(f"|{str(pkg['license_compat']): <10}|{pkg['name'][:20]: <20}|{pkg['license'][:20]: <20}|")
+			strBuf.append(f"│{str(pkg['license_compat']): <10}│{pkg['name'][:20]: <20}│{pkg['license'][:20]: <20}│")
+		strBuf.append(f"└{'─'*10}┴{'─'*20}┴{'─'*20}┘")
 	else:
-		strBuf = [logger.logString("|Package             |License                       |", LogType.NONE, True)]
-		strBuf.append(logger.logString("|--------------------|------------------------------|", LogType.NONE, True))
+		strBuf = [logger.logString(f"┌{'─'*20}┬{'─'*30}┐", LogType.NONE, True)]
+		strBuf.append(logger.logString("│Package             │License                       │", LogType.NONE, True))
+		strBuf.append(logger.logString(f"├{'─'*20}┼{'─'*30}┤", LogType.NONE, True))
 		for pkg in packages:
 			strBuf.append(logger.logString(
-				f"|{pkg['name'][:20]: <20}|{pkg['license'][:30]: <30}|",
+				f"│{pkg['name'][:20]: <20}│{pkg['license'][:30]: <30}│",
 				LogType.SUCCESS if pkg['license_compat'] else LogType.ERROR))
+		strBuf.append(logger.logString(f"└{'─'*20}┴{'─'*30}┘", LogType.NONE, True))
 	return "\n".join(strBuf)
