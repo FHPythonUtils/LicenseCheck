@@ -13,6 +13,8 @@ import requirements
 from licensecheck import packageinfo, license_matrix, formatter
 from licensecheck.packagecompat import PackageCompat
 
+stdout.reconfigure(encoding="utf-8")
+
 
 def _doSysExec(command: str) -> tuple[int, str]:
 	"""execute a command and check for errors
