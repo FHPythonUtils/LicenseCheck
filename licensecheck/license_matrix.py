@@ -41,7 +41,7 @@ from enum import Enum
 
 
 class License(Enum):
-	"""[License Enum to hold a set of potential licenses
+	"""License Enum to hold a set of potential licenses
 	"""
 	# Public domain
 	PUBLIC = 0
@@ -60,18 +60,22 @@ class License(Enum):
 	LGPL_X = 30
 	LGPL_2 = 31
 	LGPL_3 = 32
+	LGPL_2_PLUS = 33
+	LGPL_3_PLUS = 34
 	# GPL
 	GPL_X = 40
 	GPL_2 = 41
 	GPL_3 = 42
+	GPL_2_PLUS = 43
+	GPL_3_PLUS = 44
 	# AGPL
-	AGPL_3 = 50
+	AGPL_3_PLUS = 50
 	# Other copyleft
 	MPL = 60
 	EU = 61
 
-	# Unknown
-	UNKNOWN = 200
+	# No License
+	NO_LICENSE = 200
 
 def licenseType(lice: str) -> list[License]:
 	"""Return a list of license types from a license string
@@ -110,19 +114,27 @@ def licenseType(lice: str) -> list[License]:
 			licenses.append(License.ACEDEMIC_FREE)
 
 		elif "LGPL" in lice:
-			if "LGPLV2" in lice:
-				licenses.append(License.LGPL_2)
-			elif "LGPLV3" in lice:
-				licenses.append(License.LGPL_3)
+			if "LGPLV2+" in lice:
+				licenses.append(License.LGPL_2_PLUS)
+			elif "LGPLV3+" in lice:
+				licenses.append(License.LGPL_3_PLUS)
+			elif "LGPLV2+" in lice:
+				licenses.append(License.LGPL_2_PLUS)
+			elif "LGPLV3+" in lice:
+				licenses.append(License.LGPL_3_PLUS)
 			else:
 				licenses.append(License.LGPL_X)
 		elif "AGPL" in lice:
-			licenses.append(License.AGPL_3)
+			licenses.append(License.AGPL_3_PLUS)
 		elif "GPL" in lice:
-			if "GPLV2" in lice:
-				licenses.append(License.GPL_2)
-			elif "GPLV3" in lice:
-				licenses.append(License.GPL_3)
+			if "GPLV2+" in lice:
+				licenses.append(License.GPL_2_PLUS)
+			elif "GPLV3+" in lice:
+				licenses.append(License.GPL_3_PLUS)
+			elif "GPLV2+" in lice:
+				licenses.append(License.GPL_2_PLUS)
+			elif "GPLV3+" in lice:
+				licenses.append(License.GPL_3_PLUS)
 			else:
 				licenses.append(License.GPL_X)
 
@@ -131,19 +143,33 @@ def licenseType(lice: str) -> list[License]:
 		elif "EUPL" in lice:
 			licenses.append(License.EU)
 		else:
-			licenses.append(License.UNKNOWN)
+			licenses.append(License.NO_LICENSE)
 	return licenses
 
+# Permissive licenses compatible with GPL
 PERMISSIVE = [License.MIT, License.BOOST, License.BSD, License.ISC, License.NCSA]
-PERMISSIVE_GPL_INCOMPATIBLE = [License.APACHE, License.ECLIPSE, License.ACEDEMIC_FREE]
-LGPL = [License.LGPL_2, License.LGPL_3, License.LGPL_X]
-GPL = [License.GPL_2, License.GPL_3, License.GPL_X, License.AGPL_3]
+# Permissive licenses NOT compatible with GPL
+PERMISSIVE_OTHER = [License.APACHE, License.ECLIPSE, License.ACEDEMIC_FREE]
+# LGPL licenses
+LGPL = [License.LGPL_2, License.LGPL_3, License.LGPL_2_PLUS, License.LGPL_3_PLUS, License.LGPL_X]
+# GPL licenses (including AGPL)
+GPL = [License.GPL_2, License.GPL_3, License.GPL_2_PLUS, License.GPL_3_PLUS,
+License.GPL_X, License.AGPL_3_PLUS]
+# Other Copyleft licenses
 OTHER_COPYLEFT = [License.MPL, License.EU]
 
-UNLICENSEE_INCOMPATIBLE = PERMISSIVE + PERMISSIVE_GPL_INCOMPATIBLE + GPL + LGPL + OTHER_COPYLEFT
-PERMISSIVE_INCOMPATIBLE = GPL + [License.EU]
-LGPL_INCOMPATIBLE = GPL + OTHER_COPYLEFT + PERMISSIVE_GPL_INCOMPATIBLE
-GPL_INCOMPATIBLE = PERMISSIVE_GPL_INCOMPATIBLE + [License.AGPL_3]
+# Basic compat matrix
+UNLICENSEE_INCOMPATIBLE = (PERMISSIVE + PERMISSIVE_OTHER + GPL +
+LGPL + OTHER_COPYLEFT + [License.NO_LICENSE])
+PERMISSIVE_INCOMPATIBLE = GPL + [License.EU, License.NO_LICENSE]
+LGPL_INCOMPATIBLE = GPL + OTHER_COPYLEFT + PERMISSIVE_OTHER + [License.NO_LICENSE]
+GPL_INCOMPATIBLE = PERMISSIVE_OTHER + [License.AGPL_3_PLUS, License.NO_LICENSE]
+PERMISSIVE_GPL_INCOMPATIBLE = PERMISSIVE_OTHER + [License.NO_LICENSE]
+
+# GPL compat matrix
+# https://www.gnu.org/licenses/gpl-faq.html#AllCompatibility
+GPL_2_INCOMPATIBLE = [License.GPL_3, License.GPL_3_PLUS, License.LGPL_3, License.LGPL_3_PLUS]
+L_GPL_3_INCOMPATIBLE = [License.GPL_2]
 
 def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
 	"""Identify if the end user license is compatible with the dependency
@@ -156,7 +182,8 @@ def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
 	Returns:
 		bool: True if compatible, otherwise False
 	"""
-	blacklist = {License.UNLICENSE: UNLICENSEE_INCOMPATIBLE,
+	blacklist = {
+	License.UNLICENSE: UNLICENSEE_INCOMPATIBLE,
 	License.PUBLIC: UNLICENSEE_INCOMPATIBLE,
 
 	License.MIT: PERMISSIVE_INCOMPATIBLE,
@@ -170,15 +197,19 @@ def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
 
 	License.LGPL_X: LGPL_INCOMPATIBLE,
 	License.LGPL_2: LGPL_INCOMPATIBLE,
-	License.LGPL_3: LGPL_INCOMPATIBLE,
+	License.LGPL_3: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
+	License.LGPL_2_PLUS: LGPL_INCOMPATIBLE,
+	License.LGPL_3_PLUS: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
 	License.GPL_X: GPL_INCOMPATIBLE,
-	License.GPL_2: GPL_INCOMPATIBLE,
-	License.GPL_3: GPL_INCOMPATIBLE,
-	License.AGPL_3: PERMISSIVE_GPL_INCOMPATIBLE,
+	License.GPL_2: GPL_INCOMPATIBLE + GPL_2_INCOMPATIBLE,
+	License.GPL_3: GPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
+	License.GPL_2_PLUS: GPL_INCOMPATIBLE,
+	License.GPL_3_PLUS: GPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
+	License.AGPL_3_PLUS: PERMISSIVE_GPL_INCOMPATIBLE,
 
 	License.MPL: LGPL + GPL + [License.EU],
 	License.EU: PERMISSIVE_GPL_INCOMPATIBLE + LGPL + GPL + [License.MPL],
-	}
+	} # yapf: disable
 
 	blacklistResolved = blacklist[myLicense]
 	for lice in depLice:

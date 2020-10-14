@@ -1,0 +1,62 @@
+[ ] - Academic Free License (AFL)
+[x] - Apache Software License
+[ ] - Apple Public Source License
+[ ] - Artistic License
+[ ] - Attribution Assurance License
+[x] - BSD License
+[x] - Boost Software License 1.0 (BSL-1.0)
+[ ] - CEA CNRS Inria Logiciel Libre License, version 2.1 (CeCILL-2.1)
+[ ] - Common Development and Distribution License 1.0 (CDDL-1.0)
+[ ] - Common Public License
+[ ] - Eclipse Public License 1.0 (EPL-1.0)
+[ ] - Eclipse Public License 2.0 (EPL-2.0)
+[ ] - Eiffel Forum License
+[x] - European Union Public Licence 1.0 (EUPL 1.0)
+[x] - European Union Public Licence 1.1 (EUPL 1.1)
+[x] - European Union Public Licence 1.2 (EUPL 1.2)
+[ ] - GNU Affero General Public License v3
+[x] - GNU Affero General Public License v3 or later (AGPLv3+)
+[ ] - GNU Free Documentation License (FDL)
+[x] - GNU General Public License (GPL)
+[x] - GNU General Public License v2 (GPLv2)
+[x] - GNU General Public License v2 or later (GPLv2+)
+[x] - GNU General Public License v3 (GPLv3)
+[x] - GNU General Public License v3 or later (GPLv3+)
+[x] - GNU Lesser General Public License v2 (LGPLv2)
+[x] - GNU Lesser General Public License v2 or later (LGPLv2+)
+[x] - GNU Lesser General Public License v3 (LGPLv3)
+[x] - GNU Lesser General Public License v3 or later (LGPLv3+)
+[x] - GNU Library or Lesser General Public License (LGPL)
+[ ] - Historical Permission Notice and Disclaimer (HPND)
+[ ] - IBM Public License
+[x] - ISC License (ISCL)
+[ ] - Intel Open Source License
+[ ] - Jabber Open Source License
+[x] - MIT License
+[ ] - MITRE Collaborative Virtual Workspace License (CVW)
+[ ] - MirOS License (MirOS)
+[ ] - Motosoto License
+[x] - Mozilla Public License 1.0 (MPL)
+[x] - Mozilla Public License 1.1 (MPL 1.1)
+[x] - Mozilla Public License 2.0 (MPL 2.0)
+[ ] - Nethack General Public License
+[ ] - Nokia Open Source License
+[ ] - Open Group Test Suite License
+[ ] - Open Software License 3.0 (OSL-3.0)
+[ ] - PostgreSQL License
+[ ] - Python License (CNRI Python License)
+[ ] - Python Software Foundation License
+[ ] - Qt Public License (QPL)
+[ ] - Ricoh Source Code Public License
+[ ] - SIL Open Font License 1.1 (OFL-1.1)
+[ ] - Sleepycat License
+[ ] - Sun Industry Standards Source License (SISSL)
+[ ] - Sun Public License
+[x] - The Unlicense (Unlicense)
+[ ] - Universal Permissive License (UPL)
+[x] - University of Illinois/NCSA Open Source License
+[ ] - Vovida Software License 1.0
+[ ] - W3C License
+[ ] - X.Net License
+[ ] - Zope Public License
+[ ] - zlib/libpng License

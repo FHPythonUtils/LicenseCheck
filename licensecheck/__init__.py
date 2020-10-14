@@ -26,7 +26,7 @@ def _doSysExec(command: str) -> tuple[int, str]:
 		RuntimeWarning: throw a warning should there be a non exit code
 	"""
 	with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
-	stderr=subprocess.STDOUT, universal_newlines=True) as process:
+	stderr=subprocess.STDOUT, encoding="utf-8", errors="ignore") as process:
 		out = process.communicate()[0]
 		exitCode = process.returncode
 	return exitCode, out

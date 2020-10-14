@@ -1,0 +1,19 @@
+[ ] - Aladdin Free Public License (AFPL)
+[ ] - CC0 1.0 Universal (CC0 1.0) Public Domain Dedication
+[ ] - CeCILL-B Free Software License Agreement (CECILL-B)
+[ ] - CeCILL-C Free Software License Agreement (CECILL-C)
+[ ] - DFSG approved
+[ ] - Eiffel Forum License (EFL)
+[ ] - Free For Educational Use
+[ ] - Free For Home Use
+[ ] - Free To Use But Restricted
+[ ] - Free for non-commercial use
+[ ] - Freely Distributable
+[ ] - Freeware
+[ ] - GUST Font License 1.0
+[ ] - GUST Font License 2006-09-30
+[ ] - Netscape Public License (NPL)
+[ ] - Nokia Open Source License (NOKOS)
+[ ] - Other/Proprietary License
+[x] - Public Domain
+[ ] - Repoze Public License

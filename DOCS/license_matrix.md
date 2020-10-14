@@ -64,7 +64,7 @@ Classes
 -------
 
 `License(value, names=None, *, module=None, qualname=None, type=None, start=1)`
-:   [License Enum to hold a set of potential licenses
+:   License Enum to hold a set of potential licenses
 
     ### Ancestors (in MRO)
 
@@ -75,7 +75,7 @@ Classes
     `ACEDEMIC_FREE`
     :
 
-    `AGPL_3`
+    `AGPL_3_PLUS`
     :
 
     `APACHE`
@@ -96,7 +96,13 @@ Classes
     `GPL_2`
     :
 
+    `GPL_2_PLUS`
+    :
+
     `GPL_3`
+    :
+
+    `GPL_3_PLUS`
     :
 
     `GPL_X`
@@ -108,7 +114,13 @@ Classes
     `LGPL_2`
     :
 
+    `LGPL_2_PLUS`
+    :
+
     `LGPL_3`
+    :
+
+    `LGPL_3_PLUS`
     :
 
     `LGPL_X`
@@ -123,10 +135,10 @@ Classes
     `NCSA`
     :
 
-    `PUBLIC`
+    `NO_LICENSE`
     :
 
-    `UNKNOWN`
+    `PUBLIC`
     :
 
     `UNLICENSE`
