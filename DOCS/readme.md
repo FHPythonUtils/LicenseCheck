@@ -1,25 +1,13 @@
-Module licensecheck
-===================
-Output the licenses used by dependencies and check if these are compatible
-with the project license
+# Licensecheck Modules
 
-Sub-modules
------------
-* licensecheck.formatter
-* licensecheck.license_matrix
-* licensecheck.packagecompat
-* licensecheck.packageinfo
+> Auto-generated documentation modules index.
 
-Functions
----------
+Full list of [Licensecheck](#licensecheck-index) project modules.
 
-    
-`cli() ‑> NoneType`
-:   cli entry point
-
-    
-`getdepsLicenses() ‑> list`
-:   Get a list of packages with package compatibility
-    
-    Returns:
-            list[PackageCompat]: list of packages (python dicts)
+- [Licensecheck Index](#licensecheck-index)
+- [licensecheck](licensecheck/index.md#licensecheck)
+    - [\_\_main\_\_](licensecheck/module.md#__main__)
+    - [formatter](licensecheck/formatter.md#formatter)
+    - [license_matrix](licensecheck/license_matrix.md#license_matrix)
+    - [packagecompat](licensecheck/packagecompat.md#packagecompat)
+    - [packageinfo](licensecheck/packageinfo.md#packageinfo)

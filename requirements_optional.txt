@@ -1,5 +1,5 @@
-metprint==2020.*,>=2020.7
-pip==20.*,>=20.2.3
-requests==2.*,>=2.24.0
-requirements-parser==0.*,>=0.2.0
-tomlkit==0.*,>=0.7.0
+metprint<2022,>=2020.7
+pip<22,>=20.2.3
+requests<4,>=2.24.0
+requirements-parser<2,>=0.2.0
+tomlkit<2,>=0.7.0

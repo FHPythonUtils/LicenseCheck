@@ -49,9 +49,14 @@ def getdepsLicenses() -> list[PackageCompat]:
 		# Use poetry show to get dependents of dependencies
 		lines = _doSysExec("poetry show")[1].splitlines(False)
 		for line in lines:
-			parts = line.split()
-			reqs.append(parts[0])
-	else:
+			try:
+				parts = line.split()
+				reqs.append(parts[0])
+			except IndexError:
+				print("An error occurred with poetry try running 'poetry show' to see what went wrong!")
+				poetryInstalled = False # Some error occurred so fallback to requirements.txt
+				break
+	if not poetryInstalled:
 		with open("requirements.txt", 'r') as requirementsTxt:
 			for req in requirements.parse(requirementsTxt): # type: ignore
 				reqs.append(req.name) # type: ignore
