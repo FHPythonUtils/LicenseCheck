@@ -1,5 +1,4 @@
-"""
-Take our package compat dictionary and give things a pretty format
+"""Take our package compat dictionary and give things a pretty format.
 
 ```json
 {
@@ -23,12 +22,13 @@ Formats
 """
 from __future__ import annotations
 
+import typing
+from csv import writer
 from io import StringIO
 from json import dumps
-from csv import writer
-import typing
 
 from licensecheck.packagecompat import PackageCompat
+
 logger = None
 try:
 	from metprint import Logger, LogType
@@ -36,9 +36,10 @@ try:
 except ModuleNotFoundError:
 	pass
 
+
 def markdown(packages: list[PackageCompat],
 heading: typing.Optional[str] = None) -> str:
-	"""Format to Markdown
+	"""Format to Markdown.
 
 	Args:
 		packages (list[PackageCompat]): PackageCompats to format
@@ -50,8 +51,8 @@ heading: typing.Optional[str] = None) -> str:
 	if len(packages) == 0:
 		return "No packages"
 
-	heading = heading if heading is not None else \
- 	"# Packages\nFind a list of packages below"
+	heading = (heading
+	if heading is not None else "# Packages\nFind a list of packages below")
 	strBuf = [heading]
 	packages = sorted(packages, key=lambda i: i["name"])
 
@@ -76,7 +77,7 @@ heading: typing.Optional[str] = None) -> str:
 
 def json(packages: list[PackageCompat],
 heading: typing.Optional[str] = None) -> str:
-	"""Format to Json
+	"""Format to Json.
 
 	Args:
 		packages (list[PackageCompat]): PackageCompats to format
@@ -86,15 +87,15 @@ heading: typing.Optional[str] = None) -> str:
 		str: String to write to a file of stdout
 	"""
 	packages = sorted(packages, key=lambda i: i["name"])
-	out = {"heading": heading if heading is not None else \
- 	"# Packages - Find a list of packages below",
-	"packages": packages}
+	out = {
+	"heading": (heading if heading is not None else
+	"# Packages - Find a list of packages below"), "packages": packages}
 	return dumps(out, indent="\t")
 
 
 def csv(packages: list[PackageCompat],
 heading: typing.Optional[str] = None) -> str:
-	"""Format to CSV
+	"""Format to CSV.
 
 	Args:
 		packages (list[PackageCompat]): PackageCompats to format
@@ -106,8 +107,9 @@ heading: typing.Optional[str] = None) -> str:
 	packages = sorted(packages, key=lambda i: i["name"])
 	output = StringIO()
 	csvString = writer(output)
-	csvString.writerow([heading if heading is not None else \
- 	"# Packages - Find a list of packages below (you may want to delete this line)"])
+	csvString.writerow([(heading
+	if heading is not None else "# Packages - Find a list of packages below "
+	"(you may want to delete this line)")])
 	csvString.writerow([
 	"name", "version", "namever", "home_page", "author", "size", "license",
 	"license_compat"])
@@ -120,7 +122,7 @@ heading: typing.Optional[str] = None) -> str:
 
 def ansi(packages: list[PackageCompat],
 heading: typing.Optional[str] = None) -> str:
-	"""Format to ansi
+	"""Format to ansi.
 
 	Args:
 		packages (list[PackageCompat]): PackageCompats to format
@@ -140,8 +142,8 @@ heading: typing.Optional[str] = None) -> str:
 		return f"{BLD}{UL}{CB}No packages{CLS}"
 
 	# pylint: enable=invalid-name
-	heading = heading if heading is not None else \
- 	f"{BLD}{UL}{CB}PackageCompats{CLS}\n\nFind a list of packages below ordered by severity\n"
+	heading = (heading if heading is not None else
+	f"{BLD}{UL}{CB}PackageCompats{CLS}\n\nFind a list of packages below\n")
 	strBuf = [heading]
 	packages = sorted(packages, key=lambda i: i["name"])
 
@@ -167,7 +169,7 @@ heading: typing.Optional[str] = None) -> str:
 
 
 def simple(packages: list[PackageCompat]) -> str:
-	"""Format to ansi
+	"""Format to plain text.
 
 	Args:
 		packages (list[PackageCompat]): PackageCompats to format
@@ -183,15 +185,20 @@ def simple(packages: list[PackageCompat]) -> str:
 		strBuf.append("│Compatible│Package             │License             │")
 		strBuf.append(f"├{'─'*10}┼{'─'*20}┼{'─'*20}┤")
 		for pkg in packages:
-			strBuf.append(f"│{str(pkg['license_compat']): <10}│{pkg['name'][:20]: <20}│{pkg['license'][:20]: <20}│")
+			strBuf.append(
+			f"│{str(pkg['license_compat']): <10}│{pkg['name'][:20]: <20}│{pkg['license'][:20]: <20}│"
+			)
 		strBuf.append(f"└{'─'*10}┴{'─'*20}┴{'─'*20}┘")
 	else:
 		strBuf = [logger.logString(f"┌{'─'*20}┬{'─'*30}┐", LogType.NONE, True)]
-		strBuf.append(logger.logString("│Package             │License                       │", LogType.NONE, True))
+		strBuf.append(
+		logger.logString("│Package             │License                       │",
+		LogType.NONE, True))
 		strBuf.append(logger.logString(f"├{'─'*20}┼{'─'*30}┤", LogType.NONE, True))
 		for pkg in packages:
-			strBuf.append(logger.logString(
-				f"│{pkg['name'][:20]: <20}│{pkg['license'][:30]: <30}│",
-				LogType.SUCCESS if pkg['license_compat'] else LogType.ERROR))
+			strBuf.append(
+			logger
+			.logString(f"│{pkg['name'][:20]: <20}│{pkg['license'][:30]: <30}│",
+			LogType.SUCCESS if pkg['license_compat'] else LogType.ERROR))
 		strBuf.append(logger.logString(f"└{'─'*20}┴{'─'*30}┘", LogType.NONE, True))
 	return "\n".join(strBuf)

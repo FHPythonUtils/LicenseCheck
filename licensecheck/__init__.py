@@ -1,23 +1,24 @@
-"""Output the licenses used by dependencies and check if these are compatible
+"""Output the licenses used by dependencies and check if these are compatible...
+
 with the project license
 """
 from __future__ import annotations
 
-import subprocess
 import argparse
-from sys import exit as sysexit, stdout
+import subprocess
 import warnings
+from sys import exit as sysexit, stdout
 
 import requirements
 
-from licensecheck import packageinfo, license_matrix, formatter
+from licensecheck import formatter, license_matrix, packageinfo
 from licensecheck.packagecompat import PackageCompat
 
 stdout.reconfigure(encoding="utf-8")
 
 
 def _doSysExec(command: str) -> tuple[int, str]:
-	"""execute a command and check for errors
+	"""Execute a command and check for errors.
 
 	Args:
 		command (str): commands as a string
@@ -32,8 +33,8 @@ def _doSysExec(command: str) -> tuple[int, str]:
 	return exitCode, out
 
 
-def getdepsLicenses() -> list[PackageCompat]:
-	"""Get a list of packages with package compatibility
+def getDepsLicenses() -> list[PackageCompat]:
+	"""Get a list of packages with package compatibility.
 
 	Returns:
 		list[PackageCompat]: list of packages (python dicts)
@@ -53,7 +54,8 @@ def getdepsLicenses() -> list[PackageCompat]:
 				parts = line.split()
 				reqs.append(parts[0])
 			except IndexError:
-				print("An error occurred with poetry try running 'poetry show' to see what went wrong!")
+				print("An error occurred with poetry try running "
+				"'poetry show' to see what went wrong!")
 				poetryInstalled = False # Some error occurred so fallback to requirements.txt
 				break
 	if not poetryInstalled:
@@ -68,17 +70,24 @@ def getdepsLicenses() -> list[PackageCompat]:
 	for package in packageinfo.getPackages(reqs):
 		depLice = license_matrix.licenseType(package["license"])
 		depsLicenses.append(PackageCompat(**package,
-		license_compat=license_matrix.depCompatibleLice(myLice, depLice)))
+		license_compat=license_matrix.depCompatibleLice(myLice, depLice))) # yapf: disable
 	return depsLicenses
+
 
 FORMAT_HELP = "Output format. One of simple, ansi, json, markdown, csv. default=simple"
 
+
 def cli() -> None:
-	""" cli entry point """
+	"""Cli entry point."""
+	# yapf: disable
 	parser = argparse.ArgumentParser(description=__doc__)
-	parser.add_argument("--format", "-f", help=FORMAT_HELP)
+	parser.add_argument("--format", "-f",
+	help=FORMAT_HELP)
 	parser.add_argument("--file", "-o",
 	help="Filename to write to (omit for stdout)")
+	parser.add_argument("--zero", "-0",
+	help="Return non zero exit code if an incompatible license is found", action="store_true")
+	# yapf: enable
 	args = parser.parse_args()
 	# File
 	filename = stdout if args.file is None else open(args.file, "w")
@@ -86,10 +95,15 @@ def cli() -> None:
 	formatMap = {
 	"json": formatter.json, "markdown": formatter.markdown, "csv": formatter.csv,
 	"ansi": formatter.ansi, "simple": formatter.simple}
-	if args.format is None:
-		print(formatter.simple(getdepsLicenses()), file=filename)
-	elif args.format in formatMap:
-		print(formatMap[args.format](getdepsLicenses()), file=filename)
-	else:
+	if args.format is not None and args.format not in formatMap:
 		print(FORMAT_HELP)
+		sysexit(2)
+	licenses = getDepsLicenses()
+	incompat = any(not lice["license_compat"] for lice in licenses)
+	if args.format is None:
+		print(formatter.simple(licenses), file=filename)
+	elif args.format in formatMap:
+		print(formatMap[args.format](licenses), file=filename)
+	if incompat and args.zero:
 		sysexit(1)
+	sysexit(0)

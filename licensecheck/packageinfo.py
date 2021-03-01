@@ -1,27 +1,26 @@
-"""Get information for installed and online packages
+"""Get information for installed and online packages.
 """
 
 from __future__ import annotations
 
-from email.message import Message
-from email.parser import FeedParser
-from email import message_from_string
 import os
 import os.path
 import typing
-
-from pip._vendor.pkg_resources import Distribution
-from pip._internal.utils.misc import get_installed_distributions
+from email import message_from_string
+from email.message import Message
+from email.parser import FeedParser
 
 import requests
 import tomlkit
+from pip._internal.utils.misc import get_installed_distributions
+from pip._vendor.pkg_resources import Distribution
 from tomlkit import items
 
 LICENSE_UNKNOWN = 'UNKNOWN'
 
 
 class PackageInfo(typing.TypedDict):
-	"""PackageInfo type
+	"""PackageInfo type.
 	"""
 	name: str
 	version: str
@@ -33,8 +32,9 @@ class PackageInfo(typing.TypedDict):
 
 
 def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
-	"""Get a list of package info from local files including version, author, and
-	the license
+	"""Get a list of package info from local files including version, author...
+
+	and	the license.
 
 	Args:
 		requirements (list[str]): [description]
@@ -81,7 +81,7 @@ def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
 
 
 def licenseFromClassifierMessage(message: Message) -> str:
-	"""Get license string from a Message of project classifiers
+	"""Get license string from a Message of project classifiers.
 
 	Args:
 		classifiers (Message): Message of classifiers
@@ -103,8 +103,9 @@ def licenseFromClassifierMessage(message: Message) -> str:
 
 
 def getPackagesFromOnline(requirements: list[str]) -> list[PackageInfo]:
-	"""Get a list of package info from pypi.org including version, author, and
-	the license
+	"""Get a list of package info from pypi.org including version, author...
+
+	and	the license.
 
 	Args:
 		requirements (list[str]): [description]
@@ -133,7 +134,7 @@ def getPackagesFromOnline(requirements: list[str]) -> list[PackageInfo]:
 
 
 def licenseFromClassifierlist(classifiers: list[str]) -> str:
-	"""Get license string from a list of project classifiers
+	"""Get license string from a list of project classifiers.
 
 	Args:
 		classifiers (list[str]): list of classifiers
@@ -155,7 +156,7 @@ def licenseFromClassifierlist(classifiers: list[str]) -> str:
 
 
 def getPackages(reqs: list[str]) -> list[PackageInfo]:
-	"""Get dependency info
+	"""Get dependency info.
 
 	Args:
 		reqs (list[str]): list of dependency names to gather info on
@@ -171,7 +172,7 @@ def getPackages(reqs: list[str]) -> list[PackageInfo]:
 
 
 def getMyPackageLicense() -> str:
-	""" get the pyproject data
+	"""Get the pyproject data.
 
 	Returns:
 		str: license name
@@ -191,14 +192,14 @@ def getMyPackageLicense() -> str:
 		typing.cast(items.Table, tool["flit"])["metadata"])
 	else:
 		return input("Enter the project license")
-	licenseClassifier = licenseFromClassifierlist(metaData["classifiers"]) # type: ignore
+	licenseClassifier = licenseFromClassifierlist(metaData["classifiers"]) # type: ignore yapf: disable
 	if licenseClassifier != LICENSE_UNKNOWN:
 		return licenseClassifier
 	return str(metaData["license"])
 
 
 def calcContainer(path: str) -> int:
-	"""Get size of installed module from path
+	"""Get size of installed module from path.
 
 	Args:
 		path (str): path to the module
@@ -215,7 +216,7 @@ def calcContainer(path: str) -> int:
 
 
 def getModuleSize(pkg: Distribution) -> int:
-	"""Get the size of a given module as an int
+	"""Get the size of a given module as an int.
 
 	Args:
 		pkg (Distribution): package to get the size of

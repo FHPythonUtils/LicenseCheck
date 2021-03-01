@@ -2,7 +2,7 @@
 
 > Auto-generated documentation for [licensecheck.license_matrix](../../licensecheck/license_matrix.py) module.
 
-Define a foss compatability license_matrix
+Define a foss compatability license_matrix.
 
 - [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / [licensecheck](index.md#licensecheck) / license_matrix
     - [License](#license)
@@ -61,7 +61,7 @@ EU -> gpl -> agpl (3 only)
 class License(Enum):
 ```
 
-License Enum to hold a set of potential licenses
+License Enum to hold a set of potential licenses.
 
 #### Attributes
 
@@ -76,13 +76,13 @@ License Enum to hold a set of potential licenses
 
 ## depCompatibleLice
 
-[[find in source code]](../../licensecheck/license_matrix.py#L174)
+[[find in source code]](../../licensecheck/license_matrix.py#L183)
 
 ```python
 def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
 ```
 
-Identify if the end user license is compatible with the dependency
+Identify if the end user license is compatible with the dependency.
 license(s)
 
 #### Arguments
@@ -100,13 +100,13 @@ license(s)
 
 ## licenseType
 
-[[find in source code]](../../licensecheck/license_matrix.py#L80)
+[[find in source code]](../../licensecheck/license_matrix.py#L81)
 
 ```python
 def licenseType(lice: str) -> list[License]:
 ```
 
-Return a list of license types from a license string
+Return a list of license types from a license string.
 
 #### Arguments
 

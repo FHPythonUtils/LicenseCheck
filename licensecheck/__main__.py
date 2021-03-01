@@ -1,4 +1,4 @@
-""" entry point for python -m licensecheck """
+"""Entry point for python -m licensecheck."""
 from . import cli
 
 cli()

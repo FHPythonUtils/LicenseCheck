@@ -2,7 +2,7 @@
 
 > Auto-generated documentation for [licensecheck.packageinfo](../../licensecheck/packageinfo.py) module.
 
-Get information for installed and online packages
+Get information for installed and online packages.
 
 - [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / [licensecheck](index.md#licensecheck) / packageinfo
     - [PackageInfo](#packageinfo)
@@ -17,23 +17,23 @@ Get information for installed and online packages
 
 ## PackageInfo
 
-[[find in source code]](../../licensecheck/packageinfo.py#L23)
+[[find in source code]](../../licensecheck/packageinfo.py#L22)
 
 ```python
 class PackageInfo(typing.TypedDict):
 ```
 
-PackageInfo type
+PackageInfo type.
 
 ## calcContainer
 
-[[find in source code]](../../licensecheck/packageinfo.py#L200)
+[[find in source code]](../../licensecheck/packageinfo.py#L201)
 
 ```python
 def calcContainer(path: str) -> int:
 ```
 
-Get size of installed module from path
+Get size of installed module from path.
 
 #### Arguments
 
@@ -45,13 +45,13 @@ Get size of installed module from path
 
 ## getModuleSize
 
-[[find in source code]](../../licensecheck/packageinfo.py#L217)
+[[find in source code]](../../licensecheck/packageinfo.py#L218)
 
 ```python
 def getModuleSize(pkg: Distribution) -> int:
 ```
 
-Get the size of a given module as an int
+Get the size of a given module as an int.
 
 #### Arguments
 
@@ -63,13 +63,13 @@ Get the size of a given module as an int
 
 ## getMyPackageLicense
 
-[[find in source code]](../../licensecheck/packageinfo.py#L173)
+[[find in source code]](../../licensecheck/packageinfo.py#L174)
 
 ```python
 def getMyPackageLicense() -> str:
 ```
 
-get the pyproject data
+Get the pyproject data.
 
 #### Returns
 
@@ -77,13 +77,13 @@ get the pyproject data
 
 ## getPackages
 
-[[find in source code]](../../licensecheck/packageinfo.py#L157)
+[[find in source code]](../../licensecheck/packageinfo.py#L158)
 
 ```python
 def getPackages(reqs: list[str]) -> list[PackageInfo]:
 ```
 
-Get dependency info
+Get dependency info.
 
 #### Arguments
 
@@ -95,14 +95,15 @@ Get dependency info
 
 ## getPackagesFromLocal
 
-[[find in source code]](../../licensecheck/packageinfo.py#L35)
+[[find in source code]](../../licensecheck/packageinfo.py#L34)
 
 ```python
 def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
 ```
 
-Get a list of package info from local files including version, author, and
-the license
+Get a list of package info from local files including version, author...
+
+and	the license.
 
 #### Arguments
 
@@ -120,8 +121,9 @@ the license
 def getPackagesFromOnline(requirements: list[str]) -> list[PackageInfo]:
 ```
 
-Get a list of package info from pypi.org including version, author, and
-the license
+Get a list of package info from pypi.org including version, author...
+
+and	the license.
 
 #### Arguments
 
@@ -139,7 +141,7 @@ the license
 def licenseFromClassifierMessage(message: Message) -> str:
 ```
 
-Get license string from a Message of project classifiers
+Get license string from a Message of project classifiers.
 
 #### Arguments
 
@@ -151,13 +153,13 @@ Get license string from a Message of project classifiers
 
 ## licenseFromClassifierlist
 
-[[find in source code]](../../licensecheck/packageinfo.py#L135)
+[[find in source code]](../../licensecheck/packageinfo.py#L136)
 
 ```python
 def licenseFromClassifierlist(classifiers: list[str]) -> str:
 ```
 
-Get license string from a list of project classifiers
+Get license string from a list of project classifiers.
 
 #### Arguments
 

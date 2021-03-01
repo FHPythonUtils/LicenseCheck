@@ -2,7 +2,7 @@
 
 > Auto-generated documentation for [licensecheck.formatter](../../licensecheck/formatter.py) module.
 
-Take our package compat dictionary and give things a pretty format
+Take our package compat dictionary and give things a pretty format.
 
 - [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / [licensecheck](index.md#licensecheck) / formatter
     - [ansi](#ansi)
@@ -33,7 +33,7 @@ Formats
 
 ## ansi
 
-[[find in source code]](../../licensecheck/formatter.py#L121)
+[[find in source code]](../../licensecheck/formatter.py#L123)
 
 ```python
 def ansi(
@@ -42,7 +42,7 @@ def ansi(
 ) -> str:
 ```
 
-Format to ansi
+Format to ansi.
 
 #### Arguments
 
@@ -55,7 +55,7 @@ Format to ansi
 
 ## csv
 
-[[find in source code]](../../licensecheck/formatter.py#L95)
+[[find in source code]](../../licensecheck/formatter.py#L96)
 
 ```python
 def csv(
@@ -64,7 +64,7 @@ def csv(
 ) -> str:
 ```
 
-Format to CSV
+Format to CSV.
 
 #### Arguments
 
@@ -77,7 +77,7 @@ Format to CSV
 
 ## json
 
-[[find in source code]](../../licensecheck/formatter.py#L77)
+[[find in source code]](../../licensecheck/formatter.py#L78)
 
 ```python
 def json(
@@ -86,7 +86,7 @@ def json(
 ) -> str:
 ```
 
-Format to Json
+Format to Json.
 
 #### Arguments
 
@@ -99,7 +99,7 @@ Format to Json
 
 ## markdown
 
-[[find in source code]](../../licensecheck/formatter.py#L39)
+[[find in source code]](../../licensecheck/formatter.py#L40)
 
 ```python
 def markdown(
@@ -108,7 +108,7 @@ def markdown(
 ) -> str:
 ```
 
-Format to Markdown
+Format to Markdown.
 
 #### Arguments
 
@@ -121,13 +121,13 @@ Format to Markdown
 
 ## simple
 
-[[find in source code]](../../licensecheck/formatter.py#L169)
+[[find in source code]](../../licensecheck/formatter.py#L171)
 
 ```python
 def simple(packages: list[PackageCompat]) -> str:
 ```
 
-Format to ansi
+Format to plain text.
 
 #### Arguments
 

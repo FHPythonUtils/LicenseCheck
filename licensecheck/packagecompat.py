@@ -1,8 +1,10 @@
+"""PackageCompat type.
+"""
 import typing
 
 
 class PackageCompat(typing.TypedDict):
-	"""PackageCompat type
+	"""PackageCompat type.
 	"""
 	name: str
 	version: str
