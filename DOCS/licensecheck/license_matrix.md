@@ -44,7 +44,7 @@ EU -> gpl -> agpl (3 only)
 
 #### Attributes
 
-- `PERMISSIVE` - Permissive licenses compatible with GPL: `[License.MIT, License.BOOST, License.BSD, License.ISC, License.NCSA]`
+- `PERMISSIVE` - Permissive licenses compatible with GPL: `[License.MIT, License.BOOST, License.BSD, Licen...`
 - `PERMISSIVE_OTHER` - Permissive licenses NOT compatible with GPL: `[License.APACHE, License.ECLIPSE, License.ACEDEMIC_FREE]`
 - `LGPL` - LGPL licenses: `[License.LGPL_2, License.LGPL_3, License.LGPL_2...`
 - `GPL` - GPL licenses (including AGPL): `[License.GPL_2, License.GPL_3, License.GPL_2_PL...`
@@ -76,7 +76,7 @@ License Enum to hold a set of potential licenses.
 
 ## depCompatibleLice
 
-[[find in source code]](../../licensecheck/license_matrix.py#L183)
+[[find in source code]](../../licensecheck/license_matrix.py#L187)
 
 ```python
 def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
@@ -100,7 +100,7 @@ license(s)
 
 ## licenseType
 
-[[find in source code]](../../licensecheck/license_matrix.py#L81)
+[[find in source code]](../../licensecheck/license_matrix.py#L82)
 
 ```python
 def licenseType(lice: str) -> list[License]:

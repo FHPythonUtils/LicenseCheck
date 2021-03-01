@@ -52,6 +52,7 @@ class License(Enum):
 	BSD = 12
 	ISC = 13
 	NCSA = 14
+	PSFL = 15
 	# Other permissive
 	APACHE = 20
 	ECLIPSE = 21
@@ -106,6 +107,8 @@ def licenseType(lice: str) -> list[License]:
 			licenses.append(License.ISC)
 		elif "NCSA" in lice:
 			licenses.append(License.NCSA)
+		elif "PYTHON" in lice:
+			licenses.append(License.PSFL)
 
 		elif "APACHE" in lice:
 			licenses.append(License.APACHE)
@@ -150,7 +153,8 @@ def licenseType(lice: str) -> list[License]:
 
 # Permissive licenses compatible with GPL
 PERMISSIVE = [
-License.MIT, License.BOOST, License.BSD, License.ISC, License.NCSA]
+License.MIT, License.BOOST, License.BSD, License.ISC, License.NCSA,
+License.PSFL]
 # Permissive licenses NOT compatible with GPL
 PERMISSIVE_OTHER = [License.APACHE, License.ECLIPSE, License.ACEDEMIC_FREE]
 # LGPL licenses
@@ -200,6 +204,7 @@ def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
 	License.BSD: PERMISSIVE_INCOMPATIBLE,
 	License.ISC: PERMISSIVE_INCOMPATIBLE,
 	License.NCSA: PERMISSIVE_INCOMPATIBLE,
+	License.PSFL: PERMISSIVE_INCOMPATIBLE,
 	License.APACHE: PERMISSIVE_INCOMPATIBLE,
 	License.ECLIPSE: PERMISSIVE_INCOMPATIBLE,
 	License.ACEDEMIC_FREE: PERMISSIVE_INCOMPATIBLE,

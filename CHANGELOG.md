@@ -2,7 +2,10 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
-## 2021 - 2021/03/01
+## 2021.1.1 - 2021/03/01
+- Add PSFL to matrix.
+
+## 2021.1 - 2021/03/01
 - Tidied up
 - Added `--zero/-0` flag to return non-zero exit code when an incompatible
   license is found
