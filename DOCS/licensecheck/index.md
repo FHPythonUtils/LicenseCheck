@@ -18,7 +18,7 @@ with the project license
 
 ## cli
 
-[[find in source code]](../../licensecheck/__init__.py#L80)
+[[find in source code]](../../licensecheck/__init__.py#L94)
 
 ```python
 def cli() -> None:
@@ -28,7 +28,7 @@ Cli entry point.
 
 ## getDepsLicenses
 
-[[find in source code]](../../licensecheck/__init__.py#L36)
+[[find in source code]](../../licensecheck/__init__.py#L45)
 
 ```python
 def getDepsLicenses() -> list[PackageCompat]:

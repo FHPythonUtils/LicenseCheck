@@ -14,14 +14,13 @@ import requests
 import tomlkit
 from pip._internal.utils.misc import get_installed_distributions
 from pip._vendor.pkg_resources import Distribution
-from tomlkit import items
 
-LICENSE_UNKNOWN = 'UNKNOWN'
+UNKNOWN = "UNKNOWN"
 
 
 class PackageInfo(typing.TypedDict):
-	"""PackageInfo type.
-	"""
+	"""PackageInfo type."""
+
 	name: str
 	version: str
 	namever: str
@@ -51,32 +50,35 @@ def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
 
 	pkgInfo = []
 	for pkg in pkgsToKeep:
-		licenseClassifier = homePage = author = lice = LICENSE_UNKNOWN
+		licenseClassifier = homePage = author = lice = UNKNOWN
 		# Try and get metadata
 		metadata = None
-		if pkg.has_metadata('METADATA'):
-			metadata = pkg.get_metadata('METADATA')
-		if pkg.has_metadata('PKG-INFO') and metadata is None:
-			metadata = pkg.get_metadata('PKG-INFO')
+		if pkg.has_metadata("METADATA"):
+			metadata = pkg.get_metadata("METADATA")
+		if pkg.has_metadata("PKG-INFO") and metadata is None:
+			metadata = pkg.get_metadata("PKG-INFO")
 		if metadata is not None:
 			message = message_from_string(metadata)
 			licenseClassifier = licenseFromClassifierMessage(message)
 			feedParser = FeedParser()
 			feedParser.feed(metadata)
 			parsedMetadata = feedParser.close()
-			homePage = parsedMetadata.get("home-page", LICENSE_UNKNOWN)
-			author = parsedMetadata.get("author", LICENSE_UNKNOWN)
-			lice = parsedMetadata.get("license", LICENSE_UNKNOWN)
+			homePage = parsedMetadata.get("home-page", UNKNOWN)
+			author = parsedMetadata.get("author", UNKNOWN)
+			lice = parsedMetadata.get("license", UNKNOWN)
 
-		pkgLicense = licenseClassifier if licenseClassifier != LICENSE_UNKNOWN else lice
-		pkgInfo.append({
-		"name": pkg.project_name,
-		"version": pkg.version,
-		"namever": str(pkg),
-		"home_page": homePage,
-		"author": author,
-		"size": getModuleSize(pkg),
-		"license": pkgLicense}) # yapf: disable
+		pkgLicense = licenseClassifier if licenseClassifier != UNKNOWN else lice
+		pkgInfo.append(
+			{
+				"name": pkg.project_name,
+				"version": pkg.version,
+				"namever": str(pkg),
+				"home_page": homePage,
+				"author": author,
+				"size": getModuleSize(pkg),
+				"license": pkgLicense,
+			}
+		)
 	return pkgInfo
 
 
@@ -84,21 +86,21 @@ def licenseFromClassifierMessage(message: Message) -> str:
 	"""Get license string from a Message of project classifiers.
 
 	Args:
-		classifiers (Message): Message of classifiers
+		message (Message): Message of classifiers
 
 	Returns:
 		str: the license name
 	"""
-	fromClassifier = LICENSE_UNKNOWN
+	fromClassifier = UNKNOWN
 	licenses = []
 	for key, val in message.items():
-		if key == 'Classifier' and val.startswith('License'):
-			lice = val.split(' :: ')[-1]
+		if key == "Classifier" and val.startswith("License"):
+			lice = val.split(" :: ")[-1]
 			# Through the declaration of 'Classifier: License :: OSI Approved'
-			if lice != 'OSI Approved':
+			if lice != "OSI Approved":
 				licenses.append(lice)
 	if len(licenses) > 0:
-		fromClassifier = ', '.join(licenses)
+		fromClassifier = ", ".join(licenses)
 	return fromClassifier
 
 
@@ -116,20 +118,22 @@ def getPackagesFromOnline(requirements: list[str]) -> list[PackageInfo]:
 	pkgInfo = []
 	for pkg in requirements:
 		url = "https://pypi.org/pypi/" + pkg + "/json"
-		request = requests.get(url) # type: ignore
-		response = request.json() # type: ignore
+		request = requests.get(url)  # type: ignore
+		response = request.json()  # type: ignore
 		info = response["info"]
-		licenseClassifier = licenseFromClassifierlist(response["info"]
-		["classifiers"])
-		pkgLicense = licenseClassifier if licenseClassifier != LICENSE_UNKNOWN else info[
-		"license"]
-		pkgInfo.append({"name": pkg,
-		"version": info["version"],
-		"namever": f"{pkg} {info['version']}",
-		"home_page": info["home_page"],
-		"author": info["author"],
-		"size": int(response["urls"][-1]["size"]),
-		"license": pkgLicense}) # yapf: disable
+		licenseClassifier = licenseFromClassifierlist(response["info"]["classifiers"])
+		pkgLicense = licenseClassifier if licenseClassifier != UNKNOWN else info["license"]
+		pkgInfo.append(
+			{
+				"name": pkg,
+				"version": info["version"],
+				"namever": f"{pkg} {info['version']}",
+				"home_page": info["home_page"],
+				"author": info["author"],
+				"size": int(response["urls"][-1]["size"]),
+				"license": pkgLicense,
+			}
+		)
 	return pkgInfo
 
 
@@ -142,16 +146,16 @@ def licenseFromClassifierlist(classifiers: list[str]) -> str:
 	Returns:
 		str: the license name
 	"""
-	fromClassifier = LICENSE_UNKNOWN
+	fromClassifier = UNKNOWN
 	licenses = []
 	for val in classifiers:
-		if val.startswith('License'):
-			lice = val.split(' :: ')[-1]
+		if val.startswith("License"):
+			lice = val.split(" :: ")[-1]
 			# Through the declaration of 'Classifier: License :: OSI Approved'
-			if lice != 'OSI Approved':
+			if lice != "OSI Approved":
 				licenses.append(lice)
 	if len(licenses) > 0:
-		fromClassifier = ', '.join(licenses)
+		fromClassifier = ", ".join(licenses)
 	return fromClassifier
 
 
@@ -183,17 +187,19 @@ def getMyPackageLicense() -> str:
 			pyproject = tomlkit.parse(pyproject.read())
 	except FileNotFoundError:
 		return input("Enter the project license")
-	tool = typing.cast(items.Table, pyproject["tool"])
+	container = lambda x: typing.cast(
+		tomlkit.api.Container, x
+	)  # typing.cast(Container, x) -> container(x)
+	tool = container(pyproject["tool"])
 	metaData = {"classifiers": [], "license": ""}
 	if "poetry" in tool:
-		metaData = typing.cast(items.Table, tool["poetry"])
+		metaData = container(tool["poetry"])
 	elif "flit" in tool:
-		metaData = typing.cast(items.Table,
-		typing.cast(items.Table, tool["flit"])["metadata"])
+		metaData = container(container(tool["flit"])["metadata"])
 	else:
 		return input("Enter the project license")
-	licenseClassifier = licenseFromClassifierlist(metaData["classifiers"]) # type: ignore yapf: disable
-	if licenseClassifier != LICENSE_UNKNOWN:
+	licenseClassifier = licenseFromClassifierlist(metaData["classifiers"])  # type: ignore
+	if licenseClassifier != UNKNOWN:
 		return licenseClassifier
 	return str(metaData["license"])
 
@@ -224,13 +230,12 @@ def getModuleSize(pkg: Distribution) -> int:
 	Returns:
 		int: size in bytes
 	"""
-	pkgDirname = "{}-{}.dist-info".format(pkg.project_name.replace("-", "_"),
-	pkg.version)
-	path = os.path.join(pkg.location, pkgDirname) # type: ignore
+	pkgDirname = "{}-{}.dist-info".format(pkg.project_name.replace("-", "_"), pkg.version)
+	path = os.path.join(pkg.location, pkgDirname)  # type: ignore
 	size = calcContainer(path)
 	if size > 0:
 		return size
 	url = "https://pypi.org/pypi/" + pkg.project_name + "/json"
-	request = requests.get(url) # type: ignore
-	response = request.json() # type: ignore
+	request = requests.get(url)  # type: ignore
+	response = request.json()  # type: ignore
 	return int(response["urls"][-1]["size"])

@@ -25,9 +25,18 @@ def _doSysExec(command: str) -> tuple[int, str]:
 
 	Raises:
 		RuntimeWarning: throw a warning should there be a non exit code
+
+	Returns:
+		tuple[int, str]: exit code and message
 	"""
-	with subprocess.Popen(command, shell=True, stdout=subprocess.PIPE,
-	stderr=subprocess.STDOUT, encoding="utf-8", errors="ignore") as process:
+	with subprocess.Popen(
+		command,
+		shell=True,
+		stdout=subprocess.PIPE,
+		stderr=subprocess.STDOUT,
+		encoding="utf-8",
+		errors="ignore",
+	) as process:
 		out = process.communicate()[0]
 		exitCode = process.returncode
 	return exitCode, out
@@ -54,14 +63,16 @@ def getDepsLicenses() -> list[PackageCompat]:
 				parts = line.split()
 				reqs.append(parts[0])
 			except IndexError:
-				print("An error occurred with poetry try running "
-				"'poetry show' to see what went wrong!")
-				poetryInstalled = False # Some error occurred so fallback to requirements.txt
+				print(
+					"An error occurred with poetry try running "
+					"'poetry show' to see what went wrong!"
+				)
+				poetryInstalled = False  # Some error occurred so fallback to requirements.txt
 				break
 	if not poetryInstalled:
-		with open("requirements.txt", 'r') as requirementsTxt:
-			for req in requirements.parse(requirementsTxt): # type: ignore
-				reqs.append(req.name) # type: ignore
+		with open("requirements.txt", "r") as requirementsTxt:
+			for req in requirements.parse(requirementsTxt):  # type: ignore
+				reqs.append(req.name)  # type: ignore
 	# Get my license
 	myLiceTxt = packageinfo.getMyPackageLicense()
 	myLice = license_matrix.licenseType(myLiceTxt)[0]
@@ -69,8 +80,11 @@ def getDepsLicenses() -> list[PackageCompat]:
 	depsLicenses = []
 	for package in packageinfo.getPackages(reqs):
 		depLice = license_matrix.licenseType(package["license"])
-		depsLicenses.append(PackageCompat(**package,
-		license_compat=license_matrix.depCompatibleLice(myLice, depLice))) # yapf: disable
+		depsLicenses.append(
+			PackageCompat(
+				**package, license_compat=license_matrix.depCompatibleLice(myLice, depLice)
+			)
+		)
 	return depsLicenses
 
 
@@ -79,7 +93,7 @@ FORMAT_HELP = "Output format. One of simple, ansi, json, markdown, csv. default=
 
 def cli() -> None:
 	"""Cli entry point."""
-	# yapf: disable
+
 	parser = argparse.ArgumentParser(description=__doc__)
 	parser.add_argument("--format", "-f",
 	help=FORMAT_HELP)
@@ -93,17 +107,21 @@ def cli() -> None:
 	filename = stdout if args.file is None else open(args.file, "w")
 	# Format
 	formatMap = {
-	"json": formatter.json, "markdown": formatter.markdown, "csv": formatter.csv,
-	"ansi": formatter.ansi, "simple": formatter.simple}
+		"json": formatter.json,
+		"markdown": formatter.markdown,
+		"csv": formatter.csv,
+		"ansi": formatter.ansi,
+		"simple": formatter.simple,
+	}
 	if args.format is not None and args.format not in formatMap:
 		print(FORMAT_HELP)
 		sysexit(2)
 	licenses = getDepsLicenses()
-	incompat = any(not lice["license_compat"] for lice in licenses)
+	incompatible = any(not lice["license_compat"] for lice in licenses)
 	if args.format is None:
 		print(formatter.simple(licenses), file=filename)
 	elif args.format in formatMap:
 		print(formatMap[args.format](licenses), file=filename)
-	if incompat and args.zero:
+	if incompatible and args.zero:
 		sysexit(1)
 	sysexit(0)

@@ -17,7 +17,7 @@ Get information for installed and online packages.
 
 ## PackageInfo
 
-[[find in source code]](../../licensecheck/packageinfo.py#L22)
+[[find in source code]](../../licensecheck/packageinfo.py#L21)
 
 ```python
 class PackageInfo(typing.TypedDict):
@@ -27,7 +27,7 @@ PackageInfo type.
 
 ## calcContainer
 
-[[find in source code]](../../licensecheck/packageinfo.py#L201)
+[[find in source code]](../../licensecheck/packageinfo.py#L207)
 
 ```python
 def calcContainer(path: str) -> int:
@@ -45,7 +45,7 @@ Get size of installed module from path.
 
 ## getModuleSize
 
-[[find in source code]](../../licensecheck/packageinfo.py#L218)
+[[find in source code]](../../licensecheck/packageinfo.py#L224)
 
 ```python
 def getModuleSize(pkg: Distribution) -> int:
@@ -63,7 +63,7 @@ Get the size of a given module as an int.
 
 ## getMyPackageLicense
 
-[[find in source code]](../../licensecheck/packageinfo.py#L174)
+[[find in source code]](../../licensecheck/packageinfo.py#L178)
 
 ```python
 def getMyPackageLicense() -> str:
@@ -77,7 +77,7 @@ Get the pyproject data.
 
 ## getPackages
 
-[[find in source code]](../../licensecheck/packageinfo.py#L158)
+[[find in source code]](../../licensecheck/packageinfo.py#L162)
 
 ```python
 def getPackages(reqs: list[str]) -> list[PackageInfo]:
@@ -95,7 +95,7 @@ Get dependency info.
 
 ## getPackagesFromLocal
 
-[[find in source code]](../../licensecheck/packageinfo.py#L34)
+[[find in source code]](../../licensecheck/packageinfo.py#L33)
 
 ```python
 def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
@@ -115,7 +115,7 @@ and	the license.
 
 ## getPackagesFromOnline
 
-[[find in source code]](../../licensecheck/packageinfo.py#L105)
+[[find in source code]](../../licensecheck/packageinfo.py#L107)
 
 ```python
 def getPackagesFromOnline(requirements: list[str]) -> list[PackageInfo]:
@@ -135,7 +135,7 @@ and	the license.
 
 ## licenseFromClassifierMessage
 
-[[find in source code]](../../licensecheck/packageinfo.py#L83)
+[[find in source code]](../../licensecheck/packageinfo.py#L85)
 
 ```python
 def licenseFromClassifierMessage(message: Message) -> str:
@@ -145,7 +145,7 @@ Get license string from a Message of project classifiers.
 
 #### Arguments
 
-- `classifiers` *Message* - Message of classifiers
+- `message` *Message* - Message of classifiers
 
 #### Returns
 
@@ -153,7 +153,7 @@ Get license string from a Message of project classifiers.
 
 ## licenseFromClassifierlist
 
-[[find in source code]](../../licensecheck/packageinfo.py#L136)
+[[find in source code]](../../licensecheck/packageinfo.py#L140)
 
 ```python
 def licenseFromClassifierlist(classifiers: list[str]) -> str:

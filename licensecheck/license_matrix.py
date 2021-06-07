@@ -41,8 +41,8 @@ from enum import Enum
 
 
 class License(Enum):
-	"""License Enum to hold a set of potential licenses.
-	"""
+	"""License Enum to hold a set of potential licenses."""
+
 	# Public domain
 	PUBLIC = 0
 	UNLICENSE = 1
@@ -89,7 +89,7 @@ def licenseType(lice: str) -> list[License]:
 		list[License]: the license
 	"""
 	licenses = []
-	liceL = lice.split(", ") # Deal with multilicense
+	liceL = lice.split(", ")  # Deal with multilicense
 	for liceS in liceL:
 		lice = liceS.upper()
 		if "PUBLIC DOMAIN" in lice:
@@ -152,41 +152,40 @@ def licenseType(lice: str) -> list[License]:
 
 
 # Permissive licenses compatible with GPL
-PERMISSIVE = [
-License.MIT, License.BOOST, License.BSD, License.ISC, License.NCSA,
-License.PSFL]
+PERMISSIVE = [License.MIT, License.BOOST, License.BSD, License.ISC, License.NCSA, License.PSFL]
 # Permissive licenses NOT compatible with GPL
 PERMISSIVE_OTHER = [License.APACHE, License.ECLIPSE, License.ACEDEMIC_FREE]
 # LGPL licenses
-LGPL = [
-License.LGPL_2, License.LGPL_3, License.LGPL_2_PLUS, License.LGPL_3_PLUS,
-License.LGPL_X]
+LGPL = [License.LGPL_2, License.LGPL_3, License.LGPL_2_PLUS, License.LGPL_3_PLUS, License.LGPL_X]
 # GPL licenses (including AGPL)
 GPL = [
-License.GPL_2, License.GPL_3, License.GPL_2_PLUS, License.GPL_3_PLUS,
-License.GPL_X, License.AGPL_3_PLUS]
+	License.GPL_2,
+	License.GPL_3,
+	License.GPL_2_PLUS,
+	License.GPL_3_PLUS,
+	License.GPL_X,
+	License.AGPL_3_PLUS,
+]
 # Other Copyleft licenses
 OTHER_COPYLEFT = [License.MPL, License.EU]
 
 # Basic compat matrix
-UNLICENSEE_INCOMPATIBLE = (PERMISSIVE + PERMISSIVE_OTHER + GPL + LGPL
-+ OTHER_COPYLEFT + [License.NO_LICENSE])
+UNLICENSEE_INCOMPATIBLE = (
+	PERMISSIVE + PERMISSIVE_OTHER + GPL + LGPL + OTHER_COPYLEFT + [License.NO_LICENSE]
+)
 PERMISSIVE_INCOMPATIBLE = GPL + [License.EU, License.NO_LICENSE]
-LGPL_INCOMPATIBLE = GPL + OTHER_COPYLEFT + PERMISSIVE_OTHER + [
-License.NO_LICENSE]
+LGPL_INCOMPATIBLE = GPL + OTHER_COPYLEFT + PERMISSIVE_OTHER + [License.NO_LICENSE]
 GPL_INCOMPATIBLE = PERMISSIVE_OTHER + [License.AGPL_3_PLUS, License.NO_LICENSE]
 PERMISSIVE_GPL_INCOMPATIBLE = PERMISSIVE_OTHER + [License.NO_LICENSE]
 
 # GPL compat matrix
 # https://www.gnu.org/licenses/gpl-faq.html#AllCompatibility
-GPL_2_INCOMPATIBLE = [
-License.GPL_3, License.GPL_3_PLUS, License.LGPL_3, License.LGPL_3_PLUS]
+GPL_2_INCOMPATIBLE = [License.GPL_3, License.GPL_3_PLUS, License.LGPL_3, License.LGPL_3_PLUS]
 L_GPL_3_INCOMPATIBLE = [License.GPL_2]
 
 
 def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
-	"""Identify if the end user license is compatible with the dependency.
-	license(s)
+	"""Identify if the end user license is compatible with the dependency license(s).
 
 	Args:
 		myLicense (License): end user license to check
@@ -196,34 +195,31 @@ def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
 		bool: True if compatible, otherwise False
 	"""
 	blacklist = {
-	License.UNLICENSE: UNLICENSEE_INCOMPATIBLE,
-	License.PUBLIC: UNLICENSEE_INCOMPATIBLE,
-
-	License.MIT: PERMISSIVE_INCOMPATIBLE,
-	License.BOOST: PERMISSIVE_INCOMPATIBLE,
-	License.BSD: PERMISSIVE_INCOMPATIBLE,
-	License.ISC: PERMISSIVE_INCOMPATIBLE,
-	License.NCSA: PERMISSIVE_INCOMPATIBLE,
-	License.PSFL: PERMISSIVE_INCOMPATIBLE,
-	License.APACHE: PERMISSIVE_INCOMPATIBLE,
-	License.ECLIPSE: PERMISSIVE_INCOMPATIBLE,
-	License.ACEDEMIC_FREE: PERMISSIVE_INCOMPATIBLE,
-
-	License.LGPL_X: LGPL_INCOMPATIBLE,
-	License.LGPL_2: LGPL_INCOMPATIBLE,
-	License.LGPL_3: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
-	License.LGPL_2_PLUS: LGPL_INCOMPATIBLE,
-	License.LGPL_3_PLUS: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
-	License.GPL_X: GPL_INCOMPATIBLE,
-	License.GPL_2: GPL_INCOMPATIBLE + GPL_2_INCOMPATIBLE,
-	License.GPL_3: GPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
-	License.GPL_2_PLUS: GPL_INCOMPATIBLE,
-	License.GPL_3_PLUS: GPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
-	License.AGPL_3_PLUS: PERMISSIVE_GPL_INCOMPATIBLE,
-
-	License.MPL: LGPL + GPL + [License.EU],
-	License.EU: PERMISSIVE_GPL_INCOMPATIBLE + LGPL + GPL + [License.MPL],
-	} # yapf: disable
+		License.UNLICENSE: UNLICENSEE_INCOMPATIBLE,
+		License.PUBLIC: UNLICENSEE_INCOMPATIBLE,
+		License.MIT: PERMISSIVE_INCOMPATIBLE,
+		License.BOOST: PERMISSIVE_INCOMPATIBLE,
+		License.BSD: PERMISSIVE_INCOMPATIBLE,
+		License.ISC: PERMISSIVE_INCOMPATIBLE,
+		License.NCSA: PERMISSIVE_INCOMPATIBLE,
+		License.PSFL: PERMISSIVE_INCOMPATIBLE,
+		License.APACHE: PERMISSIVE_INCOMPATIBLE,
+		License.ECLIPSE: PERMISSIVE_INCOMPATIBLE,
+		License.ACEDEMIC_FREE: PERMISSIVE_INCOMPATIBLE,
+		License.LGPL_X: LGPL_INCOMPATIBLE,
+		License.LGPL_2: LGPL_INCOMPATIBLE,
+		License.LGPL_3: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
+		License.LGPL_2_PLUS: LGPL_INCOMPATIBLE,
+		License.LGPL_3_PLUS: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
+		License.GPL_X: GPL_INCOMPATIBLE,
+		License.GPL_2: GPL_INCOMPATIBLE + GPL_2_INCOMPATIBLE,
+		License.GPL_3: GPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
+		License.GPL_2_PLUS: GPL_INCOMPATIBLE,
+		License.GPL_3_PLUS: GPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
+		License.AGPL_3_PLUS: PERMISSIVE_GPL_INCOMPATIBLE,
+		License.MPL: LGPL + GPL + [License.EU],
+		License.EU: PERMISSIVE_GPL_INCOMPATIBLE + LGPL + GPL + [License.MPL],
+	}
 
 	blacklistResolved = blacklist[myLicense]
 	for lice in depLice:

@@ -2,6 +2,10 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2021.1.2 - 2021/06/07
+- reformat
+- improve docstrings
+
 ## 2021.1.1 - 2021/03/01
 - Add PSFL to matrix.
 

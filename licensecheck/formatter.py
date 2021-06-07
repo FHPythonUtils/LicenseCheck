@@ -71,7 +71,7 @@ heading: typing.Optional[str] = None) -> str:
 		f"\n- Author: {pkg['author']}",
 		f"\n- License: {pkg['license']}",
 		f"\n- Compatible: {pkg['license_compat']}",
-		f"\n- Size: {pkg['size']}"]) # yapf: disable
+		f"\n- Size: {pkg['size']}"])
 	return "\n".join(strBuf) + "\n"
 
 
@@ -164,7 +164,7 @@ heading: typing.Optional[str] = None) -> str:
 		f"Author: {pkg['author']}",
 		f"License: {pkg['license']}",
 		f"Compatible: {pkg['license_compat']}",
-		f"Size: {pkg['size']}\n"]) # yapf: disable
+		f"Size: {pkg['size']}\n"])
 	return "\n".join(strBuf)
 
 

@@ -82,8 +82,7 @@ License Enum to hold a set of potential licenses.
 def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
 ```
 
-Identify if the end user license is compatible with the dependency.
-license(s)
+Identify if the end user license is compatible with the dependency license(s).
 
 #### Arguments
 
