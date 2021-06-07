@@ -95,12 +95,14 @@ def cli() -> None:
 	"""Cli entry point."""
 
 	parser = argparse.ArgumentParser(description=__doc__)
-	parser.add_argument("--format", "-f",
-	help=FORMAT_HELP)
-	parser.add_argument("--file", "-o",
-	help="Filename to write to (omit for stdout)")
-	parser.add_argument("--zero", "-0",
-	help="Return non zero exit code if an incompatible license is found", action="store_true")
+	parser.add_argument("--format", "-f", help=FORMAT_HELP)
+	parser.add_argument("--file", "-o", help="Filename to write to (omit for stdout)")
+	parser.add_argument(
+		"--zero",
+		"-0",
+		help="Return non zero exit code if an incompatible license is found",
+		action="store_true",
+	)
 	# yapf: enable
 	args = parser.parse_args()
 	# File
