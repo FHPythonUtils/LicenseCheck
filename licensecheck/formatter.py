@@ -27,18 +27,18 @@ from csv import writer
 from io import StringIO
 from json import dumps
 
-from licensecheck.packagecompat import PackageCompat
+from licensecheck.types import PackageCompat
 
 logger = None
 try:
 	from metprint import Logger, LogType
+
 	logger = Logger()
 except ModuleNotFoundError:
 	pass
 
 
-def markdown(packages: list[PackageCompat],
-heading: typing.Optional[str] = None) -> str:
+def markdown(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> str:
 	"""Format to Markdown.
 
 	Args:
@@ -51,8 +51,7 @@ heading: typing.Optional[str] = None) -> str:
 	if len(packages) == 0:
 		return "No packages"
 
-	heading = (heading
-	if heading is not None else "# Packages\nFind a list of packages below")
+	heading = heading if heading is not None else "# Packages\nFind a list of packages below"
 	strBuf = [heading]
 	packages = sorted(packages, key=lambda i: i["name"])
 
@@ -65,18 +64,20 @@ heading: typing.Optional[str] = None) -> str:
 
 	# Details
 	for pkg in packages:
-		strBuf.extend([
-		f"## {pkg['namever']}",
-		f"\n\n- HomePage: {pkg['home_page']}",
-		f"\n- Author: {pkg['author']}",
-		f"\n- License: {pkg['license']}",
-		f"\n- Compatible: {pkg['license_compat']}",
-		f"\n- Size: {pkg['size']}"])
+		strBuf.extend(
+			[
+				f"## {pkg['namever']}",
+				f"\n\n- HomePage: {pkg['home_page']}",
+				f"\n- Author: {pkg['author']}",
+				f"\n- License: {pkg['license']}",
+				f"\n- Compatible: {pkg['license_compat']}",
+				f"\n- Size: {pkg['size']}",
+			]
+		)
 	return "\n".join(strBuf) + "\n"
 
 
-def json(packages: list[PackageCompat],
-heading: typing.Optional[str] = None) -> str:
+def json(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> str:
 	"""Format to Json.
 
 	Args:
@@ -88,13 +89,15 @@ heading: typing.Optional[str] = None) -> str:
 	"""
 	packages = sorted(packages, key=lambda i: i["name"])
 	out = {
-	"heading": (heading if heading is not None else
-	"# Packages - Find a list of packages below"), "packages": packages}
+		"heading": (
+			heading if heading is not None else "# Packages - Find a list of packages below"
+		),
+		"packages": packages,
+	}
 	return dumps(out, indent="\t")
 
 
-def csv(packages: list[PackageCompat],
-heading: typing.Optional[str] = None) -> str:
+def csv(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> str:
 	"""Format to CSV.
 
 	Args:
@@ -107,21 +110,36 @@ heading: typing.Optional[str] = None) -> str:
 	packages = sorted(packages, key=lambda i: i["name"])
 	output = StringIO()
 	csvString = writer(output)
-	csvString.writerow([(heading
-	if heading is not None else "# Packages - Find a list of packages below "
-	"(you may want to delete this line)")])
-	csvString.writerow([
-	"name", "version", "namever", "home_page", "author", "size", "license",
-	"license_compat"])
+	csvString.writerow(
+		[
+			(
+				heading
+				if heading is not None
+				else "# Packages - Find a list of packages below "
+				"(you may want to delete this line)"
+			)
+		]
+	)
+	csvString.writerow(
+		["name", "version", "namever", "home_page", "author", "size", "license", "license_compat"]
+	)
 	for pkg in packages:
-		csvString.writerow([
-		pkg["name"], pkg["version"], pkg["namever"], pkg["home_page"], pkg["author"],
-		pkg["size"], pkg["license"], pkg["license_compat"]])
+		csvString.writerow(
+			[
+				pkg["name"],
+				pkg["version"],
+				pkg["namever"],
+				pkg["home_page"],
+				pkg["author"],
+				pkg["size"],
+				pkg["license"],
+				pkg["license_compat"],
+			]
+		)
 	return output.getvalue()
 
 
-def ansi(packages: list[PackageCompat],
-heading: typing.Optional[str] = None) -> str:
+def ansi(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> str:
 	"""Format to ansi.
 
 	Args:
@@ -142,8 +160,11 @@ heading: typing.Optional[str] = None) -> str:
 		return f"{BLD}{UL}{CB}No packages{CLS}"
 
 	# pylint: enable=invalid-name
-	heading = (heading if heading is not None else
-	f"{BLD}{UL}{CB}PackageCompats{CLS}\n\nFind a list of packages below\n")
+	heading = (
+		heading
+		if heading is not None
+		else f"{BLD}{UL}{CB}PackageCompats{CLS}\n\nFind a list of packages below\n"
+	)
 	strBuf = [heading]
 	packages = sorted(packages, key=lambda i: i["name"])
 
@@ -158,13 +179,16 @@ heading: typing.Optional[str] = None) -> str:
 
 	# Details
 	for pkg in packages:
-		strBuf.extend([
-		f"{BLD}{UL}{CG}{pkg['namever']}{CLS}",
-		f"HomePage: {pkg['home_page']}",
-		f"Author: {pkg['author']}",
-		f"License: {pkg['license']}",
-		f"Compatible: {pkg['license_compat']}",
-		f"Size: {pkg['size']}\n"])
+		strBuf.extend(
+			[
+				f"{BLD}{UL}{CG}{pkg['namever']}{CLS}",
+				f"HomePage: {pkg['home_page']}",
+				f"Author: {pkg['author']}",
+				f"License: {pkg['license']}",
+				f"Compatible: {pkg['license_compat']}",
+				f"Size: {pkg['size']}\n",
+			]
+		)
 	return "\n".join(strBuf)
 
 
@@ -186,19 +210,32 @@ def simple(packages: list[PackageCompat]) -> str:
 		strBuf.append(f"├{'─'*10}┼{'─'*20}┼{'─'*20}┤")
 		for pkg in packages:
 			strBuf.append(
-			f"│{str(pkg['license_compat']): <10}│{pkg['name'][:20]: <20}│{pkg['license'][:20]: <20}│"
+				f"│{str(pkg['license_compat']): <10}│{pkg['name'][:20]: <20}│{pkg['license'][:20]: <20}│"
 			)
 		strBuf.append(f"└{'─'*10}┴{'─'*20}┴{'─'*20}┘")
 	else:
 		strBuf = [logger.logString(f"┌{'─'*20}┬{'─'*30}┐", LogType.NONE, True)]
 		strBuf.append(
-		logger.logString("│Package             │License                       │",
-		LogType.NONE, True))
+			logger.logString(
+				"│Package             │License                       │", LogType.NONE, True
+			)
+		)
 		strBuf.append(logger.logString(f"├{'─'*20}┼{'─'*30}┤", LogType.NONE, True))
 		for pkg in packages:
 			strBuf.append(
-			logger
-			.logString(f"│{pkg['name'][:20]: <20}│{pkg['license'][:30]: <30}│",
-			LogType.SUCCESS if pkg['license_compat'] else LogType.ERROR))
+				logger.logString(
+					f"│{pkg['name'][:20]: <20}│{pkg['license'][:30]: <30}│",
+					LogType.SUCCESS if pkg["license_compat"] else LogType.ERROR,
+				)
+			)
 		strBuf.append(logger.logString(f"└{'─'*20}┴{'─'*30}┘", LogType.NONE, True))
 	return "\n".join(strBuf)
+
+
+formatMap = {
+	"json": json,
+	"markdown": markdown,
+	"csv": csv,
+	"ansi": ansi,
+	"simple": simple,
+}

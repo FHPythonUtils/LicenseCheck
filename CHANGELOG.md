@@ -2,6 +2,12 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2021.2 - 2021/08/13
+- Added ability to use requirements.txt per https://github.com/FHPythonUtils/LicenseCheck/issues/6
+- Code clean-up + refactoring
+- Fix spelling
+- packagecompat.py → types.py as this module holds types + typing info
+
 ## 2021.1.2 - 2021/06/07
 - reformat
 - improve docstrings

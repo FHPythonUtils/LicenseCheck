@@ -33,7 +33,7 @@ Formats
 
 ## ansi
 
-[[find in source code]](../../licensecheck/formatter.py#L123)
+[[find in source code]](../../licensecheck/formatter.py#L142)
 
 ```python
 def ansi(
@@ -55,7 +55,7 @@ Format to ansi.
 
 ## csv
 
-[[find in source code]](../../licensecheck/formatter.py#L96)
+[[find in source code]](../../licensecheck/formatter.py#L100)
 
 ```python
 def csv(
@@ -77,7 +77,7 @@ Format to CSV.
 
 ## json
 
-[[find in source code]](../../licensecheck/formatter.py#L78)
+[[find in source code]](../../licensecheck/formatter.py#L80)
 
 ```python
 def json(
@@ -99,7 +99,7 @@ Format to Json.
 
 ## markdown
 
-[[find in source code]](../../licensecheck/formatter.py#L40)
+[[find in source code]](../../licensecheck/formatter.py#L41)
 
 ```python
 def markdown(
@@ -121,7 +121,7 @@ Format to Markdown.
 
 ## simple
 
-[[find in source code]](../../licensecheck/formatter.py#L171)
+[[find in source code]](../../licensecheck/formatter.py#L195)
 
 ```python
 def simple(packages: list[PackageCompat]) -> str:

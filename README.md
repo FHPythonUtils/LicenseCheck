@@ -37,15 +37,18 @@ See below for the output if you run `licensecheck` in this directory
 ### Help
 
 ```txt
-usage: __main__.py [-h] [--format FORMAT] [--file FILE]
+usage: __main__.py [-h] [--format FORMAT] [--file FILE] [--using USING] [--zero]
 
-Output the licenses used by dependencies and check if these are compatible with the project license
+Output the licenses used by dependencies and check if these are compatible with the project license.
 
 optional arguments:
   -h, --help            show this help message and exit
   --format FORMAT, -f FORMAT
-                        Output format. One of simple, ansi, json, markdown, csv. default=simple
+                        Output format. one of: json, markdown, csv, ansi, simple. default=simple
   --file FILE, -o FILE  Filename to write to (omit for stdout)
+  --using USING, -u USING
+                        Environment to use e.g. requirements.txt. one of: requirements, poetry. default=poetry
+  --zero, -0            Return non zero exit code if an incompatible license is found
 ```
 
 You can also import this into your own project and use any of the functions

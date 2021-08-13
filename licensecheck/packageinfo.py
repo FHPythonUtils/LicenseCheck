@@ -118,8 +118,8 @@ def getPackagesFromOnline(requirements: list[str]) -> list[PackageInfo]:
 	pkgInfo = []
 	for pkg in requirements:
 		url = "https://pypi.org/pypi/" + pkg + "/json"
-		request = requests.get(url)  # type: ignore
-		response = request.json()  # type: ignore
+		request = requests.get(url)
+		response = request.json()
 		info = response["info"]
 		licenseClassifier = licenseFromClassifierlist(response["info"]["classifiers"])
 		pkgLicense = licenseClassifier if licenseClassifier != UNKNOWN else info["license"]
@@ -198,7 +198,7 @@ def getMyPackageLicense() -> str:
 		metaData = container(container(tool["flit"])["metadata"])
 	else:
 		return input("Enter the project license")
-	licenseClassifier = licenseFromClassifierlist(metaData["classifiers"])  # type: ignore
+	licenseClassifier = licenseFromClassifierlist(metaData["classifiers"])  # type:ignore
 	if licenseClassifier != UNKNOWN:
 		return licenseClassifier
 	return str(metaData["license"])
@@ -231,11 +231,11 @@ def getModuleSize(pkg: Distribution) -> int:
 		int: size in bytes
 	"""
 	pkgDirname = "{}-{}.dist-info".format(pkg.project_name.replace("-", "_"), pkg.version)
-	path = os.path.join(pkg.location, pkgDirname)  # type: ignore
+	path = os.path.join(pkg.location, pkgDirname)
 	size = calcContainer(path)
 	if size > 0:
 		return size
 	url = "https://pypi.org/pypi/" + pkg.project_name + "/json"
-	request = requests.get(url)  # type: ignore
-	response = request.json()  # type: ignore
+	request = requests.get(url)
+	response = request.json()
 	return int(response["urls"][-1]["size"])

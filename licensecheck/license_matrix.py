@@ -1,6 +1,6 @@
 """Define a foss compatability license_matrix.
 
-Standard disclaimer:: I am not a lawyer and there is no guarentee that the
+Standard disclaimer:: I am not a lawyer and there is no guarantee that the
 information provided here is complete or correct. Do not take this as legal
 advice on foss license compatability
 
@@ -37,46 +37,7 @@ EU -> gpl -> agpl (3 only)
 """
 from __future__ import annotations
 
-from enum import Enum
-
-
-class License(Enum):
-	"""License Enum to hold a set of potential licenses."""
-
-	# Public domain
-	PUBLIC = 0
-	UNLICENSE = 1
-	# Permissive GPL compatible
-	MIT = 10
-	BOOST = 11
-	BSD = 12
-	ISC = 13
-	NCSA = 14
-	PSFL = 15
-	# Other permissive
-	APACHE = 20
-	ECLIPSE = 21
-	ACEDEMIC_FREE = 22
-	# LGPL
-	LGPL_X = 30
-	LGPL_2 = 31
-	LGPL_3 = 32
-	LGPL_2_PLUS = 33
-	LGPL_3_PLUS = 34
-	# GPL
-	GPL_X = 40
-	GPL_2 = 41
-	GPL_3 = 42
-	GPL_2_PLUS = 43
-	GPL_3_PLUS = 44
-	# AGPL
-	AGPL_3_PLUS = 50
-	# Other copyleft
-	MPL = 60
-	EU = 61
-
-	# No License
-	NO_LICENSE = 200
+from licensecheck.types import License
 
 
 def licenseType(lice: str) -> list[License]:
@@ -152,11 +113,28 @@ def licenseType(lice: str) -> list[License]:
 
 
 # Permissive licenses compatible with GPL
-PERMISSIVE = [License.MIT, License.BOOST, License.BSD, License.ISC, License.NCSA, License.PSFL]
+PERMISSIVE = [
+	License.MIT,
+	License.BOOST,
+	License.BSD,
+	License.ISC,
+	License.NCSA,
+	License.PSFL,
+]
 # Permissive licenses NOT compatible with GPL
-PERMISSIVE_OTHER = [License.APACHE, License.ECLIPSE, License.ACEDEMIC_FREE]
+PERMISSIVE_OTHER = [
+	License.APACHE,
+	License.ECLIPSE,
+	License.ACEDEMIC_FREE,
+]
 # LGPL licenses
-LGPL = [License.LGPL_2, License.LGPL_3, License.LGPL_2_PLUS, License.LGPL_3_PLUS, License.LGPL_X]
+LGPL = [
+	License.LGPL_2,
+	License.LGPL_3,
+	License.LGPL_2_PLUS,
+	License.LGPL_3_PLUS,
+	License.LGPL_X,
+]
 # GPL licenses (including AGPL)
 GPL = [
 	License.GPL_2,
@@ -167,10 +145,13 @@ GPL = [
 	License.AGPL_3_PLUS,
 ]
 # Other Copyleft licenses
-OTHER_COPYLEFT = [License.MPL, License.EU]
+OTHER_COPYLEFT = [
+	License.MPL,
+	License.EU,
+]
 
 # Basic compat matrix
-UNLICENSEE_INCOMPATIBLE = (
+UNLICENSE_INCOMPATIBLE = (
 	PERMISSIVE + PERMISSIVE_OTHER + GPL + LGPL + OTHER_COPYLEFT + [License.NO_LICENSE]
 )
 PERMISSIVE_INCOMPATIBLE = GPL + [License.EU, License.NO_LICENSE]
@@ -184,7 +165,7 @@ GPL_2_INCOMPATIBLE = [License.GPL_3, License.GPL_3_PLUS, License.LGPL_3, License
 L_GPL_3_INCOMPATIBLE = [License.GPL_2]
 
 
-def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
+def depCompatWMyLice(myLicense: License, depLice: list[License]) -> bool:
 	"""Identify if the end user license is compatible with the dependency license(s).
 
 	Args:
@@ -195,8 +176,8 @@ def depCompatibleLice(myLicense: License, depLice: list[License]) -> bool:
 		bool: True if compatible, otherwise False
 	"""
 	blacklist = {
-		License.UNLICENSE: UNLICENSEE_INCOMPATIBLE,
-		License.PUBLIC: UNLICENSEE_INCOMPATIBLE,
+		License.UNLICENSE: UNLICENSE_INCOMPATIBLE,
+		License.PUBLIC: UNLICENSE_INCOMPATIBLE,
 		License.MIT: PERMISSIVE_INCOMPATIBLE,
 		License.BOOST: PERMISSIVE_INCOMPATIBLE,
 		License.BSD: PERMISSIVE_INCOMPATIBLE,
