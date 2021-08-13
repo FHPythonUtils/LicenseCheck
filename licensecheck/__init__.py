@@ -30,6 +30,24 @@ def cli() -> None:
 		help=f"Environment to use e.g. requirements.txt. one of: {', '.join(get_deps.usings)}. default=poetry",
 	)
 	parser.add_argument(
+		"--ignore-packages",
+		help="a list of packages to ignore (compat=True)",
+		nargs="+",
+		default=[],
+	)
+	parser.add_argument(
+		"--fail-packages", help="a list of packages to fail (compat=False)", nargs="+", default=[]
+	)
+	parser.add_argument(
+		"--ignore-licenses",
+		help="a list of licenses to ignore (skipped, compat may still be False)",
+		nargs="+",
+		default=[],
+	)
+	parser.add_argument(
+		"--fail-licenses", help="a list of licenses to fail (compat=False)", nargs="+", default=[]
+	)
+	parser.add_argument(
 		"--zero",
 		"-0",
 		help="Return non zero exit code if an incompatible license is found",
@@ -41,7 +59,13 @@ def cli() -> None:
 	filename = stdout if args.file is None else open(args.file, "w")
 
 	# Get list of licenses
-	dependenciesWLicenses = get_deps.getDepsWLicenses(args.using)
+	dependenciesWLicenses = get_deps.getDepsWLicenses(
+		args.using,
+		args.ignore_packages,
+		args.fail_packages,
+		args.ignore_licenses,
+		args.fail_licenses,
+	)
 
 	# Are any licenses incompatible?
 	incompatible = any(not lice["license_compat"] for lice in dependenciesWLicenses)

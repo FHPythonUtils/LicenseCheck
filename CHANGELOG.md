@@ -2,6 +2,13 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2021.3 - 2021/08/13
+- Add `--ignore-packages`, `--fail-packages`,`--ignore-licenses`, `--fail-licenses`, per https://github.com/FHPythonUtils/LicenseCheck/issues/7
+- Fix spelling
+- Added a couple examples to the readme
+- Added pylintrc to pyproject.toml
+
+
 ## 2021.2 - 2021/08/13
 - Added ability to use requirements.txt per https://github.com/FHPythonUtils/LicenseCheck/issues/6
 - Code clean-up + refactoring

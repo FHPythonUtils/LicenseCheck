@@ -24,7 +24,7 @@ Permissive Not Compatible
 Permissive license NOT compatible with gpl
 - Apache
 - Eclipse
-- Acedemic Free
+- Academic Free
 
 
 Copyleft
@@ -76,7 +76,7 @@ def licenseType(lice: str) -> list[License]:
 		elif "ECLIPSE" in lice:
 			licenses.append(License.ECLIPSE)
 		elif "AFL" in lice:
-			licenses.append(License.ACEDEMIC_FREE)
+			licenses.append(License.ACADEMIC_FREE)
 
 		elif "LGPL" in lice:
 			if "LGPLV2+" in lice:
@@ -125,7 +125,7 @@ PERMISSIVE = [
 PERMISSIVE_OTHER = [
 	License.APACHE,
 	License.ECLIPSE,
-	License.ACEDEMIC_FREE,
+	License.ACADEMIC_FREE,
 ]
 # LGPL licenses
 LGPL = [
@@ -165,12 +165,19 @@ GPL_2_INCOMPATIBLE = [License.GPL_3, License.GPL_3_PLUS, License.LGPL_3, License
 L_GPL_3_INCOMPATIBLE = [License.GPL_2]
 
 
-def depCompatWMyLice(myLicense: License, depLice: list[License]) -> bool:
+def depCompatWMyLice(
+	myLicense: License,
+	depLice: list[License],
+	ignoreLicenses: list[License] = None,
+	failLicenses: list[License] = None,
+) -> bool:
 	"""Identify if the end user license is compatible with the dependency license(s).
 
 	Args:
 		myLicense (License): end user license to check
 		depLice (list[License]): dependency license
+		ignoreLicenses (list[License], optional): list of licenses to ignore. Defaults to None.
+		failLicenses (list[License], optional): list of licenses to fail on. Defaults to None.
 
 	Returns:
 		bool: True if compatible, otherwise False
@@ -186,7 +193,7 @@ def depCompatWMyLice(myLicense: License, depLice: list[License]) -> bool:
 		License.PSFL: PERMISSIVE_INCOMPATIBLE,
 		License.APACHE: PERMISSIVE_INCOMPATIBLE,
 		License.ECLIPSE: PERMISSIVE_INCOMPATIBLE,
-		License.ACEDEMIC_FREE: PERMISSIVE_INCOMPATIBLE,
+		License.ACADEMIC_FREE: PERMISSIVE_INCOMPATIBLE,
 		License.LGPL_X: LGPL_INCOMPATIBLE,
 		License.LGPL_2: LGPL_INCOMPATIBLE,
 		License.LGPL_3: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
@@ -201,9 +208,11 @@ def depCompatWMyLice(myLicense: License, depLice: list[License]) -> bool:
 		License.MPL: LGPL + GPL + [License.EU],
 		License.EU: PERMISSIVE_GPL_INCOMPATIBLE + LGPL + GPL + [License.MPL],
 	}
-
+	# Protect against None
+	failLicenses = failLicenses or []
+	ignoreLicenses = ignoreLicenses or []
 	blacklistResolved = blacklist[myLicense]
 	for lice in depLice:
-		if lice in blacklistResolved:
+		if lice in failLicenses or (lice not in ignoreLicenses and lice in blacklistResolved):
 			return False
 	return True

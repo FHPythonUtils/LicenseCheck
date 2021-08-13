@@ -31,7 +31,7 @@ Permissive Not Compatible
 Permissive license NOT compatible with gpl
 - Apache
 - Eclipse
-- Acedemic Free
+- Academic Free
 
 Copyleft
 permissive -> lgpl 2.1 -> gpl 2
@@ -44,7 +44,7 @@ EU -> gpl -> agpl (3 only)
 #### Attributes
 
 - `PERMISSIVE` - Permissive licenses compatible with GPL: `[License.MIT, License.BOOST, License.BSD, Licen...`
-- `PERMISSIVE_OTHER` - Permissive licenses NOT compatible with GPL: `[License.APACHE, License.ECLIPSE, License.ACEDEMIC_FREE]`
+- `PERMISSIVE_OTHER` - Permissive licenses NOT compatible with GPL: `[License.APACHE, License.ECLIPSE, License.ACADEMIC_FREE]`
 - `LGPL` - LGPL licenses: `[License.LGPL_2, License.LGPL_3, License.LGPL_2...`
 - `GPL` - GPL licenses (including AGPL): `[License.GPL_2, License.GPL_3, License.GPL_2_PL...`
 - `OTHER_COPYLEFT` - Other Copyleft licenses: `[License.MPL, License.EU]`
@@ -57,7 +57,12 @@ EU -> gpl -> agpl (3 only)
 [[find in source code]](../../licensecheck/license_matrix.py#L168)
 
 ```python
-def depCompatWMyLice(myLicense: License, depLice: list[License]) -> bool:
+def depCompatWMyLice(
+    myLicense: License,
+    depLice: list[License],
+    ignoreLicenses: list[License] = None,
+    failLicenses: list[License] = None,
+) -> bool:
 ```
 
 Identify if the end user license is compatible with the dependency license(s).
@@ -66,6 +71,8 @@ Identify if the end user license is compatible with the dependency license(s).
 
 - `myLicense` *License* - end user license to check
 - `depLice` *list[License]* - dependency license
+- `ignoreLicenses` *list[License], optional* - list of licenses to ignore. Defaults to None.
+- `failLicenses` *list[License], optional* - list of licenses to fail on. Defaults to None.
 
 #### Returns
 

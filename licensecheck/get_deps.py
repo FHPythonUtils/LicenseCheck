@@ -38,11 +38,14 @@ def _doSysExec(command: str) -> tuple[int, str]:
 	return exitCode, out
 
 
-def getDepsWLicenses(using: str) -> list[PackageCompat]:
-	"""Get a list of packages with package compatibility.
+def getReqs(using: str) -> list[str]:
+	"""Get requirements for the end user project/ lib.
+
+	Args:
+		using (str): use requirements or poetry
 
 	Returns:
-		list[PackageCompat]: list of packages (python dicts)
+		list[str]: list of requirement packages
 	"""
 	if using not in usings:
 		using = "poetry"
@@ -73,6 +76,29 @@ def getDepsWLicenses(using: str) -> list[PackageCompat]:
 		with open("requirements.txt", "r") as requirementsTxt:
 			for req in requirements.parse(requirementsTxt):
 				reqs.append(req.name)
+	return reqs
+
+
+def getDepsWLicenses(
+	using: str,
+	ignorePackages: list[str],
+	failPackages: list[str],
+	ignoreLicenses: list[str],
+	failLicenses: list[str],
+) -> list[PackageCompat]:
+	"""Get a list of dependencies with licenses and determin license compatibility.
+
+	Args:
+		using (str): use requirements or poetry
+		ignorePackages (list[str]): a list of packages to ignore (compat=True)
+		failPackages (list[str]): a list of packages to fail (compat=False)
+		ignoreLicenses (list[str]): a list of licenses to ignore (skipped, compat may still be False)
+		failLicenses (list[str]): a list of licenses to fail (compat=False)
+
+	Returns:
+		list[PackageCompat]: list of packagecompat types: dependency info + licence compat
+	"""
+	reqs = getReqs(using)
 
 	# Get my license
 	myLiceTxt = packageinfo.getMyPackageLicense()
@@ -81,10 +107,20 @@ def getDepsWLicenses(using: str) -> list[PackageCompat]:
 	# Check it is compatible with packages and add a note
 	dependenciesWLicenses = []
 	for package in packageinfo.getPackages(reqs):
-		depLice = license_matrix.licenseType(package["license"])
-		dependenciesWLicenses.append(
-			PackageCompat(
-				**package, license_compat=license_matrix.depCompatWMyLice(myLice, depLice)
+		# Deal with --ignore-packages and --fail-packages
+		licenseCompat = False
+		if package["name"].lower() in [x.lower() for x in ignorePackages]:
+			licenseCompat = True
+		elif package["name"].lower() in [x.lower() for x in failPackages]:
+			pass  # licenseCompat=False
+		# Old behaviour
+		else:
+			licenseCompat = license_matrix.depCompatWMyLice(
+				myLice,
+				license_matrix.licenseType(package["license"]),
+				license_matrix.licenseType(", ".join(ignoreLicenses)),
+				license_matrix.licenseType(", ".join(failLicenses)),
 			)
-		)
+		# Add to list of dependenciesWLicenses
+		dependenciesWLicenses.append(PackageCompat(**package, license_compat=licenseCompat))
 	return dependenciesWLicenses

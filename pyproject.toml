@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2021.2"
+version = "2021.3"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
 classifiers = [
@@ -44,3 +44,35 @@ full = ["metprint"]
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+# Pylint
+[tool.pylint.basic]
+argument-naming-style = "camelCase"
+attr-naming-style = "camelCase"
+function-naming-style = "camelCase"
+method-naming-style = "camelCase"
+variable-naming-style = "camelCase"
+
+[tool.pylint.format]
+indent-string = "\t"
+
+[tool.pylint.master]
+ignore-patterns = "test_.*?py"
+
+[tool.pylint.messages_control]
+enable = [
+	'F', # Fatal
+	'E', # Error
+	'W', # Warning
+	'R', # Refactor
+	'C', # Convention
+
+]
+disable = [
+	"pointless-string-statement",
+	"superfluous-parens",
+	"bad-continuation",
+	"wrong-import-position",
+	"unsubscriptable-object",
+	"python3",
+]

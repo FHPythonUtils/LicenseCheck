@@ -34,10 +34,47 @@ See below for the output if you run `licensecheck` in this directory
 [+] |urllib3             |MIT License                   |
 ```
 
+
+If `metprint` is installed the tables look slightly different (note that the
+leftmost symbols are coloured in the terminal)
+
+```txt
+>> licensecheck -u requirements
+    ┌────────────────────┬──────────────────────────────┐
+    │Package             │License                       │
+    ├────────────────────┼──────────────────────────────┤
+[+] │pip                 │MIT License                   │
+[+] │requests            │Apache Software License       │
+[+] │requirements-parser │BSD License                   │
+[+] │tomlkit             │MIT License                   │
+    └────────────────────┴──────────────────────────────┘
+```
+
+
+```txt
+>> licensecheck --fail-licenses mit
+    ┌────────────────────┬──────────────────────────────┐
+    │Package             │License                       │
+    ├────────────────────┼──────────────────────────────┤
+[+] │certifi             │Mozilla Public License 2.0 (MP│
+[-] │charset-normalizer  │MIT License                   │
+[+] │idna                │BSD License                   │
+[-] │metprint            │MIT License                   │
+[+] │requests            │Apache Software License       │
+[+] │requirements-parser │BSD License                   │
+[-] │tomlkit             │MIT License                   │
+[-] │urllib3             │MIT License                   │
+    └────────────────────┴──────────────────────────────┘
+```
+
 ### Help
 
 ```txt
-usage: __main__.py [-h] [--format FORMAT] [--file FILE] [--using USING] [--zero]
+usage: __main__.py [-h] [--format FORMAT] [--file FILE] [--using USING]
+                   [--ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]]
+                   [--fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]]
+                   [--ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]]
+                   [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]] [--zero]
 
 Output the licenses used by dependencies and check if these are compatible with the project license.
 
@@ -48,6 +85,14 @@ optional arguments:
   --file FILE, -o FILE  Filename to write to (omit for stdout)
   --using USING, -u USING
                         Environment to use e.g. requirements.txt. one of: requirements, poetry. default=poetry
+  --ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]
+                        a list of packages to ignore (compat=True)
+  --fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]
+                        a list of packages to fail (compat=False)
+  --ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]
+                        a list of licenses to ignore (skipped, compat may still be False)
+  --fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]
+                        a list of licenses to fail (compat=False)
   --zero, -0            Return non zero exit code if an incompatible license is found
 ```
 

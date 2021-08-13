@@ -33,7 +33,7 @@ class License(Enum):
 	# Other permissive
 	APACHE = 20
 	ECLIPSE = 21
-	ACEDEMIC_FREE = 22
+	ACADEMIC_FREE = 22
 	# LGPL
 	LGPL_X = 30
 	LGPL_2 = 31
