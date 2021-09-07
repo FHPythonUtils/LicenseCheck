@@ -16,7 +16,7 @@ Output the licenses used by dependencies and check if these are compatible with 
 
 ## cli
 
-[[find in source code]](../../licensecheck/__init__.py#L13)
+[[find in source code]](../../licensecheck/__init__.py#L17)
 
 ```python
 def cli() -> None:

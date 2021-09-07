@@ -47,9 +47,11 @@ def getReqs(using: str) -> list[str]:
 	Returns:
 		list[str]: list of requirement packages
 	"""
+	_ = str(using).split(":", 1)
+	using, reqsTxts = _[0], _[1] if len(_) > 1 else "requirements.txt"
 	if using not in usings:
 		using = "poetry"
-	reqs = []
+	reqs = set()
 
 	# Is poetry installed?
 	if using == "poetry" and _doSysExec("poetry -h")[0] != 0:
@@ -62,7 +64,7 @@ def getReqs(using: str) -> list[str]:
 		for line in lines:
 			try:
 				parts = line.split()
-				reqs.append(parts[0])
+				reqs.add(parts[0])
 			except IndexError:
 				print(
 					"An error occurred with poetry, try running 'poetry show' to "
@@ -73,10 +75,11 @@ def getReqs(using: str) -> list[str]:
 
 	# Requirements
 	if using == "requirements":
-		with open("requirements.txt", "r") as requirementsTxt:
-			for req in requirements.parse(requirementsTxt):
-				reqs.append(req.name)
-	return reqs
+		for reqTxt in reqsTxts.split(";"):
+			with open(reqTxt, "r", encoding="utf-8") as requirementsTxt:
+				for req in requirements.parse(requirementsTxt):
+					reqs.add(req.name)
+	return list(reqs)
 
 
 def getDepsWLicenses(

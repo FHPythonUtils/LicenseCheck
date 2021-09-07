@@ -3,7 +3,11 @@
 from __future__ import annotations
 
 import argparse
+from functools import partial
+from pathlib import Path
 from sys import exit as sysexit, stdout
+
+from fhconfparser import FHConfParser
 
 from licensecheck import formatter, get_deps
 
@@ -54,32 +58,51 @@ def cli() -> None:
 		action="store_true",
 	)
 	# yapf: enable
-	args = parser.parse_args()
+	args = vars(parser.parse_args())
+
+	# ConfigParser (Parses in the following order: `pyproject.toml`,
+	# `setup.cfg`, `licensecheck.toml`, `licensecheck.json`,
+	# `licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`)
+	configparser = FHConfParser()
+	configparser.parseConfigList(
+		[("pyproject.toml", "toml"), ("setup.cfg", "ini")]
+		+ [
+			(f"{directory}/licensecheck.{ext}", ext)
+			for ext in ("toml", "json", "ini")
+			for directory in [".", str(Path.home())]
+		],
+		["tool"],
+		["tool"],
+	)
+
+	# Function to read the config and fall back the the command-line
+	conf = lambda option: configparser.get("licensecheck", option) or args[option]
+
 	# File
-	filename = stdout if args.file is None else open(args.file, "w")
+	filename = stdout if conf("file") is None else open(conf("file"), "w")
 
 	# Get list of licenses
 	dependenciesWLicenses = get_deps.getDepsWLicenses(
-		args.using,
-		args.ignore_packages,
-		args.fail_packages,
-		args.ignore_licenses,
-		args.fail_licenses,
+		conf("using"),
+		conf("ignore_packages"),
+		conf("fail_packages"),
+		conf("ignore_licenses"),
+		conf("fail_licenses"),
 	)
 
 	# Are any licenses incompatible?
 	incompatible = any(not lice["license_compat"] for lice in dependenciesWLicenses)
 
 	# Format the results
-	if args.format is None:
+	if conf("format") is None:
 		print(formatter.simple(dependenciesWLicenses), file=filename)
-	elif args.format in formatter.formatMap:
-		print(formatter.formatMap[args.format](dependenciesWLicenses), file=filename)
+	elif conf("format") in formatter.formatMap:
+		print(formatter.formatMap[conf("format")](dependenciesWLicenses), file=filename)
 	else:
 		exitCode = 2
 
 	# Exit code of 1 if args.zero
-	if args.zero and incompatible:
+	if conf("zero") and incompatible:
 		exitCode = 1
 
 	# Cleanup + exit

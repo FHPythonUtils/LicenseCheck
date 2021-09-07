@@ -17,21 +17,57 @@ Output the licences used by dependencies and check if these are compatible with
 the project license
 
 
+<!-- omit in toc -->
+## Table of Contents
+- [Example Use](#example-use)
+	- [Help](#help)
+	- [Configuration](#configuration)
+		- [Example 1: pyproject.toml](#example-1-pyprojecttoml)
+		- [Example 2: licensecheck.json](#example-2-licensecheckjson)
+		- [Example 3: licensecheck.ini](#example-3-licensecheckini)
+- [Documentation](#documentation)
+- [Install With PIP](#install-with-pip)
+- [Language information](#language-information)
+	- [Built for](#built-for)
+- [Install Python on Windows](#install-python-on-windows)
+	- [Chocolatey](#chocolatey)
+	- [Download](#download)
+- [Install Python on Linux](#install-python-on-linux)
+	- [Apt](#apt)
+- [How to run](#how-to-run)
+	- [With VSCode](#with-vscode)
+	- [From the Terminal](#from-the-terminal)
+- [Download Project](#download-project)
+	- [Clone](#clone)
+		- [Using The Command Line](#using-the-command-line)
+		- [Using GitHub Desktop](#using-github-desktop)
+	- [Download Zip File](#download-zip-file)
+- [Community Files](#community-files)
+	- [Licence](#licence)
+	- [Changelog](#changelog)
+	- [Code of Conduct](#code-of-conduct)
+	- [Contributing](#contributing)
+	- [Security](#security)
+	- [Support](#support)
+	- [Rationale](#rationale)
+
+
+
 ## Example Use
 
 See below for the output if you run `licensecheck` in this directory
 
 ```txt
 >> licensecheck
-    |Package             |License                       |
-    |--------------------|------------------------------|
-[+] |certifi             |Mozilla Public License 2.0 (MP|
-[+] |chardet             |GNU Library or Lesser General |
-[+] |idna                |BSD License                   |
-[+] |metprint            |MIT License                   |
-[+] |requests            |Apache Software License       |
-[+] |requirements-parser |BSD License                   |
-[+] |urllib3             |MIT License                   |
+    | Package | License             |
+    | ------- | ------------------- |
+    | [+]     | certifi             | Mozilla Public License 2.0 (MP |
+    | [+]     | chardet             | GNU Library or Lesser General  |
+    | [+]     | idna                | BSD License                    |
+    | [+]     | metprint            | MIT License                    |
+    | [+]     | requests            | Apache Software License        |
+    | [+]     | requirements-parser | BSD License                    |
+    | [+]     | urllib3             | MIT License                    |
 ```
 
 
@@ -99,35 +135,59 @@ optional arguments:
 You can also import this into your own project and use any of the functions
 in the DOCS
 
-<!-- omit in toc -->
-## Table of Contents
-- [Example Use](#example-use)
-	- [Help](#help)
-- [Documentation](#documentation)
-- [Install With PIP](#install-with-pip)
-- [Language information](#language-information)
-	- [Built for](#built-for)
-- [Install Python on Windows](#install-python-on-windows)
-	- [Chocolatey](#chocolatey)
-	- [Download](#download)
-- [Install Python on Linux](#install-python-on-linux)
-	- [Apt](#apt)
-- [How to run](#how-to-run)
-	- [With VSCode](#with-vscode)
-	- [From the Terminal](#from-the-terminal)
-- [Download Project](#download-project)
-	- [Clone](#clone)
-		- [Using The Command Line](#using-the-command-line)
-		- [Using GitHub Desktop](#using-github-desktop)
-	- [Download Zip File](#download-zip-file)
-- [Community Files](#community-files)
-	- [Licence](#licence)
-	- [Changelog](#changelog)
-	- [Code of Conduct](#code-of-conduct)
-	- [Contributing](#contributing)
-	- [Security](#security)
-	- [Support](#support)
-	- [Rationale](#rationale)
+
+### Configuration
+
+Configuration files are parsed in the following order: `pyproject.toml`,
+`setup.cfg`, `licensecheck.toml`, `licensecheck.json`, `licensecheck.ini`,
+`~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`
+
+- ⚠ All config files are parsed, however configuration defined in previous files takes precedent
+- ⚠ Note, however, that the config takes precedent over command-line options
+
+Add optional path to requirements.txt as outlined in
+https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228
+for example: `licensecheck --using requirements:c:/path/to/reqs.txt;path/to/other/reqs.txt`
+
+
+#### Example 1: pyproject.toml
+
+The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
+
+```toml
+[tool.licensecheck]
+using = "requirements:requirements.txt;requirements_optional.txt"
+format = "json"
+
+```
+
+
+#### Example 2: licensecheck.json
+
+The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
+
+```json
+{
+	"tool": {
+		"licensecheck": {
+			"using": "requirements:requirements.txt;requirements_optional.txt",
+			"format": "json"
+		}
+	}
+}
+```
+
+
+#### Example 3: licensecheck.ini
+
+The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
+
+```ini
+[licensecheck]
+using = "requirements:requirements.txt;requirements_optional.txt"
+format = "json"
+
+```
 
 ## Documentation
 See the [Docs](/DOCS/) for more information.

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2021.3"
+version = "2021.4"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
 classifiers = [
@@ -34,9 +34,10 @@ licensecheck = 'licensecheck:cli'
 python = "^3.7"
 requirements-parser = "<2,>=0.2.0"
 requests = "<4,>=2.24.0"
-metprint = { version = "<2022,>=2020.7", optional = true }
+metprint = "<2022,>=2020.7.1"
 pip = "<22,>=20.2.3"
 tomlkit = "<2,>=0.7.0"
+fhconfparser = "<2023,>=2021"
 
 [tool.poetry.extras]
 full = ["metprint"]
@@ -76,3 +77,8 @@ disable = [
 	"unsubscriptable-object",
 	"python3",
 ]
+
+
+[tool.licensecheck]
+# using = "requirements:requirements.txt;requirements_optional.txt"
+# format = "json"

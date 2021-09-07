@@ -10,7 +10,7 @@ Get a list of packages with package compatibility.
 
 ## getDepsWLicenses
 
-[[find in source code]](../../licensecheck/get_deps.py#L82)
+[[find in source code]](../../licensecheck/get_deps.py#L85)
 
 ```python
 def getDepsWLicenses(

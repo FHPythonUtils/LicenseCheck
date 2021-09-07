@@ -2,6 +2,13 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2021.4
+- Add config file functionality per https://github.com/FHPythonUtils/LicenseCheck/issues/11
+  - Parsed in the following order: `pyproject.toml`, `setup.cfg`, `licensecheck.toml`, `licensecheck.json`, `licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`
+  - Note that the config takes precedent over command-line options
+- Add optional path to requirements.txt as outlined in https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228
+  - Eg. `licensecheck --using requirements:c:/path/to/reqs.txt;path/to/other/reqs.txt`
+
 ## 2021.3 - 2021/08/13
 - Add `--ignore-packages`, `--fail-packages`,`--ignore-licenses`, `--fail-licenses`, per https://github.com/FHPythonUtils/LicenseCheck/issues/7
 - Fix spelling
