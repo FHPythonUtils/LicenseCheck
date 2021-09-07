@@ -143,7 +143,6 @@ Configuration files are parsed in the following order: `pyproject.toml`,
 `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`
 
 - ⚠ All config files are parsed, however configuration defined in previous files takes precedent
-- ⚠ Note, however, that the config takes precedent over command-line options
 
 Add optional path to requirements.txt as outlined in
 https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228

@@ -1,4 +1,4 @@
-fhconfparser<2023,>=2021
+fhconfparser<2023,>=2021.1.1
 metprint<2022,>=2020.7.1
 pip<22,>=20.2.3
 requests<4,>=2.24.0

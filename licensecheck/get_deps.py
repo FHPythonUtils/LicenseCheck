@@ -47,7 +47,7 @@ def getReqs(using: str) -> list[str]:
 	Returns:
 		list[str]: list of requirement packages
 	"""
-	_ = str(using).split(":", 1)
+	_ = using.split(":", 1)
 	using, reqsTxts = _[0], _[1] if len(_) > 1 else "requirements.txt"
 	if using not in usings:
 		using = "poetry"

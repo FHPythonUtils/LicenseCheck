@@ -2,7 +2,10 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
-## 2021.4
+## 2021.4.1 - 2021/09/07
+- Command-line options take precedent over config options as expected
+
+## 2021.4 - 2021/09/07
 - Add config file functionality per https://github.com/FHPythonUtils/LicenseCheck/issues/11
   - Parsed in the following order: `pyproject.toml`, `setup.cfg`, `licensecheck.toml`, `licensecheck.json`, `licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`
   - Note that the config takes precedent over command-line options

@@ -7,7 +7,7 @@ from functools import partial
 from pathlib import Path
 from sys import exit as sysexit, stdout
 
-from fhconfparser import FHConfParser
+from fhconfparser import FHConfParser, SimpleConf
 
 from licensecheck import formatter, get_deps
 
@@ -17,7 +17,7 @@ stdout.reconfigure(encoding="utf-8")
 def cli() -> None:
 	"""Cli entry point."""
 	exitCode = 0
-	parser = argparse.ArgumentParser(description=__doc__)
+	parser = argparse.ArgumentParser(description=__doc__, argument_default=argparse.SUPPRESS)
 	parser.add_argument(
 		"--format",
 		"-f",
@@ -37,19 +37,21 @@ def cli() -> None:
 		"--ignore-packages",
 		help="a list of packages to ignore (compat=True)",
 		nargs="+",
-		default=[],
 	)
 	parser.add_argument(
-		"--fail-packages", help="a list of packages to fail (compat=False)", nargs="+", default=[]
+		"--fail-packages",
+		help="a list of packages to fail (compat=False)",
+		nargs="+",
 	)
 	parser.add_argument(
 		"--ignore-licenses",
 		help="a list of licenses to ignore (skipped, compat may still be False)",
 		nargs="+",
-		default=[],
 	)
 	parser.add_argument(
-		"--fail-licenses", help="a list of licenses to fail (compat=False)", nargs="+", default=[]
+		"--fail-licenses",
+		help="a list of licenses to fail (compat=False)",
+		nargs="+",
 	)
 	parser.add_argument(
 		"--zero",
@@ -57,7 +59,6 @@ def cli() -> None:
 		help="Return non zero exit code if an incompatible license is found",
 		action="store_true",
 	)
-	# yapf: enable
 	args = vars(parser.parse_args())
 
 	# ConfigParser (Parses in the following order: `pyproject.toml`,
@@ -74,35 +75,31 @@ def cli() -> None:
 		["tool"],
 		["tool"],
 	)
-
-	# Function to read the config and fall back the the command-line
-	conf = lambda option: configparser.get("licensecheck", option) or args[option]
+	sc = SimpleConf(configparser, "licensecheck", args)
 
 	# File
-	filename = stdout if conf("file") is None else open(conf("file"), "w")
+	filename = stdout if sc.get("file") is None else open(sc.get("file"), "w")
 
 	# Get list of licenses
 	dependenciesWLicenses = get_deps.getDepsWLicenses(
-		conf("using"),
-		conf("ignore_packages"),
-		conf("fail_packages"),
-		conf("ignore_licenses"),
-		conf("fail_licenses"),
+		sc.get("using", "poetry"),
+		sc.get("ignore_packages", []),
+		sc.get("fail_packages", []),
+		sc.get("ignore_licenses", []),
+		sc.get("fail_licenses", []),
 	)
 
 	# Are any licenses incompatible?
 	incompatible = any(not lice["license_compat"] for lice in dependenciesWLicenses)
 
 	# Format the results
-	if conf("format") is None:
-		print(formatter.simple(dependenciesWLicenses), file=filename)
-	elif conf("format") in formatter.formatMap:
-		print(formatter.formatMap[conf("format")](dependenciesWLicenses), file=filename)
+	if sc.get("format", "simple") in formatter.formatMap:
+		print(formatter.formatMap[sc.get("format", "simple")](dependenciesWLicenses), file=filename)
 	else:
 		exitCode = 2
 
 	# Exit code of 1 if args.zero
-	if conf("zero") and incompatible:
+	if sc.get("zero", False) and incompatible:
 		exitCode = 1
 
 	# Cleanup + exit
