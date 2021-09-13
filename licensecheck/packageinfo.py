@@ -180,10 +180,13 @@ def getMyPackageLicense() -> str:
 
 	Returns:
 		str: license name
+
+	Raises:
+		RuntimeError: Must specify a license using license spdx or classifier (tool.poetry or tool.flit)
 	"""
 	pyproject = None
 	try:
-		with open("pyproject.toml") as pyproject:
+		with open("pyproject.toml", "r", encoding="utf-8") as pyproject:
 			pyproject = tomlkit.parse(pyproject.read())
 	except FileNotFoundError:
 		return input("Enter the project license")
@@ -201,7 +204,11 @@ def getMyPackageLicense() -> str:
 	licenseClassifier = licenseFromClassifierlist(metaData["classifiers"])  # type:ignore
 	if licenseClassifier != UNKNOWN:
 		return licenseClassifier
-	return str(metaData["license"])
+	if "license" in metaData:
+		return str(metaData["license"])
+	raise RuntimeError(
+		"Must specify a license using license spdx or classifier (tool.poetry or tool.flit)"
+	)
 
 
 def calcContainer(path: str) -> int:

@@ -51,6 +51,7 @@ class License(Enum):
 	# Other copyleft
 	MPL = 60
 	EU = 61
-
+	# PROPRIETARY
+	PROPRIETARY = 190
 	# No License
 	NO_LICENSE = 200
