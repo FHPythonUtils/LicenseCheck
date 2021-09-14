@@ -31,7 +31,7 @@ def cli() -> None:
 	parser.add_argument(
 		"--using",
 		"-u",
-		help=f"Environment to use e.g. requirements.txt. one of: {', '.join(get_deps.usings)}. default=poetry",
+		help=f"Environment to use e.g. requirements.txt. one of: {', '.join(get_deps.USINGS)}. default=poetry",
 	)
 	parser.add_argument(
 		"--ignore-packages",

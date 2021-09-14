@@ -10,7 +10,7 @@ import requirements
 from licensecheck import license_matrix, packageinfo
 from licensecheck.types import PackageCompat
 
-usings = ["requirements", "poetry"]
+USINGS = ["requirements", "poetry"]
 
 
 def _doSysExec(command: str) -> tuple[int, str]:
@@ -48,8 +48,8 @@ def getReqs(using: str) -> list[str]:
 		list[str]: list of requirement packages
 	"""
 	_ = using.split(":", 1)
-	using, reqsTxts = _[0], _[1] if len(_) > 1 else "requirements.txt"
-	if using not in usings:
+	using, extras = _[0], _[1] if len(_) > 1 else None
+	if using not in USINGS:
 		using = "poetry"
 	reqs = set()
 
@@ -60,7 +60,7 @@ def getReqs(using: str) -> list[str]:
 
 	# Poetry
 	if using == "poetry":  # Use poetry show to get dependents of dependencies
-		lines = _doSysExec("poetry show")[1].splitlines(False)
+		lines = _doSysExec("poetry show " + ("" if extras else "--no-dev"))[1].splitlines(False)
 		for line in lines:
 			try:
 				parts = line.split()
@@ -75,7 +75,7 @@ def getReqs(using: str) -> list[str]:
 
 	# Requirements
 	if using == "requirements":
-		for reqTxt in reqsTxts.split(";"):
+		for reqTxt in (extras or "requirements.txt").split(";"):
 			with open(reqTxt, "r", encoding="utf-8") as requirementsTxt:
 				for req in requirements.parse(requirementsTxt):
 					reqs.add(req.name)

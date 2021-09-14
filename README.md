@@ -19,12 +19,18 @@ the project license
 
 <!-- omit in toc -->
 ## Table of Contents
-- [Example Use](#example-use)
-	- [Help](#help)
-	- [Configuration](#configuration)
-		- [Example 1: pyproject.toml](#example-1-pyprojecttoml)
-		- [Example 2: licensecheck.json](#example-2-licensecheckjson)
-		- [Example 3: licensecheck.ini](#example-3-licensecheckini)
+- [Examples from the command-line](#examples-from-the-command-line)
+	- [Without metprint](#without-metprint)
+	- [With metprint](#with-metprint)
+	- [Using requirements](#using-requirements)
+	- [Failing on packages under MIT license](#failing-on-packages-under-mit-license)
+	- [Custom requirements.txt in json format](#custom-requirementstxt-in-json-format)
+	- [Poetry with dev requirements](#poetry-with-dev-requirements)
+- [Help](#help)
+- [Configuration Example](#configuration-example)
+	- [Example 1: pyproject.toml](#example-1-pyprojecttoml)
+	- [Example 2: licensecheck.json](#example-2-licensecheckjson)
+	- [Example 3: licensecheck.ini](#example-3-licensecheckini)
 - [Documentation](#documentation)
 - [Install With PIP](#install-with-pip)
 - [Language information](#language-information)
@@ -53,32 +59,61 @@ the project license
 
 
 
-## Example Use
+
+
+## Examples from the command-line
 
 See below for the output if you run `licensecheck` in this directory
 
+
+### Without metprint
 ```txt
 >> licensecheck
-    | Package | License             |
-    | ------- | ------------------- |
-    | [+]     | certifi             | Mozilla Public License 2.0 (MP |
-    | [+]     | chardet             | GNU Library or Lesser General  |
-    | [+]     | idna                | BSD License                    |
-    | [+]     | metprint            | MIT License                    |
-    | [+]     | requests            | Apache Software License        |
-    | [+]     | requirements-parser | BSD License                    |
-    | [+]     | urllib3             | MIT License                    |
+┌──────────┬────────────────────┬────────────────────┐
+│Compatible│Package             │License             │
+├──────────┼────────────────────┼────────────────────┤
+│True      │attrs               │MIT License         │
+│True      │certifi             │Mozilla Public Licen│
+│True      │charset-normalizer  │MIT License         │
+│True      │fhconfparser        │MIT License         │
+│True      │idna                │BSD License         │
+│True      │metprint            │MIT License         │
+│True      │requests            │Apache Software Lice│
+│True      │requirements-parser │BSD License         │
+│True      │tomlkit             │MIT License         │
+│True      │urllib3             │MIT License         │
+└──────────┴────────────────────┴────────────────────┘
 ```
 
-
+### With metprint
 If `metprint` is installed the tables look slightly different (note that the
 leftmost symbols are coloured in the terminal)
+```txt
+>> licensecheck
+    ┌────────────────────┬──────────────────────────────┐
+    │Package             │License                       │
+    ├────────────────────┼──────────────────────────────┤
+[+] │attrs               │MIT License                   │
+[+] │certifi             │Mozilla Public License 2.0 (MP│
+[+] │charset-normalizer  │MIT License                   │
+[+] │idna                │BSD License                   │
+[+] │metprint            │MIT License                   │
+[+] │requests            │Apache Software License       │
+[+] │requirements-parser │BSD License                   │
+[+] │tomlkit             │MIT License                   │
+[+] │urllib3             │MIT License                   │
+    └────────────────────┴──────────────────────────────┘
+```
+
+### Using requirements
 
 ```txt
 >> licensecheck -u requirements
     ┌────────────────────┬──────────────────────────────┐
     │Package             │License                       │
     ├────────────────────┼──────────────────────────────┤
+[+] │fhconfparser        │MIT License                   │
+[+] │metprint            │MIT License                   │
 [+] │pip                 │MIT License                   │
 [+] │requests            │Apache Software License       │
 [+] │requirements-parser │BSD License                   │
@@ -86,14 +121,17 @@ leftmost symbols are coloured in the terminal)
     └────────────────────┴──────────────────────────────┘
 ```
 
+### Failing on packages under MIT license
 
 ```txt
 >> licensecheck --fail-licenses mit
     ┌────────────────────┬──────────────────────────────┐
     │Package             │License                       │
     ├────────────────────┼──────────────────────────────┤
+[-] │attrs               │MIT License                   │
 [+] │certifi             │Mozilla Public License 2.0 (MP│
 [-] │charset-normalizer  │MIT License                   │
+[-] │fhconfparser        │MIT License                   │
 [+] │idna                │BSD License                   │
 [-] │metprint            │MIT License                   │
 [+] │requests            │Apache Software License       │
@@ -103,7 +141,62 @@ leftmost symbols are coloured in the terminal)
     └────────────────────┴──────────────────────────────┘
 ```
 
-### Help
+### Custom requirements.txt in json format
+
+Add optional path to requirements.txt as outlined in https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228. Eg. `licensecheck --using requirements:c:/path/to/reqs.txt;path/to/other/reqs.txt`
+
+```txt
+>> licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json
+{
+	"heading": "# Packages - Find a list of packages below",
+	"packages": [
+			{
+					"name": "fhconfparser",
+					"version": "2021.1.1",
+					"namever": "fhconfparser 2021.1.1",
+					"home_page": "https://github.com/FHPythonUtils/FHConfParser",
+					"author": "FredHappyface",
+					"size": 9241,
+					"license": "MIT License",
+					"license_compat": true
+			},
+			...
+			{
+					"name": "tomlkit",
+					"version": "0.7.2",
+					"namever": "tomlkit 0.7.2",
+					"home_page": "https://github.com/sdispater/tomlkit",
+					"author": "S\u00e9bastien Eustace",
+					"size": 11653,
+					"license": "MIT License",
+					"license_compat": true
+			}
+	]
+}
+```
+
+### Poetry with dev requirements
+
+Add `-u poetry:dev` to command-line to include dev packages (excluded by default)
+
+```txt
+>> licensecheck -u poetry:dev
+    ┌────────────────────┬──────────────────────────────┐
+    │Package             │License                       │
+    ├────────────────────┼──────────────────────────────┤
+[+] │attrs               │MIT License                   │
+[+] │certifi             │Mozilla Public License 2.0 (MP│
+[+] │charset-normalizer  │MIT License                   │
+[+] │idna                │BSD License                   │
+[+] │metprint            │MIT License                   │
+[+] │requests            │Apache Software License       │
+[+] │requirements-parser │BSD License                   │
+[+] │tomlkit             │MIT License                   │
+[+] │urllib3             │MIT License                   │
+    └────────────────────┴──────────────────────────────┘
+```
+
+## Help
 
 ```txt
 usage: __main__.py [-h] [--format FORMAT] [--file FILE] [--using USING]
@@ -136,7 +229,7 @@ You can also import this into your own project and use any of the functions
 in the DOCS
 
 
-### Configuration
+## Configuration Example
 
 Configuration files are parsed in the following order: `pyproject.toml`,
 `setup.cfg`, `licensecheck.toml`, `licensecheck.json`, `licensecheck.ini`,
@@ -149,7 +242,7 @@ https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228
 for example: `licensecheck --using requirements:c:/path/to/reqs.txt;path/to/other/reqs.txt`
 
 
-#### Example 1: pyproject.toml
+### Example 1: pyproject.toml
 
 The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
 
@@ -161,7 +254,7 @@ format = "json"
 ```
 
 
-#### Example 2: licensecheck.json
+### Example 2: licensecheck.json
 
 The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
 
@@ -177,7 +270,7 @@ The following config is equivalent to `licensecheck -u 'requirements:requirement
 ```
 
 
-#### Example 3: licensecheck.ini
+### Example 3: licensecheck.ini
 
 The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
 
