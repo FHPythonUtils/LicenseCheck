@@ -1,0 +1,7 @@
+- id: licensecheck
+  name: licensecheck
+  description: "Output the licenses used by dependencies and check if these are compatible with the project license"
+  entry: licensecheck --zero
+  language: python
+  minimum_pre_commit_version: 2.9.2
+  pass_filenames: false

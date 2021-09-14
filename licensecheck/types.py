@@ -4,8 +4,8 @@ import typing
 from enum import Enum
 
 
-class PackageCompat(typing.TypedDict):
-	"""PackageCompat type."""
+class PackageInfo(typing.TypedDict):
+	"""PackageInfo type."""
 
 	name: str
 	version: str
@@ -14,6 +14,11 @@ class PackageCompat(typing.TypedDict):
 	home_page: str
 	author: str
 	license: str
+
+
+class PackageCompat(PackageInfo):
+	"""PackageCompat type."""
+
 	license_compat: bool
 
 

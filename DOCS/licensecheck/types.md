@@ -7,10 +7,11 @@ PackageCompat type.
 - [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / [licensecheck](index.md#licensecheck) / types
     - [License](#license)
     - [PackageCompat](#packagecompat)
+    - [PackageInfo](#packageinfo)
 
 ## License
 
-[[find in source code]](../../licensecheck/types.py#L20)
+[[find in source code]](../../licensecheck/types.py#L25)
 
 ```python
 class License(Enum):
@@ -27,14 +28,29 @@ License Enum to hold a set of potential licenses.
 - `GPL_X` - GPL: `40`
 - `AGPL_3_PLUS` - AGPL: `50`
 - `MPL` - Other copyleft: `60`
+- `PROPRIETARY` - PROPRIETARY: `190`
 - `NO_LICENSE` - No License: `200`
 
 ## PackageCompat
 
-[[find in source code]](../../licensecheck/types.py#L7)
+[[find in source code]](../../licensecheck/types.py#L19)
 
 ```python
-class PackageCompat(typing.TypedDict):
+class PackageCompat(PackageInfo):
 ```
 
 PackageCompat type.
+
+#### See also
+
+- [PackageInfo](#packageinfo)
+
+## PackageInfo
+
+[[find in source code]](../../licensecheck/types.py#L7)
+
+```python
+class PackageInfo(typing.TypedDict):
+```
+
+PackageInfo type.

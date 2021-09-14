@@ -15,19 +15,9 @@ import tomlkit
 from pip._internal.utils.misc import get_installed_distributions
 from pip._vendor.pkg_resources import Distribution
 
+from licensecheck.types import PackageInfo
+
 UNKNOWN = "UNKNOWN"
-
-
-class PackageInfo(typing.TypedDict):
-	"""PackageInfo type."""
-
-	name: str
-	version: str
-	namever: str
-	size: int
-	home_page: str
-	author: str
-	license: str
 
 
 def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:

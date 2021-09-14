@@ -2,12 +2,13 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
-## 2021.5 - 2021/09/xx
+## 2021.5 - 2021/09/14
 - Add `-u poetry:dev` to command-line to include dev packages (excluded by default) per https://github.com/FHPythonUtils/LicenseCheck/issues/16
 - Add support for proprietary license per https://github.com/FHPythonUtils/LicenseCheck/issues/15
 - Raise RuntimeError if missing license and classifier https://github.com/FHPythonUtils/LicenseCheck/issues/14
 - Quality improvements to license_matrix.py
 - Add additional examples to readme
+- Support pre-commit-hooks https://github.com/FHPythonUtils/LicenseCheck/issues/8
 
 
 ## 2021.4.1 - 2021/09/07

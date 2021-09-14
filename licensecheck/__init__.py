@@ -31,7 +31,8 @@ def cli() -> None:
 	parser.add_argument(
 		"--using",
 		"-u",
-		help=f"Environment to use e.g. requirements.txt. one of: {', '.join(get_deps.USINGS)}. default=poetry",
+		help="Environment to use e.g. requirements.txt. one of: "
+		f"{', '.join(get_deps.USINGS)}. default=poetry",
 	)
 	parser.add_argument(
 		"--ignore-packages",
@@ -75,31 +76,38 @@ def cli() -> None:
 		["tool"],
 		["tool"],
 	)
-	sc = SimpleConf(configparser, "licensecheck", args)
+	simpleConf = SimpleConf(configparser, "licensecheck", args)
 
 	# File
-	filename = stdout if sc.get("file") is None else open(sc.get("file"), "w")
+	filename = (
+		stdout
+		if simpleConf.get("file") is None
+		else open(simpleConf.get("file"), "w", encoding="utf-8")
+	)
 
 	# Get list of licenses
 	dependenciesWLicenses = get_deps.getDepsWLicenses(
-		sc.get("using", "poetry"),
-		sc.get("ignore_packages", []),
-		sc.get("fail_packages", []),
-		sc.get("ignore_licenses", []),
-		sc.get("fail_licenses", []),
+		simpleConf.get("using", "poetry"),
+		simpleConf.get("ignore_packages", []),
+		simpleConf.get("fail_packages", []),
+		simpleConf.get("ignore_licenses", []),
+		simpleConf.get("fail_licenses", []),
 	)
 
 	# Are any licenses incompatible?
 	incompatible = any(not lice["license_compat"] for lice in dependenciesWLicenses)
 
 	# Format the results
-	if sc.get("format", "simple") in formatter.formatMap:
-		print(formatter.formatMap[sc.get("format", "simple")](dependenciesWLicenses), file=filename)
+	if simpleConf.get("format", "simple") in formatter.formatMap:
+		print(
+			formatter.formatMap[simpleConf.get("format", "simple")](dependenciesWLicenses),
+			file=filename,
+		)
 	else:
 		exitCode = 2
 
 	# Exit code of 1 if args.zero
-	if sc.get("zero", False) and incompatible:
+	if simpleConf.get("zero", False) and incompatible:
 		exitCode = 1
 
 	# Cleanup + exit
