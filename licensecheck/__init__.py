@@ -1,11 +1,12 @@
-"""Output the licenses used by dependencies and check if these are compatible with the project license.
+"""Output the licenses used by dependencies and check if these are compatible with the project
+license.
 """
 from __future__ import annotations
 
 import argparse
-from functools import partial
 from pathlib import Path
-from sys import exit as sysexit, stdout
+from sys import exit as sysexit
+from sys import stdout
 
 from fhconfparser import FHConfParser, SimpleConf
 

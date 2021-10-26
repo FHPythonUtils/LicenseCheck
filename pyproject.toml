@@ -1,6 +1,7 @@
 [tool.poetry]
 name = "licensecheck"
 version = "2021.5"
+license = "mit"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
 classifiers = [
@@ -10,13 +11,8 @@ classifiers = [
 	"Development Status :: 5 - Production/Stable",
 	"Intended Audience :: Developers",
 	"Intended Audience :: Education",
-	"License :: OSI Approved :: MIT License",
 	"Natural Language :: English",
 	"Operating System :: OS Independent",
-	"Programming Language :: Python :: 3",
-	"Programming Language :: Python :: 3.7",
-	"Programming Language :: Python :: 3.8",
-	"Programming Language :: Python :: 3.9",
 	"Programming Language :: Python :: Implementation :: CPython",
 	"Topic :: Security",
 	"Topic :: Software Development :: Libraries :: Python Modules",
@@ -42,11 +38,24 @@ fhconfparser = "<2023,>=2021.1.1"
 [tool.poetry.extras]
 full = ["metprint"]
 
+
+[tool.black]
+line-length = 100
+target-version = ["py37"]
+
+[tool.isort]
+profile = "black"
+indent = "Tab"
+
+[tool.pydocstyle]
+convention = "google"
+ignore = "D205,D415"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 # Pylint
+[tool.pylint]
 [tool.pylint.basic]
 argument-naming-style = "camelCase"
 attr-naming-style = "camelCase"
@@ -61,23 +70,8 @@ indent-string = "\t"
 ignore-patterns = "test_.*?py"
 
 [tool.pylint.messages_control]
-enable = [
-	'F', # Fatal
-	'E', # Error
-	'W', # Warning
-	'R', # Refactor
-	'C', # Convention
-
-]
-disable = [
-	"pointless-string-statement",
-	"superfluous-parens",
-	"bad-continuation",
-	"wrong-import-position",
-	"unsubscriptable-object",
-	"python3",
-]
-
+enable = ["F", "E", "W", "R", "C"]
+disable = ["pointless-string-statement", "superfluous-parens", "bad-continuation", "python3"]
 
 [tool.licensecheck]
 # using = "requirements:requirements.txt;requirements_optional.txt"

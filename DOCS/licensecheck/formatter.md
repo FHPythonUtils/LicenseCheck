@@ -33,13 +33,10 @@ Formats
 
 ## ansi
 
-[[find in source code]](../../licensecheck/formatter.py#L142)
+[[find in source code]](../../licensecheck/formatter.py#L141)
 
 ```python
-def ansi(
-    packages: list[PackageCompat],
-    heading: typing.Optional[str] = None,
-) -> str:
+def ansi(packages: list[PackageCompat], heading: str | None = None) -> str:
 ```
 
 Format to ansi.
@@ -55,13 +52,10 @@ Format to ansi.
 
 ## csv
 
-[[find in source code]](../../licensecheck/formatter.py#L100)
+[[find in source code]](../../licensecheck/formatter.py#L99)
 
 ```python
-def csv(
-    packages: list[PackageCompat],
-    heading: typing.Optional[str] = None,
-) -> str:
+def csv(packages: list[PackageCompat], heading: str | None = None) -> str:
 ```
 
 Format to CSV.
@@ -77,13 +71,10 @@ Format to CSV.
 
 ## json
 
-[[find in source code]](../../licensecheck/formatter.py#L80)
+[[find in source code]](../../licensecheck/formatter.py#L79)
 
 ```python
-def json(
-    packages: list[PackageCompat],
-    heading: typing.Optional[str] = None,
-) -> str:
+def json(packages: list[PackageCompat], heading: str | None = None) -> str:
 ```
 
 Format to Json.
@@ -99,12 +90,12 @@ Format to Json.
 
 ## markdown
 
-[[find in source code]](../../licensecheck/formatter.py#L41)
+[[find in source code]](../../licensecheck/formatter.py#L40)
 
 ```python
 def markdown(
     packages: list[PackageCompat],
-    heading: typing.Optional[str] = None,
+    heading: str | None = None,
 ) -> str:
 ```
 
@@ -121,7 +112,7 @@ Format to Markdown.
 
 ## simple
 
-[[find in source code]](../../licensecheck/formatter.py#L195)
+[[find in source code]](../../licensecheck/formatter.py#L194)
 
 ```python
 def simple(packages: list[PackageCompat]) -> str:

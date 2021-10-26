@@ -2,7 +2,8 @@
 
 > Auto-generated documentation for [licensecheck](../../licensecheck/__init__.py) module.
 
-Output the licenses used by dependencies and check if these are compatible with the project license.
+Output the licenses used by dependencies and check if these are compatible with the project
+license.
 
 - [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / licensecheck
     - [cli](#cli)
@@ -16,7 +17,7 @@ Output the licenses used by dependencies and check if these are compatible with 
 
 ## cli
 
-[[find in source code]](../../licensecheck/__init__.py#L17)
+[[find in source code]](../../licensecheck/__init__.py#L18)
 
 ```python
 def cli() -> None:

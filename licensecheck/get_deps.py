@@ -76,7 +76,7 @@ def getReqs(using: str) -> list[str]:
 	# Requirements
 	if using == "requirements":
 		for reqTxt in (extras or "requirements.txt").split(";"):
-			with open(reqTxt, "r", encoding="utf-8") as requirementsTxt:
+			with open(reqTxt, encoding="utf-8") as requirementsTxt:
 				for req in requirements.parse(requirementsTxt):
 					reqs.add(req.name)
 	return list(reqs)

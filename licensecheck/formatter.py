@@ -22,7 +22,6 @@ Formats
 """
 from __future__ import annotations
 
-import typing
 from csv import writer
 from io import StringIO
 from json import dumps
@@ -38,7 +37,7 @@ except ModuleNotFoundError:
 	pass
 
 
-def markdown(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> str:
+def markdown(packages: list[PackageCompat], heading: str | None = None) -> str:
 	"""Format to Markdown.
 
 	Args:
@@ -77,7 +76,7 @@ def markdown(packages: list[PackageCompat], heading: typing.Optional[str] = None
 	return "\n".join(strBuf) + "\n"
 
 
-def json(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> str:
+def json(packages: list[PackageCompat], heading: str | None = None) -> str:
 	"""Format to Json.
 
 	Args:
@@ -97,7 +96,7 @@ def json(packages: list[PackageCompat], heading: typing.Optional[str] = None) ->
 	return dumps(out, indent="\t")
 
 
-def csv(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> str:
+def csv(packages: list[PackageCompat], heading: str | None = None) -> str:
 	"""Format to CSV.
 
 	Args:
@@ -139,7 +138,7 @@ def csv(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> 
 	return output.getvalue()
 
 
-def ansi(packages: list[PackageCompat], heading: typing.Optional[str] = None) -> str:
+def ansi(packages: list[PackageCompat], heading: str | None = None) -> str:
 	"""Format to ansi.
 
 	Args:
