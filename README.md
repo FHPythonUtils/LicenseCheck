@@ -290,7 +290,8 @@ Head to https://pypi.org/project/licensecheck/ for more info
 ## Language information
 
 ### Built for
-This program has been written for Python versions 3.7 - 3.10 and has been tested with both 3.7 and 3.10
+This program has been written for Python versions 3.7 - 3.10 and has been tested with both 3.7 and
+3.10
 
 ## Install Python on Windows
 
@@ -335,10 +336,10 @@ version.
 ### Windows
 
 - Module
-	`python -3.x -m [module]` or `[module]` (if module installs a script)
+	`py -3.x -m [module]` or `[module]` (if module installs a script)
 
 - File
-	`python -3.x [file]` or `./[file]`
+	`py -3.x [file]` or `./[file]`
 
 ### Linux/ MacOS
 
