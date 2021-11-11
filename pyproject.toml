@@ -72,8 +72,7 @@ enable = ["F", "E", "W", "R", "C"]
 disable = [
 	"pointless-string-statement",
 	"superfluous-parens",
-	"bad-continuation",
-	"python3"
+	"bad-continuation"
 ]
 
 [tool.licensecheck]
