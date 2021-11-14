@@ -11,7 +11,7 @@ PackageCompat type.
 
 ## License
 
-[[find in source code]](../../licensecheck/types.py#L25)
+[[find in source code]](../../licensecheck/types.py#L27)
 
 ```python
 class License(Enum):
@@ -33,7 +33,7 @@ License Enum to hold a set of potential licenses.
 
 ## PackageCompat
 
-[[find in source code]](../../licensecheck/types.py#L19)
+[[find in source code]](../../licensecheck/types.py#L21)
 
 ```python
 class PackageCompat(PackageInfo):
@@ -47,7 +47,7 @@ PackageCompat type.
 
 ## PackageInfo
 
-[[find in source code]](../../licensecheck/types.py#L7)
+[[find in source code]](../../licensecheck/types.py#L9)
 
 ```python
 class PackageInfo(typing.TypedDict):
