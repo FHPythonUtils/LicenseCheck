@@ -42,7 +42,7 @@ def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
 		pkgInfo.append(
 			{
 				"name": pkg.canonical_name,
-				"version": pkg.version,
+				"version": str(pkg.version),
 				"namever": str(pkg),
 				"home_page": homePage,
 				"author": author,

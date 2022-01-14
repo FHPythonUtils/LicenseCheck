@@ -3,7 +3,11 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
-## 2021.5.1 - 2021/10/18
+## 2022 - 2022/01/14
+
+- Fix https://github.com/FHPythonUtils/LicenseCheck/issues/18
+
+## 2021.5.2 - 2021/10/18
 
 - Compatible with pip 21.3
 - Code quality improvements
