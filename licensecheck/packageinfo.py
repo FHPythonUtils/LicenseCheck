@@ -2,13 +2,12 @@
 """
 from __future__ import annotations
 
+from importlib import metadata, resources
 from pathlib import Path
 from typing import cast
 
 import requests
-import tomlkit
-from pip._internal.metadata import get_default_environment as pipenv
-from pip._internal.metadata.base import BaseDistribution
+import tomli
 
 from licensecheck.types import PackageInfo
 
@@ -25,31 +24,34 @@ def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
 	Returns:
 		list[PackageInfo]: [description]
 	"""
-	# Filter our packages
-	pkgs = [pkg for pkg in pipenv().iter_distributions() if pkg.canonical_name in requirements]
 	pkgInfo = []
-	for pkg in pkgs:
-		# Get pkg metadata: license, homepage + author
-		pkgMetadata = pkg.metadata
-		lice = licenseFromClassifierlist(
-			[val for key, val in pkgMetadata.items() if key == "Classifier"]
-		)
-		if lice == UNKNOWN:
-			lice = pkgMetadata.get("License", UNKNOWN)
-		homePage = pkgMetadata.get("Home-page", UNKNOWN)
-		author = pkgMetadata.get("Author", UNKNOWN)
-		# append to pkgInfo
-		pkgInfo.append(
-			{
-				"name": pkg.canonical_name,
-				"version": str(pkg.version),
-				"namever": str(pkg),
-				"home_page": homePage,
-				"author": author,
-				"size": getModuleSize(pkg),
-				"license": lice,
-			}
-		)
+	for requirement in requirements:
+		try:
+			# Get pkg metadata: license, homepage + author
+			pkgMetadata = metadata.metadata(requirement)
+			lice = licenseFromClassifierlist(
+				[val for key, val in pkgMetadata.items() if key == "Classifier"]
+			)
+			if lice == UNKNOWN:
+				lice = pkgMetadata.get("License", UNKNOWN)
+			homePage = pkgMetadata.get("Home-page", UNKNOWN)
+			author = pkgMetadata.get("Author", UNKNOWN)
+			name = pkgMetadata.get("Name", UNKNOWN)
+			version = pkgMetadata.get("Version", UNKNOWN)
+			# append to pkgInfo
+			pkgInfo.append(
+				{
+					"name": name,
+					"version": version,
+					"namever": f"{name}-{version}",
+					"home_page": homePage,
+					"author": author,
+					"size": getModuleSize(cast(Path, resources.files(requirement)), name),
+					"license": lice,
+				}
+			)
+		except (metadata.PackageNotFoundError, ModuleNotFoundError):
+			pass
 	return pkgInfo
 
 
@@ -127,9 +129,7 @@ def getMyPackageLicense() -> str:
 		RuntimeError: Must specify a license using license spdx or classifier (tool.poetry or tool.flit)
 	"""
 	try:
-		pyproject = cast(
-			dict, tomlkit.api.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
-		)
+		pyproject = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
 	except FileNotFoundError:
 		return input("Enter the project license")
 	tool = pyproject["tool"]
@@ -140,7 +140,7 @@ def getMyPackageLicense() -> str:
 		metaData = tool["flit"]["metadata"]
 	else:
 		return input("Enter the project license")
-	licenseClassifier = licenseFromClassifierlist(metaData["classifiers"])
+	licenseClassifier = licenseFromClassifierlist(metaData.get("classifiers", []))
 	if licenseClassifier != UNKNOWN:
 		return licenseClassifier
 	if "license" in metaData:
@@ -150,22 +150,21 @@ def getMyPackageLicense() -> str:
 	)
 
 
-def getModuleSize(pkg: BaseDistribution) -> int:
+def getModuleSize(path: Path, name: str) -> int:
 	"""Get the size of a given module as an int.
 
 	Args:
-		pkg (BaseDistribution): package to get the size of
+		path (Path): path to package
+		name (str): name of package
 
 	Returns:
 		int: size in bytes
 	"""
 	size = sum(
-		f.stat().st_size
-		for f in Path(f"{pkg.location}/{pkg.canonical_name.replace('-', '_')}").glob("**/*")
-		if f.is_file() and "__pycache__" not in str(f)
+		f.stat().st_size for f in path.glob("**/*") if f.is_file() and "__pycache__" not in str(f)
 	)
 	if size > 0:
 		return size
-	request = requests.get(f"https://pypi.org/pypi/{pkg.canonical_name}/json")
+	request = requests.get(f"https://pypi.org/pypi/{name}/json")
 	response = request.json()
 	return int(response["urls"][-1]["size"])

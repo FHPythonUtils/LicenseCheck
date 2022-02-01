@@ -1,6 +1,5 @@
-fhconfparser<2023,>=2021.1.1
-metprint<2022,>=2020.7.1
-pip<22,>=20.2.3
-requests<4,>=2.24.0
-requirements-parser<2,>=0.2.0
-tomlkit<2,>=0.7.0
+fhconfparser<2024,>=2022
+metprint<2023,>=2021
+requests<3,>=2.27.1
+requirements-parser<2,>=0.5.0
+tomli<3,>=2.0.0

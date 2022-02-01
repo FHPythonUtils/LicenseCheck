@@ -3,6 +3,13 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2022.0.1 - 2022/02/01
+
+- Hopefully fix https://github.com/FHPythonUtils/LicenseCheck/issues/14 for real this time
+- Update deps
+- Remove `pip`
+- Replace `tomlkit` with `tomli`
+
 ## 2022 - 2022/01/14
 
 - Fix https://github.com/FHPythonUtils/LicenseCheck/issues/18

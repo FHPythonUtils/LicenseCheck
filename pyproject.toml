@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2022"
+version = "2022.0.1"
 license = "mit"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
@@ -27,16 +27,18 @@ readme = "README.md"
 licensecheck = 'licensecheck:cli'
 
 [tool.poetry.dependencies]
-python = "^3.7"
-requirements-parser = "<2,>=0.2.0"
-requests = "<4,>=2.24.0"
-metprint = "<2022,>=2020.7.1"
-pip = "<22,>=20.2.3"
-tomlkit = "<2,>=0.7.0"
-fhconfparser = "<2023,>=2021.1.1"
+python = "^3.8"
+requirements-parser = "<2,>=0.5.0"
+requests = "<3,>=2.27.1"
+metprint = { version = "<2023,>=2021", optional = true }
+fhconfparser = "<2024,>=2022"
+tomli = "<3,>=2.0.0"
 
 [tool.poetry.extras]
 full = ["metprint"]
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
 
 [tool.black]
 line-length = 100

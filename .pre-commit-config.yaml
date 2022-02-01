@@ -1,28 +1,43 @@
 repos:
   - repo: https://github.com/FHPythonUtils/Blackt
-    rev: '2021'
+    rev: '2022.0.1'
     hooks:
       - id: blackt
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.9.3
+    rev: 5.10.1
     hooks:
       - id: isort
 
   - repo: https://github.com/pycqa/pylint
-    rev: v2.11.1
+    rev: v2.12.2
     hooks:
       - id: pylint
         args: [--disable=import-error,--jobs=0, --fail-under=9.8, --ignore-patterns=test.*?py]
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.0.1
+    rev: v4.1.0
     hooks:
       - id: trailing-whitespace
+        exclude: "tests/"
       - id: end-of-file-fixer
+        exclude: "tests/"
 
   - repo: https://github.com/asottile/pyupgrade
-    rev: v2.29.0
+    rev: v2.31.0
     hooks:
       - id: pyupgrade
         args: [--py37-plus]
+  - repo: https://github.com/boidolr/pre-commit-images
+    rev: v1.0.0
+    hooks:
+      - id: optimize-avif
+        exclude: "tests/"
+      - id: optimize-jpg
+        exclude: "tests/"
+      - id: optimize-png
+        exclude: "tests/"
+      - id: optimize-svg
+        exclude: "tests/"
+      - id: optimize-webp
+        exclude: "tests/"
