@@ -38,6 +38,12 @@ def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
 			author = pkgMetadata.get("Author", UNKNOWN)
 			name = pkgMetadata.get("Name", UNKNOWN)
 			version = pkgMetadata.get("Version", UNKNOWN)
+			size = 0
+			try:
+				packagePath = resources.files(requirement)
+				size = getModuleSize(cast(Path, packagePath), name)
+			except TypeError:
+				pass
 			# append to pkgInfo
 			pkgInfo.append(
 				{
@@ -46,7 +52,7 @@ def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
 					"namever": f"{name}-{version}",
 					"home_page": homePage,
 					"author": author,
-					"size": getModuleSize(cast(Path, resources.files(requirement)), name),
+					"size": size,
 					"license": lice,
 				}
 			)
@@ -114,7 +120,7 @@ def getPackages(reqs: list[str]) -> list[PackageInfo]:
 	"""
 	localReqs = getPackagesFromLocal(reqs)
 	for localReq in localReqs:
-		reqs.remove(localReq["name"])
+		reqs.remove(localReq["name"].lower())
 	onlineReqs = packageInfoFromPypi(reqs)
 	return localReqs + onlineReqs
 

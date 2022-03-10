@@ -79,7 +79,7 @@ def getReqs(using: str) -> list[str]:
 			with open(reqTxt, encoding="utf-8") as requirementsTxt:
 				for req in requirements.parse(requirementsTxt):
 					reqs.add(req.name)
-	return list(reqs)
+	return [x.lower() for x in reqs]
 
 
 def getDepsWLicenses(
