@@ -1,16 +1,16 @@
-# get_deps
+# Get Deps
 
-> Auto-generated documentation for [licensecheck.get_deps](../../licensecheck/get_deps.py) module.
+> Auto-generated documentation for [licensecheck.get_deps](../../../licensecheck/get_deps.py) module.
 
 Get a list of packages with package compatibility.
 
-- [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / [licensecheck](index.md#licensecheck) / get_deps
+- [Licensecheck](../README.md#licensecheck-index) / [Modules](../MODULES.md#licensecheck-modules) / [Licensecheck](index.md#licensecheck) / Get Deps
     - [getDepsWLicenses](#getdepswlicenses)
     - [getReqs](#getreqs)
 
 ## getDepsWLicenses
 
-[[find in source code]](../../licensecheck/get_deps.py#L85)
+[[find in source code]](../../../licensecheck/get_deps.py#L85)
 
 ```python
 def getDepsWLicenses(
@@ -36,9 +36,13 @@ Get a list of dependencies with licenses and determin license compatibility.
 
 - `list[PackageCompat]` - list of packagecompat types: dependency info + licence compat
 
+#### See also
+
+- [PackageCompat](types.md#packagecompat)
+
 ## getReqs
 
-[[find in source code]](../../licensecheck/get_deps.py#L41)
+[[find in source code]](../../../licensecheck/get_deps.py#L41)
 
 ```python
 def getReqs(using: str) -> list[str]:

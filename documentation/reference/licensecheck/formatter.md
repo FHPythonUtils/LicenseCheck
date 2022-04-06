@@ -1,10 +1,10 @@
-# formatter
+# Formatter
 
-> Auto-generated documentation for [licensecheck.formatter](../../licensecheck/formatter.py) module.
+> Auto-generated documentation for [licensecheck.formatter](../../../licensecheck/formatter.py) module.
 
 Take our package compat dictionary and give things a pretty format.
 
-- [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / [licensecheck](index.md#licensecheck) / formatter
+- [Licensecheck](../README.md#licensecheck-index) / [Modules](../MODULES.md#licensecheck-modules) / [Licensecheck](index.md#licensecheck) / Formatter
     - [ansi](#ansi)
     - [csv](#csv)
     - [json](#json)
@@ -33,7 +33,7 @@ Formats
 
 ## ansi
 
-[[find in source code]](../../licensecheck/formatter.py#L141)
+[[find in source code]](../../../licensecheck/formatter.py#L133)
 
 ```python
 def ansi(packages: list[PackageCompat], heading: str | None = None) -> str:
@@ -50,9 +50,13 @@ Format to ansi.
 
 - `str` - String to write to a file of stdout
 
+#### See also
+
+- [PackageCompat](types.md#packagecompat)
+
 ## csv
 
-[[find in source code]](../../licensecheck/formatter.py#L99)
+[[find in source code]](../../../licensecheck/formatter.py#L91)
 
 ```python
 def csv(packages: list[PackageCompat], heading: str | None = None) -> str:
@@ -69,9 +73,13 @@ Format to CSV.
 
 - `str` - String to write to a file of stdout
 
+#### See also
+
+- [PackageCompat](types.md#packagecompat)
+
 ## json
 
-[[find in source code]](../../licensecheck/formatter.py#L79)
+[[find in source code]](../../../licensecheck/formatter.py#L71)
 
 ```python
 def json(packages: list[PackageCompat], heading: str | None = None) -> str:
@@ -88,9 +96,13 @@ Format to Json.
 
 - `str` - String to write to a file of stdout
 
+#### See also
+
+- [PackageCompat](types.md#packagecompat)
+
 ## markdown
 
-[[find in source code]](../../licensecheck/formatter.py#L40)
+[[find in source code]](../../../licensecheck/formatter.py#L32)
 
 ```python
 def markdown(
@@ -110,9 +122,13 @@ Format to Markdown.
 
 - `str` - String to write to a file of stdout
 
+#### See also
+
+- [PackageCompat](types.md#packagecompat)
+
 ## simple
 
-[[find in source code]](../../licensecheck/formatter.py#L194)
+[[find in source code]](../../../licensecheck/formatter.py#L186)
 
 ```python
 def simple(packages: list[PackageCompat]) -> str:
@@ -127,3 +143,7 @@ Format to plain text.
 #### Returns
 
 - `str` - String to write to a file of stdout
+
+#### See also
+
+- [PackageCompat](types.md#packagecompat)

@@ -1,10 +1,10 @@
-# license_matrix
+# License Matrix
 
-> Auto-generated documentation for [licensecheck.license_matrix](../../licensecheck/license_matrix.py) module.
+> Auto-generated documentation for [licensecheck.license_matrix](../../../licensecheck/license_matrix.py) module.
 
 Define a foss compatability license_matrix.
 
-- [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / [licensecheck](index.md#licensecheck) / license_matrix
+- [Licensecheck](../README.md#licensecheck-index) / [Modules](../MODULES.md#licensecheck-modules) / [Licensecheck](index.md#licensecheck) / License Matrix
     - [depCompatWMyLice](#depcompatwmylice)
     - [licenseLookup](#licenselookup)
     - [licenseType](#licensetype)
@@ -55,7 +55,7 @@ EU -> gpl -> agpl (3 only)
 
 ## depCompatWMyLice
 
-[[find in source code]](../../licensecheck/license_matrix.py#L153)
+[[find in source code]](../../../licensecheck/license_matrix.py#L153)
 
 ```python
 def depCompatWMyLice(
@@ -85,7 +85,7 @@ Identify if the end user license is compatible with the dependency license(s).
 
 ## licenseLookup
 
-[[find in source code]](../../licensecheck/license_matrix.py#L43)
+[[find in source code]](../../../licensecheck/license_matrix.py#L43)
 
 ```python
 def licenseLookup(licenseStr: str) -> L:
@@ -107,7 +107,7 @@ Identify a license from an uppercase string representation of a license.
 
 ## licenseType
 
-[[find in source code]](../../licensecheck/license_matrix.py#L86)
+[[find in source code]](../../../licensecheck/license_matrix.py#L86)
 
 ```python
 def licenseType(lice: str) -> list[L]:
@@ -122,3 +122,7 @@ Return a list of license types from a license string.
 #### Returns
 
 - `list[L]` - the license
+
+#### See also
+
+- [License](types.md#license)

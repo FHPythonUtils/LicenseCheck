@@ -20,8 +20,6 @@ the project license
 ## Table of Contents
 
 - [Examples from the command-line](#examples-from-the-command-line)
-	- [Without metprint](#without-metprint)
-	- [With metprint](#with-metprint)
 	- [Using requirements](#using-requirements)
 	- [Failing on packages under MIT license](#failing-on-packages-under-mit-license)
 	- [Custom requirements.txt in json format](#custom-requirementstxt-in-json-format)
@@ -65,82 +63,56 @@ the project license
 
 See below for the output if you run `licensecheck` in this directory
 
-### Without metprint
-
 ```txt
 >> licensecheck
-┌──────────┬────────────────────┬────────────────────┐
-│Compatible│Package             │License             │
-├──────────┼────────────────────┼────────────────────┤
-│True      │attrs               │MIT License         │
-│True      │certifi             │Mozilla Public Licen│
-│True      │charset-normalizer  │MIT License         │
-│True      │fhconfparser        │MIT License         │
-│True      │idna                │BSD License         │
-│True      │metprint            │MIT License         │
-│True      │requests            │Apache Software Lice│
-│True      │requirements-parser │BSD License         │
-│True      │tomlkit             │MIT License         │
-│True      │urllib3             │MIT License         │
-└──────────┴────────────────────┴────────────────────┘
-```
-
-### With metprint
-
-If `metprint` is installed the tables look slightly different (note that the
-leftmost symbols are coloured in the terminal)
-
-```txt
->> licensecheck
-    ┌────────────────────┬──────────────────────────────┐
-    │Package             │License                       │
-    ├────────────────────┼──────────────────────────────┤
-[+] │attrs               │MIT License                   │
-[+] │certifi             │Mozilla Public License 2.0 (MP│
-[+] │charset-normalizer  │MIT License                   │
-[+] │idna                │BSD License                   │
-[+] │metprint            │MIT License                   │
-[+] │requests            │Apache Software License       │
-[+] │requirements-parser │BSD License                   │
-[+] │tomlkit             │MIT License                   │
-[+] │urllib3             │MIT License                   │
-    └────────────────────┴──────────────────────────────┘
+┌──────┬────────────────────┬──────────────────────────────┐
+│Compat│      Package       │           License            │
+├──────┼────────────────────┼──────────────────────────────┤
+│  ✅  │attrs               │MIT License                   │
+│  ✅  │certifi             │Mozilla Public License 2.0 (MP│
+│  ✅  │charset-normalizer  │MIT License                   │
+│  ✅  │fhconfparser        │MIT License                   │
+│  ✅  │idna                │BSD License                   │
+│  ✅  │requests            │Apache Software License       │
+│  ✅  │requirements-parser │Apache Software License       │
+│  ✅  │tomli               │MIT License                   │
+│  ✅  │types-setuptools    │Apache Software License       │
+│  ✅  │urllib3             │MIT License                   │
+└──────┴────────────────────┴──────────────────────────────┘
 ```
 
 ### Using requirements
 
 ```txt
 >> licensecheck -u requirements
-    ┌────────────────────┬──────────────────────────────┐
-    │Package             │License                       │
-    ├────────────────────┼──────────────────────────────┤
-[+] │fhconfparser        │MIT License                   │
-[+] │metprint            │MIT License                   │
-[+] │pip                 │MIT License                   │
-[+] │requests            │Apache Software License       │
-[+] │requirements-parser │BSD License                   │
-[+] │tomlkit             │MIT License                   │
-    └────────────────────┴──────────────────────────────┘
+┌──────┬────────────────────┬──────────────────────────────┐
+│Compat│      Package       │           License            │
+├──────┼────────────────────┼──────────────────────────────┤
+│  ✅  │fhconfparser        │MIT License                   │
+│  ✅  │requests            │Apache Software License       │
+│  ✅  │requirements-parser │Apache Software License       │
+│  ✅  │tomli               │MIT License                   │
+└──────┴────────────────────┴──────────────────────────────┘
 ```
 
 ### Failing on packages under MIT license
 
 ```txt
 >> licensecheck --fail-licenses mit
-    ┌────────────────────┬──────────────────────────────┐
-    │Package             │License                       │
-    ├────────────────────┼──────────────────────────────┤
-[-] │attrs               │MIT License                   │
-[+] │certifi             │Mozilla Public License 2.0 (MP│
-[-] │charset-normalizer  │MIT License                   │
-[-] │fhconfparser        │MIT License                   │
-[+] │idna                │BSD License                   │
-[-] │metprint            │MIT License                   │
-[+] │requests            │Apache Software License       │
-[+] │requirements-parser │BSD License                   │
-[-] │tomlkit             │MIT License                   │
-[-] │urllib3             │MIT License                   │
-    └────────────────────┴──────────────────────────────┘
+┌──────┬────────────────────┬──────────────────────────────┐
+│Compat│      Package       │           License            │
+├──────┼────────────────────┼──────────────────────────────┤
+│  ❌  │attrs               │MIT License                   │
+│  ✅  │certifi             │Mozilla Public License 2.0 (MP│
+│  ❌  │charset-normalizer  │MIT License                   │
+│  ❌  │fhconfparser        │MIT License                   │
+│  ✅  │idna                │BSD License                   │
+│  ✅  │requests            │Apache Software License       │
+│  ✅  │requirements-parser │Apache Software License       │
+│  ❌  │tomli               │MIT License                   │
+│  ✅  │types-setuptools    │Apache Software License       │
+│  ❌  │urllib3             │MIT License                   │
+└──────┴────────────────────┴──────────────────────────────┘
 ```
 
 ### Custom requirements.txt in json format
@@ -150,30 +122,30 @@ Add optional path to requirements.txt as outlined in https://github.com/FHPython
 ```txt
 >> licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json
 {
-	"heading": "# Packages - Find a list of packages below",
-	"packages": [
-			{
-					"name": "fhconfparser",
-					"version": "2021.1.1",
-					"namever": "fhconfparser 2021.1.1",
-					"home_page": "https://github.com/FHPythonUtils/FHConfParser",
-					"author": "FredHappyface",
-					"size": 9241,
-					"license": "MIT License",
-					"license_compat": true
-			},
-			...
-			{
-					"name": "tomlkit",
-					"version": "0.7.2",
-					"namever": "tomlkit 0.7.2",
-					"home_page": "https://github.com/sdispater/tomlkit",
-					"author": "S\u00e9bastien Eustace",
-					"size": 11653,
-					"license": "MIT License",
-					"license_compat": true
-			}
-	]
+        "heading": "# Packages - Find a list of packages below",
+        "packages": [
+                {
+                        "name": "fhconfparser",
+                        "version": "2022",
+                        "namever": "fhconfparser-2022",
+                        "home_page": "https://github.com/FHPythonUtils/FHConfParser",
+                        "author": "FredHappyface",
+                        "size": 14586,
+                        "license": "MIT License",
+                        "license_compat": true
+                },
+                ...
+                {
+                        "name": "tomli",
+                        "version": "2.0.1",
+                        "namever": "tomli-2.0.1",
+                        "home_page": "UNKNOWN",
+                        "author": "UNKNOWN",
+                        "size": 26252,
+                        "license": "MIT License",
+                        "license_compat": true
+                }
+        ]
 }
 ```
 
@@ -183,19 +155,29 @@ Add `-u poetry:dev` to command-line to include dev packages (excluded by default
 
 ```txt
 >> licensecheck -u poetry:dev
-    ┌────────────────────┬──────────────────────────────┐
-    │Package             │License                       │
-    ├────────────────────┼──────────────────────────────┤
-[+] │attrs               │MIT License                   │
-[+] │certifi             │Mozilla Public License 2.0 (MP│
-[+] │charset-normalizer  │MIT License                   │
-[+] │idna                │BSD License                   │
-[+] │metprint            │MIT License                   │
-[+] │requests            │Apache Software License       │
-[+] │requirements-parser │BSD License                   │
-[+] │tomlkit             │MIT License                   │
-[+] │urllib3             │MIT License                   │
-    └────────────────────┴──────────────────────────────┘
+┌──────┬────────────────────┬──────────────────────────────┐
+│Compat│      Package       │           License            │
+├──────┼────────────────────┼──────────────────────────────┤
+│  ✅  │atomicwrites        │MIT License                   │
+│  ✅  │attrs               │MIT License                   │
+│  ✅  │certifi             │Mozilla Public License 2.0 (MP│
+│  ✅  │charset-normalizer  │MIT License                   │
+│  ✅  │colorama            │BSD License                   │
+│  ✅  │fhconfparser        │MIT License                   │
+│  ✅  │idna                │BSD License                   │
+│  ✅  │iniconfig           │MIT License                   │
+│  ✅  │packaging           │Apache Software License, BSD L│
+│  ✅  │pluggy              │MIT License                   │
+│  ✅  │py                  │MIT License                   │
+│  ✅  │pyparsing           │MIT License                   │
+│  ✅  │pytest              │MIT License                   │
+│  ✅  │requests            │Apache Software License       │
+│  ✅  │requirements-parser │Apache Software License       │
+│  ✅  │toml                │MIT License                   │
+│  ✅  │tomli               │MIT License                   │
+│  ✅  │types-setuptools    │Apache Software License       │
+│  ✅  │urllib3             │MIT License                   │
+└──────┴────────────────────┴──────────────────────────────┘
 ```
 
 ## Help
@@ -279,7 +261,20 @@ format = "json"
 
 ## Documentation
 
-See the [Docs](/DOCS/) for more information.
+A high-level overview of how the documentation is organized organized will help you know
+where to look for certain things:
+
+<!--
+- [Tutorials](/documentation/tutorials) take you by the hand through a series of steps to get
+  started using the software. Start here if you’re new.
+-->
+- The [Technical Reference](/documentation/reference) documents APIs and other aspects of the
+  machinery. This documentation describes how to use the classes and functions at a lower level
+  and assume that you have a good high-level understanding of the software.
+<!--
+- The [Help](/documentation/help) guide provides a starting point and outlines common issues that you
+  may have.
+-->
 
 ## Install With PIP
 

@@ -28,14 +28,6 @@ from json import dumps
 
 from licensecheck.types import PackageCompat
 
-logger = None
-try:
-	from metprint import Logger, LogType
-
-	logger = Logger()
-except ModuleNotFoundError:
-	pass
-
 
 def markdown(packages: list[PackageCompat], heading: str | None = None) -> str:
 	"""Format to Markdown.
@@ -203,31 +195,16 @@ def simple(packages: list[PackageCompat]) -> str:
 	packages = sorted(packages, key=lambda i: i["name"])
 
 	# Summary Table
-	if logger is None:
-		strBuf = [f"┌{'─'*10}┬{'─'*20}┬{'─'*20}┐"]
-		strBuf.append("│Compatible│Package             │License             │")
-		strBuf.append(f"├{'─'*10}┼{'─'*20}┼{'─'*20}┤")
-		for pkg in packages:
-			strBuf.append(
-				f"│{str(pkg['license_compat']): <10}│{pkg['name'][:20]: <20}│{pkg['license'][:20]: <20}│"
-			)
-		strBuf.append(f"└{'─'*10}┴{'─'*20}┴{'─'*20}┘")
-	else:
-		strBuf = [logger.logString(f"┌{'─'*20}┬{'─'*30}┐", LogType.NONE, True)]
+	strBuf = [f"┌{'─'*6}┬{'─'*20}┬{'─'*30}┐"]
+	strBuf.append(f"│{'Compat':^6}│{'Package':^20}│{'License':^30}│")
+	strBuf.append(f"├{'─'*6}┼{'─'*20}┼{'─'*30}┤")
+	for pkg in packages:
 		strBuf.append(
-			logger.logString(
-				"│Package             │License                       │", LogType.NONE, True
-			)
+			f"│{'✅' if pkg['license_compat'] else '❌':^5}"
+			f"│{pkg['name'][:20]: <20}│{pkg['license'][:30]: <30}│"
 		)
-		strBuf.append(logger.logString(f"├{'─'*20}┼{'─'*30}┤", LogType.NONE, True))
-		for pkg in packages:
-			strBuf.append(
-				logger.logString(
-					f"│{pkg['name'][:20]: <20}│{pkg['license'][:30]: <30}│",
-					LogType.SUCCESS if pkg["license_compat"] else LogType.ERROR,
-				)
-			)
-		strBuf.append(logger.logString(f"└{'─'*20}┴{'─'*30}┘", LogType.NONE, True))
+	strBuf.append(f"└{'─'*6}┴{'─'*20}┴{'─'*30}┘")
+
 	return "\n".join(strBuf)
 
 

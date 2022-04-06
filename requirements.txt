@@ -1,4 +1,4 @@
 fhconfparser<2024,>=2022
 requests<3,>=2.27.1
 requirements-parser<2,>=0.5.0
-tomli<3,>=2.0.0
+tomli<3,>=2.0.1

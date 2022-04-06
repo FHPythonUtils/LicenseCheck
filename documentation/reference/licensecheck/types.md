@@ -1,17 +1,17 @@
-# types
+# Types
 
-> Auto-generated documentation for [licensecheck.types](../../licensecheck/types.py) module.
+> Auto-generated documentation for [licensecheck.types](../../../licensecheck/types.py) module.
 
 PackageCompat type.
 
-- [Licensecheck](../README.md#licensecheck-index) / [Modules](../README.md#licensecheck-modules) / [licensecheck](index.md#licensecheck) / types
+- [Licensecheck](../README.md#licensecheck-index) / [Modules](../MODULES.md#licensecheck-modules) / [Licensecheck](index.md#licensecheck) / Types
     - [License](#license)
     - [PackageCompat](#packagecompat)
     - [PackageInfo](#packageinfo)
 
 ## License
 
-[[find in source code]](../../licensecheck/types.py#L27)
+[[find in source code]](../../../licensecheck/types.py#L27)
 
 ```python
 class License(Enum):
@@ -33,7 +33,7 @@ License Enum to hold a set of potential licenses.
 
 ## PackageCompat
 
-[[find in source code]](../../licensecheck/types.py#L21)
+[[find in source code]](../../../licensecheck/types.py#L21)
 
 ```python
 class PackageCompat(PackageInfo):
@@ -47,7 +47,7 @@ PackageCompat type.
 
 ## PackageInfo
 
-[[find in source code]](../../licensecheck/types.py#L9)
+[[find in source code]](../../../licensecheck/types.py#L9)
 
 ```python
 class PackageInfo(typing.TypedDict):
