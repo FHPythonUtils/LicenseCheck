@@ -34,7 +34,9 @@ fhconfparser = "<2024,>=2022"
 tomli = "<3,>=2.0.1"
 
 [tool.poetry.dev-dependencies]
-pytest = "^6.2.5"
+pytest = "^7.1.1"
+pylint = "^2.13.5"
+handsdown = "^1.1.0"
 
 [tool.black]
 line-length = 100
