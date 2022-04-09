@@ -51,26 +51,39 @@ def licenseLookup(licenseStr: str) -> L:
 	"""
 	termToLicense = {
 		"PUBLIC DOMAIN": L.PUBLIC,
+		"CC-PDDC": L.PUBLIC,
+		"CC0-1.0": L.PUBLIC,
 		"UNLICENSE": L.UNLICENSE,
+		"WTFPL": L.UNLICENSE,
 		"BOOST": L.BOOST,
+		"BSL-1.0": L.BOOST,
 		"MIT": L.MIT,
 		"BSD": L.BSD,
 		"ISC": L.ISC,
 		"NCSA": L.NCSA,
 		"PYTHON": L.PSFL,
+		"PSF-2.0": L.PSFL,
 		"APACHE": L.APACHE,
 		"ECLIPSE": L.ECLIPSE,
 		"AFL": L.ACADEMIC_FREE,
 		"LGPLV2+": L.LGPL_2_PLUS,
+		"LGPL-2.0-OR-LATER": L.LGPL_2_PLUS,
 		"LGPLV3+": L.LGPL_3_PLUS,
+		"LGPL-3.0-OR-LATER": L.LGPL_3_PLUS,
+		"LGPL-2.0-ONLY": L.LGPL_2,
 		"LGPLV2": L.LGPL_2,
+		"LGPL-3.0-ONLY": L.LGPL_3,
 		"LGPLV3": L.LGPL_3,
 		"LGPL": L.LGPL_X,
-		"AGPL": L.UNLICENSE,
+		"AGPL": L.AGPL_3_PLUS,
+		"GPL-2.0-OR-LATER": L.GPL_2_PLUS,
 		"GPLV2+": L.GPL_2_PLUS,
+		"GPL-3.0-OR-LATER": L.GPL_3_PLUS,
 		"GPLV3+": L.GPL_3_PLUS,
 		"GPLV2": L.GPL_2,
+		"GPL-2.0": L.GPL_2,
 		"GPLV3": L.GPL_3,
+		"GPL-3.0": L.GPL_3,
 		"MPL": L.MPL,
 		"EUPL": L.EU,
 		"PROPRIETARY": L.PROPRIETARY,
@@ -79,7 +92,7 @@ def licenseLookup(licenseStr: str) -> L:
 		if liceStr in licenseStr:
 			return lice
 
-	print("WARN: License not identified so falling back to NO_LICENSE")
+	print(f"WARN: '{licenseStr}' License not identified so falling back to NO_LICENSE")
 	return L.NO_LICENSE
 
 

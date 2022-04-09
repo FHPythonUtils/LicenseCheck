@@ -3,6 +3,11 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2022.1.1 - 2022/04/09
+
+- More detailed warnings per https://github.com/FHPythonUtils/LicenseCheck/issues/19
+- Add check using spdx identifiers
+
 ## 2022.1 - 2022/04/06
 
 - Remove metprint

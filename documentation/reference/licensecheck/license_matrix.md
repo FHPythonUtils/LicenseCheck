@@ -55,7 +55,7 @@ EU -> gpl -> agpl (3 only)
 
 ## depCompatWMyLice
 
-[[find in source code]](../../../licensecheck/license_matrix.py#L153)
+[[find in source code]](../../../licensecheck/license_matrix.py#L166)
 
 ```python
 def depCompatWMyLice(
@@ -107,7 +107,7 @@ Identify a license from an uppercase string representation of a license.
 
 ## licenseType
 
-[[find in source code]](../../../licensecheck/license_matrix.py#L86)
+[[find in source code]](../../../licensecheck/license_matrix.py#L99)
 
 ```python
 def licenseType(lice: str) -> list[L]:
