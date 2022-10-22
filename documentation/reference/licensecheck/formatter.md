@@ -1,149 +1,173 @@
 # Formatter
 
+[Licensecheck Index](../README.md#licensecheck-index) /
+[Licensecheck](./index.md#licensecheck) /
+Formatter
+
 > Auto-generated documentation for [licensecheck.formatter](../../../licensecheck/formatter.py) module.
 
-Take our package compat dictionary and give things a pretty format.
-
-- [Licensecheck](../README.md#licensecheck-index) / [Modules](../MODULES.md#licensecheck-modules) / [Licensecheck](index.md#licensecheck) / Formatter
-    - [ansi](#ansi)
-    - [csv](#csv)
-    - [json](#json)
-    - [markdown](#markdown)
-    - [simple](#simple)
-
-```json
-{
- name: str
- version: str
- namever: str
- size: int
- home_page: str
- author: str
- license: str
- license_compat: bool
-}
-```
-
-Formats
-
-- markdown
-- json
-- csv
-- ansi
+- [Formatter](#formatter)
+  - [ansi](#ansi)
+  - [markdown](#markdown)
+  - [plainText](#plaintext)
+  - [raw](#raw)
+  - [rawCsv](#rawcsv)
+  - [stripAnsi](#stripansi)
 
 ## ansi
 
-[[find in source code]](../../../licensecheck/formatter.py#L133)
+[Show source in formatter.py:50](../../../licensecheck/formatter.py#L50)
 
-```python
-def ansi(packages: list[PackageCompat], heading: str | None = None) -> str:
-```
-
-Format to ansi.
+Format to ansi
 
 #### Arguments
 
-- `packages` *list[PackageCompat]* - PackageCompats to format
-- `heading` *str, optional* - Optional heading to include. Defaults to None.
+- `packages` *list[PackageCompat]* - list of PackageCompats to format.
 
 #### Returns
 
-- `str` - String to write to a file of stdout
+- `str` - string to send to specified output in ansi format
 
-#### See also
-
-- [PackageCompat](types.md#packagecompat)
-
-## csv
-
-[[find in source code]](../../../licensecheck/formatter.py#L91)
+#### Signature
 
 ```python
-def csv(packages: list[PackageCompat], heading: str | None = None) -> str:
+def ansi(packages: list[PackageCompat]) -> str:
+    ...
 ```
-
-Format to CSV.
-
-#### Arguments
-
-- `packages` *list[PackageCompat]* - PackageCompats to format
-- `heading` *str, optional* - Optional heading to include. Defaults to None.
-
-#### Returns
-
-- `str` - String to write to a file of stdout
 
 #### See also
 
-- [PackageCompat](types.md#packagecompat)
+- [PackageCompat](./types.md#packagecompat)
 
-## json
 
-[[find in source code]](../../../licensecheck/formatter.py#L71)
-
-```python
-def json(packages: list[PackageCompat], heading: str | None = None) -> str:
-```
-
-Format to Json.
-
-#### Arguments
-
-- `packages` *list[PackageCompat]* - PackageCompats to format
-- `heading` *str, optional* - Optional heading to include. Defaults to None.
-
-#### Returns
-
-- `str` - String to write to a file of stdout
-
-#### See also
-
-- [PackageCompat](types.md#packagecompat)
 
 ## markdown
 
-[[find in source code]](../../../licensecheck/formatter.py#L32)
+[Show source in formatter.py:91](../../../licensecheck/formatter.py#L91)
 
-```python
-def markdown(
-    packages: list[PackageCompat],
-    heading: str | None = None,
-) -> str:
-```
-
-Format to Markdown.
+Format to markdown
 
 #### Arguments
 
-- `packages` *list[PackageCompat]* - PackageCompats to format
-- `heading` *str, optional* - Optional heading to include. Defaults to None.
+- `packages` *list[PackageCompat]* - list of PackageCompats to format.
 
 #### Returns
 
-- `str` - String to write to a file of stdout
+- `str` - string to send to specified output in markdown format
+
+#### Signature
+
+```python
+def markdown(packages: list[PackageCompat]) -> str:
+    ...
+```
 
 #### See also
 
-- [PackageCompat](types.md#packagecompat)
+- [PackageCompat](./types.md#packagecompat)
 
-## simple
 
-[[find in source code]](../../../licensecheck/formatter.py#L186)
 
-```python
-def simple(packages: list[PackageCompat]) -> str:
-```
+## plainText
 
-Format to plain text.
+[Show source in formatter.py:79](../../../licensecheck/formatter.py#L79)
+
+Format to plain text
 
 #### Arguments
 
-- `packages` *list[PackageCompat]* - PackageCompats to format
+- `packages` *list[PackageCompat]* - list of PackageCompats to format.
 
 #### Returns
 
-- `str` - String to write to a file of stdout
+- `str` - string to send to specified output in plain text format
+
+#### Signature
+
+```python
+def plainText(packages: list[PackageCompat]) -> str:
+    ...
+```
 
 #### See also
 
-- [PackageCompat](types.md#packagecompat)
+- [PackageCompat](./types.md#packagecompat)
+
+
+
+## raw
+
+[Show source in formatter.py:127](../../../licensecheck/formatter.py#L127)
+
+Format to raw json
+
+#### Arguments
+
+- `packages` *list[PackageCompat]* - list of PackageCompats to format.
+
+#### Returns
+
+- `str` - string to send to specified output in raw json format
+
+#### Signature
+
+```python
+def raw(packages: list[PackageCompat]) -> str:
+    ...
+```
+
+#### See also
+
+- [PackageCompat](./types.md#packagecompat)
+
+
+
+## rawCsv
+
+[Show source in formatter.py:139](../../../licensecheck/formatter.py#L139)
+
+Format to raw csv
+
+#### Arguments
+
+- `packages` *list[PackageCompat]* - list of PackageCompats to format.
+
+#### Returns
+
+- `str` - string to send to specified output in raw csv format
+
+#### Signature
+
+```python
+def rawCsv(packages: list[PackageCompat]) -> str:
+    ...
+```
+
+#### See also
+
+- [PackageCompat](./types.md#packagecompat)
+
+
+
+## stripAnsi
+
+[Show source in formatter.py:38](../../../licensecheck/formatter.py#L38)
+
+Strip ansi codes from a given string
+
+#### Arguments
+
+- `string` *str* - string to strip codes from
+
+#### Returns
+
+- `str` - plaintext, utf-8 string (safe for writing to files)
+
+#### Signature
+
+```python
+def stripAnsi(string: str) -> str:
+    ...
+```
+
+

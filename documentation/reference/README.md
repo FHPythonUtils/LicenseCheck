@@ -1,10 +1,9 @@
-# Licensecheck Modules
+# Licensecheck Index
 
-> Auto-generated documentation modules index.
+> Auto-generated documentation index.
 
-Full list of [Licensecheck](README.md#licensecheck-index) project modules.
+A full list of `Licensecheck` project modules.
 
-- [Licensecheck Index](README.md#licensecheck-index)
 - [Licensecheck](licensecheck/index.md#licensecheck)
     - [Module](licensecheck/module.md#module)
     - [Formatter](licensecheck/formatter.md#formatter)

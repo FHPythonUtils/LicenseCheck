@@ -1,26 +1,34 @@
 # Licensecheck
 
+[Licensecheck Index](../README.md#licensecheck-index) /
+Licensecheck
+
 > Auto-generated documentation for [licensecheck](../../../licensecheck/__init__.py) module.
 
-Output the licenses used by dependencies and check if these are compatible with the project
-license.
-
-- [Licensecheck](../README.md#licensecheck-index) / [Modules](../MODULES.md#licensecheck-modules) / Licensecheck
-    - [cli](#cli)
-    - Modules
-        - [Module](module.md#module)
-        - [Formatter](formatter.md#formatter)
-        - [Get Deps](get_deps.md#get-deps)
-        - [License Matrix](license_matrix.md#license-matrix)
-        - [Packageinfo](packageinfo.md#packageinfo)
-        - [Types](types.md#types)
+- [Licensecheck](#licensecheck)
+  - [cli](#cli)
+  - [Modules](#modules)
 
 ## cli
 
-[[find in source code]](../../../licensecheck/__init__.py#L18)
+[Show source in __init__.py:18](../../../licensecheck/__init__.py#L18)
+
+Cli entry point.
+
+#### Signature
 
 ```python
 def cli() -> None:
+    ...
 ```
 
-Cli entry point.
+
+
+## Modules
+
+- [Module](./module.md)
+- [Formatter](./formatter.md)
+- [Get Deps](./get_deps.md)
+- [License Matrix](./license_matrix.md)
+- [Packageinfo](./packageinfo.md)
+- [Types](./types.md)

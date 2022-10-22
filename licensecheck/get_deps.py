@@ -41,8 +41,13 @@ def _doSysExec(command: str) -> tuple[int, str]:
 def getReqs(using: str) -> list[str]:
 	"""Get requirements for the end user project/ lib.
 
+	>>> getReqs("poetry")
+	>>> getReqs("poetry:dev")
+	>>> getReqs("requirements")
+	>>> getReqs("requirements:requirements.txt;requirements-dev.txt")
+
 	Args:
-		using (str): use requirements or poetry
+		using (str): use requirements or poetry.
 
 	Returns:
 		list[str]: list of requirement packages
@@ -60,7 +65,7 @@ def getReqs(using: str) -> list[str]:
 
 	# Poetry
 	if using == "poetry":  # Use poetry show to get dependents of dependencies
-		lines = _doSysExec("poetry show " + ("" if extras else "--no-dev"))[1].splitlines(False)
+		lines = _doSysExec("poetry show " + ("" if extras else "--only main"))[1].splitlines(False)
 		for line in lines:
 			try:
 				parts = line.split()
@@ -82,7 +87,7 @@ def getReqs(using: str) -> list[str]:
 	return [x.lower() for x in reqs]
 
 
-def getDepsWLicenses(
+def getDepsWithLicenses(
 	using: str,
 	ignorePackages: list[str],
 	failPackages: list[str],

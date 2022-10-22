@@ -1,70 +1,37 @@
 # License Matrix
 
+[Licensecheck Index](../README.md#licensecheck-index) /
+[Licensecheck](./index.md#licensecheck) /
+License Matrix
+
 > Auto-generated documentation for [licensecheck.license_matrix](../../../licensecheck/license_matrix.py) module.
-
-Define a foss compatability license_matrix.
-
-- [Licensecheck](../README.md#licensecheck-index) / [Modules](../MODULES.md#licensecheck-modules) / [Licensecheck](index.md#licensecheck) / License Matrix
-    - [depCompatWMyLice](#depcompatwmylice)
-    - [licenseLookup](#licenselookup)
-    - [licenseType](#licensetype)
-
-Standard disclaimer:: I am not a lawyer and there is no guarantee that the
-information provided here is complete or correct. Do not take this as legal
-advice on foss license compatability
-
-https://en.wikipedia.org/wiki/IANAL
-
-Types of license/ compatability
-
-Public Domain
-- Unlicense
-
-Permissive Compatible
-Permissive license compatible with gpl
-- Mit
-- Boost
-- Bsd
-- Isc
-- Ncsa
-
-Permissive Not Compatible
-Permissive license NOT compatible with gpl
-- Apache
-- Eclipse
-- Academic Free
-
-Copyleft
-permissive -> lgpl 2.1 -> gpl 2
-permissive -> lgpl 3 -> gpl 3 -> agpl
-permissive -> mpl -> gpl -> agpl (3 only)
-
-permissive (any) -> EU
-EU -> gpl -> agpl (3 only)
 
 #### Attributes
 
 - `PERMISSIVE` - Permissive licenses compatible with GPL: `[L.MIT, L.BOOST, L.BSD, L.ISC, L.NCSA, L.PSFL]`
+
 - `PERMISSIVE_OTHER` - Permissive licenses NOT compatible with GPL: `[L.APACHE, L.ECLIPSE, L.ACADEMIC_FREE]`
+
 - `LGPL` - LGPL licenses: `[L.LGPL_2, L.LGPL_3, L.LGPL_2_PLUS, L.LGPL_3_PLUS, L.LGPL_X]`
+
 - `GPL` - GPL licenses (including AGPL): `[L.GPL_2, L.GPL_3, L.GPL_2_PLUS, L.GPL_3_PLUS, L.GPL_X, L.AGPL_3_PLUS]`
+
 - `OTHER_COPYLEFT` - Other Copyleft licenses: `[L.MPL, L.EU]`
-- `UNLICENSE_INCOMPATIBLE` - Basic compat matrix: `PERMISSIVE + PERMISSIVE_OTHER + GPL + LGPL + OT...`
+
+- `UNLICENSE_INCOMPATIBLE` - Basic compat matrix: `PERMISSIVE + PERMISSIVE_OTHER + GPL + LGPL + OTHER_COPYLEFT + [L.NO_LICENSE, L.PROPRIETARY]`
+
 - `GPL_2_INCOMPATIBLE` - GPL compat matrix
   https://www.gnu.org/licenses/gpl-faq.html#AllCompatibility: `[L.GPL_3, L.GPL_3_PLUS, L.LGPL_3, L.LGPL_3_PLUS]`
 
+
+- [License Matrix](#license-matrix)
+  - [depCompatWMyLice](#depcompatwmylice)
+  - [licenseLookup](#licenselookup)
+  - [licenseType](#licensetype)
+
 ## depCompatWMyLice
 
-[[find in source code]](../../../licensecheck/license_matrix.py#L166)
-
-```python
-def depCompatWMyLice(
-    myLicense: L,
-    depLice: list[L],
-    ignoreLicenses: list[L] = None,
-    failLicenses: list[L] = None,
-) -> bool:
-```
+[Show source in license_matrix.py:166](../../../licensecheck/license_matrix.py#L166)
 
 Identify if the end user license is compatible with the dependency license(s).
 
@@ -79,17 +46,27 @@ Identify if the end user license is compatible with the dependency license(s).
 
 - `bool` - True if compatible, otherwise False
 
+#### Signature
+
+```python
+def depCompatWMyLice(
+    myLicense: L,
+    depLice: list[L],
+    ignoreLicenses: list[L] = None,
+    failLicenses: list[L] = None,
+) -> bool:
+    ...
+```
+
 #### See also
 
-- [License](types.md#license)
+- [License](./types.md#license)
+
+
 
 ## licenseLookup
 
-[[find in source code]](../../../licensecheck/license_matrix.py#L43)
-
-```python
-def licenseLookup(licenseStr: str) -> L:
-```
+[Show source in license_matrix.py:43](../../../licensecheck/license_matrix.py#L43)
 
 Identify a license from an uppercase string representation of a license.
 
@@ -101,17 +78,22 @@ Identify a license from an uppercase string representation of a license.
 
 - `L` - License represented by licenseStr
 
+#### Signature
+
+```python
+def licenseLookup(licenseStr: str) -> L:
+    ...
+```
+
 #### See also
 
-- [License](types.md#license)
+- [License](./types.md#license)
+
+
 
 ## licenseType
 
-[[find in source code]](../../../licensecheck/license_matrix.py#L99)
-
-```python
-def licenseType(lice: str) -> list[L]:
-```
+[Show source in license_matrix.py:99](../../../licensecheck/license_matrix.py#L99)
 
 Return a list of license types from a license string.
 
@@ -123,6 +105,15 @@ Return a list of license types from a license string.
 
 - `list[L]` - the license
 
+#### Signature
+
+```python
+def licenseType(lice: str) -> list[L]:
+    ...
+```
+
 #### See also
 
-- [License](types.md#license)
+- [License](./types.md#license)
+
+

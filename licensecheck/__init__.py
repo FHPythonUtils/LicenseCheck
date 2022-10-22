@@ -87,7 +87,7 @@ def cli() -> None:
 	)
 
 	# Get list of licenses
-	dependenciesWLicenses = get_deps.getDepsWLicenses(
+	dependenciesWLicenses = get_deps.getDepsWithLicenses(
 		simpleConf.get("using", "poetry"),
 		simpleConf.get("ignore_packages", []),
 		simpleConf.get("fail_packages", []),

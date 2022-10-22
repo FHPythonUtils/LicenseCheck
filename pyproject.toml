@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2022.1.1"
+version = "2022.2"
 license = "mit"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
@@ -29,9 +29,10 @@ licensecheck = 'licensecheck:cli'
 [tool.poetry.dependencies]
 python = "^3.8"
 requirements-parser = "<2,>=0.5.0"
-requests = "<3,>=2.27.1"
+requests = "<3,>=2.28.1"
 fhconfparser = "<2024,>=2022"
 tomli = "<3,>=2.0.1"
+rich = "<13,>=12.6.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.1"
@@ -72,8 +73,7 @@ ignore-patterns = "test_.*?py"
 enable = ["F", "E", "W", "R", "C"]
 disable = [
 	"pointless-string-statement",
-	"superfluous-parens",
-	"bad-continuation"
+	"superfluous-parens"
 ]
 
 [tool.licensecheck]

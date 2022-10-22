@@ -3,6 +3,12 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2022.2.0 - 2022/10/22
+
+- Add support for `setup.cfg` https://github.com/FHPythonUtils/LicenseCheck/issues/21
+  (thank you https://github.com/NicolaDonelli for the code :))
+- Use rich for table rendering https://github.com/FHPythonUtils/LicenseCheck/issues/20
+
 ## 2022.1.1 - 2022/04/09
 
 - More detailed warnings per https://github.com/FHPythonUtils/LicenseCheck/issues/19

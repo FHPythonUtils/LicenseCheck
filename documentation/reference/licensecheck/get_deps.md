@@ -1,26 +1,18 @@
 # Get Deps
 
+[Licensecheck Index](../README.md#licensecheck-index) /
+[Licensecheck](./index.md#licensecheck) /
+Get Deps
+
 > Auto-generated documentation for [licensecheck.get_deps](../../../licensecheck/get_deps.py) module.
 
-Get a list of packages with package compatibility.
+- [Get Deps](#get-deps)
+  - [getDepsWithLicenses](#getdepswithlicenses)
+  - [getReqs](#getreqs)
 
-- [Licensecheck](../README.md#licensecheck-index) / [Modules](../MODULES.md#licensecheck-modules) / [Licensecheck](index.md#licensecheck) / Get Deps
-    - [getDepsWLicenses](#getdepswlicenses)
-    - [getReqs](#getreqs)
+## getDepsWithLicenses
 
-## getDepsWLicenses
-
-[[find in source code]](../../../licensecheck/get_deps.py#L85)
-
-```python
-def getDepsWLicenses(
-    using: str,
-    ignorePackages: list[str],
-    failPackages: list[str],
-    ignoreLicenses: list[str],
-    failLicenses: list[str],
-) -> list[PackageCompat]:
-```
+[Show source in get_deps.py:90](../../../licensecheck/get_deps.py#L90)
 
 Get a list of dependencies with licenses and determin license compatibility.
 
@@ -36,24 +28,51 @@ Get a list of dependencies with licenses and determin license compatibility.
 
 - `list[PackageCompat]` - list of packagecompat types: dependency info + licence compat
 
+#### Signature
+
+```python
+def getDepsWithLicenses(
+    using: str,
+    ignorePackages: list[str],
+    failPackages: list[str],
+    ignoreLicenses: list[str],
+    failLicenses: list[str],
+) -> list[PackageCompat]:
+    ...
+```
+
 #### See also
 
-- [PackageCompat](types.md#packagecompat)
+- [PackageCompat](./types.md#packagecompat)
+
+
 
 ## getReqs
 
-[[find in source code]](../../../licensecheck/get_deps.py#L41)
-
-```python
-def getReqs(using: str) -> list[str]:
-```
+[Show source in get_deps.py:41](../../../licensecheck/get_deps.py#L41)
 
 Get requirements for the end user project/ lib.
 
+```python
+>>> getReqs("poetry")
+>>> getReqs("poetry:dev")
+>>> getReqs("requirements")
+>>> getReqs("requirements:requirements.txt;requirements-dev.txt")
+```
+
 #### Arguments
 
-- `using` *str* - use requirements or poetry
+- `using` *str* - use requirements or poetry.
 
 #### Returns
 
 - `list[str]` - list of requirement packages
+
+#### Signature
+
+```python
+def getReqs(using: str) -> list[str]:
+    ...
+```
+
+

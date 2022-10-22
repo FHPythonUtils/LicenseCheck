@@ -1,4 +1,4 @@
-"""Take our package compat dictionary and give things a pretty format.
+"""Output
 
 ```json
 {
@@ -13,205 +13,149 @@
 }
 ```
 
-Formats
+To one of the following formats:
 
+- ansi
+- plain
 - markdown
 - json
 - csv
-- ansi
 """
-from __future__ import annotations
 
-from csv import writer
+import csv
+import json
+import re
 from io import StringIO
-from json import dumps
+
+from rich.console import Console
+from rich.table import Table
 
 from licensecheck.types import PackageCompat
 
+INFO = {"program": "licensecheck", "version": "2022.2.0"}
 
-def markdown(packages: list[PackageCompat], heading: str | None = None) -> str:
-	"""Format to Markdown.
+
+def stripAnsi(string: str) -> str:
+	"""Strip ansi codes from a given string
 
 	Args:
-		packages (list[PackageCompat]): PackageCompats to format
-		heading (str, optional): Optional heading to include. Defaults to None.
+		string (str): string to strip codes from
 
 	Returns:
-		str: String to write to a file of stdout
+		str: plaintext, utf-8 string (safe for writing to files)
+	"""
+	return re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", string)
+
+
+def ansi(packages: list[PackageCompat]) -> str:
+	"""Format to ansi
+
+	Args:
+		packages (list[PackageCompat]): list of PackageCompats to format.
+
+	Returns:
+		str: string to send to specified output in ansi format
 	"""
 	if len(packages) == 0:
 		return "No packages"
 
-	heading = heading if heading is not None else "# Packages\nFind a list of packages below"
-	strBuf = [heading]
+	string = StringIO()
+
+	console = Console(file=string, color_system="truecolor")
+
+	table = Table(title="\nlist of packages")
+	table.add_column("Compatible", style="cyan")
+	table.add_column("Package", style="magenta")
+	table.add_column("License(s)", style="magenta")
+	licenseCompat = (
+		"[red]✖[/]",
+		"[green]✔[/]",
+	)
+	_ = [table.add_row(licenseCompat[x["license_compat"]], x["name"], x["license"]) for x in packages]
+	console.print(table)
+	return string.getvalue()
+
+
+def plainText(packages: list[PackageCompat]) -> str:
+	"""Format to plain text
+
+	Args:
+		packages (list[PackageCompat]): list of PackageCompats to format.
+
+	Returns:
+		str: string to send to specified output in plain text format
+	"""
+	return stripAnsi(ansi(packages))
+
+
+def markdown(packages: list[PackageCompat]) -> str:
+	"""Format to markdown
+
+	Args:
+		packages (list[PackageCompat]): list of PackageCompats to format.
+
+	Returns:
+		str: string to send to specified output in markdown format
+	"""
+	if len(packages) == 0:
+		return "No packages"
+
+	strBuf = ["\n# Packages\nFind a list of packages below\n"]
 	packages = sorted(packages, key=lambda i: i["name"])
 
 	# Summary Table
-	strBuf.append("")
 	strBuf.append("|Compatible|Package|\n|:--|:--|")
 	for pkg in packages:
 		strBuf.append(f"|{pkg['license_compat']}|{pkg['name']}|")
-	strBuf.append("")
 
 	# Details
 	for pkg in packages:
 		strBuf.extend(
 			[
-				f"## {pkg['namever']}",
-				f"\n\n- HomePage: {pkg['home_page']}",
-				f"\n- Author: {pkg['author']}",
-				f"\n- License: {pkg['license']}",
-				f"\n- Compatible: {pkg['license_compat']}",
-				f"\n- Size: {pkg['size']}",
+				f"\n## {pkg['namever']}",
+				f"\n- HomePage: {pkg['home_page']}",
+				f"- Author: {pkg['author']}",
+				f"- License: {pkg['license']}",
+				f"- Compatible: {pkg['license_compat']}",
+				f"- Size: {pkg['size']}",
 			]
 		)
 	return "\n".join(strBuf) + "\n"
 
 
-def json(packages: list[PackageCompat], heading: str | None = None) -> str:
-	"""Format to Json.
+
+def raw(packages: list[PackageCompat]) -> str:
+	"""Format to raw json
 
 	Args:
-		packages (list[PackageCompat]): PackageCompats to format
-		heading (str, optional): Optional heading to include. Defaults to None.
+		packages (list[PackageCompat]): list of PackageCompats to format.
 
 	Returns:
-		str: String to write to a file of stdout
+		str: string to send to specified output in raw json format
 	"""
-	packages = sorted(packages, key=lambda i: i["name"])
-	out = {
-		"heading": (
-			heading if heading is not None else "# Packages - Find a list of packages below"
-		),
-		"packages": packages,
-	}
-	return dumps(out, indent="\t")
+	return json.dumps({"info": INFO, "packages": packages}, indent="\t")
 
 
-def csv(packages: list[PackageCompat], heading: str | None = None) -> str:
-	"""Format to CSV.
+def rawCsv(packages: list[PackageCompat]) -> str:
+	"""Format to raw csv
 
 	Args:
-		packages (list[PackageCompat]): PackageCompats to format
-		heading (str, optional): Optional heading to include. Defaults to None.
+		packages (list[PackageCompat]): list of PackageCompats to format.
 
 	Returns:
-		str: String to write to a file of stdout
+		str: string to send to specified output in raw csv format
 	"""
-	packages = sorted(packages, key=lambda i: i["name"])
-	output = StringIO()
-	csvString = writer(output)
-	csvString.writerow(
-		[
-			(
-				heading
-				if heading is not None
-				else "# Packages - Find a list of packages below "
-				"(you may want to delete this line)"
-			)
-		]
-	)
-	csvString.writerow(
-		["name", "version", "namever", "home_page", "author", "size", "license", "license_compat"]
-	)
-	for pkg in packages:
-		csvString.writerow(
-			[
-				pkg["name"],
-				pkg["version"],
-				pkg["namever"],
-				pkg["home_page"],
-				pkg["author"],
-				pkg["size"],
-				pkg["license"],
-				pkg["license_compat"],
-			]
-		)
-	return output.getvalue()
-
-
-def ansi(packages: list[PackageCompat], heading: str | None = None) -> str:
-	"""Format to ansi.
-
-	Args:
-		packages (list[PackageCompat]): PackageCompats to format
-		heading (str, optional): Optional heading to include. Defaults to None.
-
-	Returns:
-		str: String to write to a file of stdout
-	"""
-	# pylint: disable=invalid-name
-	BLD = "\033[01m"
-	CLS = "\033[00m"
-	UL = "\033[04m"
-	CB = "\033[36m"
-	CG = "\033[32m"
-
-	if len(packages) == 0:
-		return f"{BLD}{UL}{CB}No packages{CLS}"
-
-	# pylint: enable=invalid-name
-	heading = (
-		heading
-		if heading is not None
-		else f"{BLD}{UL}{CB}PackageCompats{CLS}\n\nFind a list of packages below\n"
-	)
-	strBuf = [heading]
-	packages = sorted(packages, key=lambda i: i["name"])
-
-	# Summary Table
-	strBuf.append(f"┌{'─'*10}┬{'─'*30}┐")
-	strBuf.append("│Compatible│Package                       │")
-	strBuf.append(f"├{'─'*10}┼{'─'*30}┤")
-	for pkg in packages:
-		strBuf.append(f"│{str(pkg['license_compat']): <10}│{pkg['name'][:30]: <30}│")
-	strBuf.append(f"└{'─'*10}┴{'─'*30}┘")
-	strBuf.append("")
-
-	# Details
-	for pkg in packages:
-		strBuf.extend(
-			[
-				f"{BLD}{UL}{CG}{pkg['namever']}{CLS}",
-				f"HomePage: {pkg['home_page']}",
-				f"Author: {pkg['author']}",
-				f"License: {pkg['license']}",
-				f"Compatible: {pkg['license_compat']}",
-				f"Size: {pkg['size']}\n",
-			]
-		)
-	return "\n".join(strBuf)
-
-
-def simple(packages: list[PackageCompat]) -> str:
-	"""Format to plain text.
-
-	Args:
-		packages (list[PackageCompat]): PackageCompats to format
-
-	Returns:
-		str: String to write to a file of stdout
-	"""
-	packages = sorted(packages, key=lambda i: i["name"])
-
-	# Summary Table
-	strBuf = [f"┌{'─'*6}┬{'─'*20}┬{'─'*30}┐"]
-	strBuf.append(f"│{'Compat':^6}│{'Package':^20}│{'License':^30}│")
-	strBuf.append(f"├{'─'*6}┼{'─'*20}┼{'─'*30}┤")
-	for pkg in packages:
-		strBuf.append(
-			f"│{'✅' if pkg['license_compat'] else '❌':^5}"
-			f"│{pkg['name'][:20]: <20}│{pkg['license'][:30]: <30}│"
-		)
-	strBuf.append(f"└{'─'*6}┴{'─'*20}┴{'─'*30}┘")
-
-	return "\n".join(strBuf)
+	string = StringIO()
+	writer = csv.DictWriter(string, fieldnames=list(packages[0]), lineterminator="\n")
+	writer.writeheader()
+	writer.writerows(packages)
+	return string.getvalue()
 
 
 formatMap = {
-	"json": json,
+	"json": raw,
 	"markdown": markdown,
-	"csv": csv,
+	"csv": rawCsv,
 	"ansi": ansi,
-	"simple": simple,
+	"simple": plainText,
 }
