@@ -143,6 +143,9 @@ def getClassifiersLicense() -> dict[str, Any]:
 			return tool["poetry"]
 		if "flit" in tool:
 			return tool["flit"]["metadata"]
+		if pyproject.get("project") is not None:
+			return pyproject["project"]
+
 	return {"classifiers": [], "license": ""}
 
 
@@ -158,7 +161,10 @@ def getMyPackageLicense() -> str:
 	if licenseClassifier != UNKNOWN:
 		return licenseClassifier
 	if "license" in metaData:
-		return str(metaData["license"])
+		if isinstance(metaData["license"], dict) and metaData["license"].get("text") is not None:
+			return str(metaData["license"].get("text"))
+		else:
+			return str(metaData["license"])
 	return input("Enter the project license")
 
 
