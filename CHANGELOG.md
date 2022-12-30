@@ -3,6 +3,14 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2022.3.2 - 2022/12/30
+
+- Fix: use constant `JOINS` (";; ") in place of hardcoded ", " string to avoid splitting single license with commas
+- Fix: Add `GPL_X` for GPL without a defined version
+- Minor refactoring eg renaming functions
+- Make namever consistent
+- Add regression tests
+
 ## 2022.3.0 - 2022/12/30
 
 - Combined `PackageCompat` and `PackageInfo` to a `@dataclass` of `PackageInfo`

@@ -14,7 +14,7 @@ Get Deps
 
 [Show source in get_deps.py:90](../../../licensecheck/get_deps.py#L90)
 
-Get a set of dependencies with licenses and determin license compatibility.
+Get a set of dependencies with licenses and determine license compatibility.
 
 #### Arguments
 

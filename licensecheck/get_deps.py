@@ -94,7 +94,7 @@ def getDepsWithLicenses(
 	ignoreLicenses: list[str],
 	failLicenses: list[str],
 ) -> set[PackageInfo]:
-	"""Get a set of dependencies with licenses and determin license compatibility.
+	"""Get a set of dependencies with licenses and determine license compatibility.
 
 	Args:
 		using (str): use requirements or poetry
