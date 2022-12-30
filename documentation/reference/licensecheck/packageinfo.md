@@ -36,7 +36,7 @@ def getClassifiersLicense() -> dict[str, Any]:
 
 ## getModuleSize
 
-[Show source in packageinfo.py:157](../../../licensecheck/packageinfo.py#L157)
+[Show source in packageinfo.py:163](../../../licensecheck/packageinfo.py#L163)
 
 Get the size of a given module as an int.
 
@@ -60,7 +60,7 @@ def getModuleSize(path: Path, name: str) -> int:
 
 ## getMyPackageLicense
 
-[Show source in packageinfo.py:142](../../../licensecheck/packageinfo.py#L142)
+[Show source in packageinfo.py:145](../../../licensecheck/packageinfo.py#L145)
 
 Get the package license from "setup.cfg", "pyproject.toml" or user input
 
