@@ -8,7 +8,7 @@ import warnings
 import requirements
 
 from licensecheck import license_matrix, packageinfo
-from licensecheck.types import PackageInfo
+from licensecheck.types import JOINS, PackageInfo
 
 USINGS = ["requirements", "poetry"]
 
@@ -126,7 +126,7 @@ def getDepsWithLicenses(
 			package.licenseCompat = license_matrix.depCompatWMyLice(  # type: ignore
 				myLice,
 				license_matrix.licenseType(package.license),
-				license_matrix.licenseType(", ".join(ignoreLicenses)),
-				license_matrix.licenseType(", ".join(failLicenses)),
+				license_matrix.licenseType(JOINS.join(ignoreLicenses)),
+				license_matrix.licenseType(JOINS.join(failLicenses)),
 			)
 	return packages

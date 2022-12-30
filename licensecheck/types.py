@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 
 UNKNOWN = "UNKNOWN"
+JOINS = ";; "
 
 
 @dataclass(unsafe_hash=True)

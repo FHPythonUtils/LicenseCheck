@@ -10,7 +10,7 @@ from typing import Any, cast
 import requests
 import tomli
 
-from licensecheck.types import UNKNOWN, PackageInfo
+from licensecheck.types import JOINS, UNKNOWN, PackageInfo
 
 
 def getPackageInfoLocal(requirement: str) -> PackageInfo:
@@ -91,7 +91,7 @@ def licenseFromClassifierlist(classifiers: list[str]) -> str:
 			lice = val.split(" :: ")[-1]
 			if lice != "OSI Approved":
 				licenses.append(lice)
-	return ", ".join(licenses) if len(licenses) > 0 else UNKNOWN
+	return JOINS.join(licenses) if len(licenses) > 0 else UNKNOWN
 
 
 def getPackages(reqs: set[str]) -> set[PackageInfo]:

@@ -12,7 +12,7 @@ Types
 
 ## License
 
-[Show source in types.py:29](../../../licensecheck/types.py#L29)
+[Show source in types.py:30](../../../licensecheck/types.py#L30)
 
 #### Attributes
 
@@ -48,7 +48,7 @@ class License(Enum):
 
 ## PackageInfo
 
-[Show source in types.py:12](../../../licensecheck/types.py#L12)
+[Show source in types.py:13](../../../licensecheck/types.py#L13)
 
 PackageInfo type.
 

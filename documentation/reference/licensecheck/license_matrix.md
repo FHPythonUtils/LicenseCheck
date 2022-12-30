@@ -31,7 +31,7 @@ License Matrix
 
 ## depCompatWMyLice
 
-[Show source in license_matrix.py:166](../../../licensecheck/license_matrix.py#L166)
+[Show source in license_matrix.py:168](../../../licensecheck/license_matrix.py#L168)
 
 Identify if the end user license is compatible with the dependency license(s).
 
@@ -66,7 +66,7 @@ def depCompatWMyLice(
 
 ## licenseLookup
 
-[Show source in license_matrix.py:43](../../../licensecheck/license_matrix.py#L43)
+[Show source in license_matrix.py:44](../../../licensecheck/license_matrix.py#L44)
 
 Identify a license from an uppercase string representation of a license.
 
@@ -93,7 +93,7 @@ def licenseLookup(licenseStr: str) -> L:
 
 ## licenseType
 
-[Show source in license_matrix.py:99](../../../licensecheck/license_matrix.py#L99)
+[Show source in license_matrix.py:101](../../../licensecheck/license_matrix.py#L101)
 
 Return a list of license types from a license string.
 

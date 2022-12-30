@@ -37,6 +37,7 @@ EU -> gpl -> agpl (3 only)
 """
 from __future__ import annotations
 
+from licensecheck.types import JOINS
 from licensecheck.types import License as L
 
 
@@ -84,6 +85,7 @@ def licenseLookup(licenseStr: str) -> L:
 		"GPL-2.0": L.GPL_2,
 		"GPLV3": L.GPL_3,
 		"GPL-3.0": L.GPL_3,
+		"GPL": L.GPL_X,
 		"MPL": L.MPL,
 		"EUPL": L.EU,
 		"PROPRIETARY": L.PROPRIETARY,
@@ -107,7 +109,7 @@ def licenseType(lice: str) -> list[L]:
 	"""
 	if len(lice) < 1:
 		return []
-	return [licenseLookup(x) for x in lice.upper().split(", ")]
+	return [licenseLookup(x) for x in lice.upper().split(JOINS)]
 
 
 # Permissive licenses compatible with GPL
