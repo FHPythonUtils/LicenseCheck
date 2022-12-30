@@ -116,15 +116,15 @@ def getPackages(reqs: set[str]) -> set[PackageInfo]:
 	return packageinfo
 
 
-def getClassifiersLicense() -> dict[str, Any]:
-	"""Get the package classifiers and license from "setup.cfg", "pyproject.toml" or user input
+def getMyPackageMetadata() -> dict[str, Any]:
+	"""Get the package classifiers and license from "setup.cfg", "pyproject.toml"
 
 	Returns:
-		dict[str, Any]: {"classifiers": set[str], "license": str}
+		dict[str, Any]: {"classifiers": list[str], "license": str}
 	"""
 	if Path("setup.cfg").exists():
 		config = configparser.ConfigParser()
-		_ = config.read("setup.cfg")
+		config.read("setup.cfg")
 		if "license" in config["metadata"]:
 			return config["metadata"].__dict__
 	if Path("pyproject.toml").exists():
@@ -146,16 +146,15 @@ def getMyPackageLicense() -> str:
 	Returns:
 		str: license name
 	"""
-	metaData = getClassifiersLicense()
+	metaData = getMyPackageMetadata()
 	licenseClassifier = licenseFromClassifierlist(metaData.get("classifiers", []))
 	if licenseClassifier != UNKNOWN:
 		return licenseClassifier
 	if "license" in metaData:
 		if isinstance(metaData["license"], dict) and metaData["license"].get("text") is not None:
 			return str(metaData["license"].get("text"))
-		else:
-			return str(metaData["license"])
-	return input("Enter the project license")
+		return str(metaData["license"])
+	return input("Enter the project license\n>")
 
 
 def getModuleSize(path: Path, name: str) -> int:

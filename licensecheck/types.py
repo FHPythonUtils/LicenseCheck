@@ -14,7 +14,7 @@ class PackageInfo:
 
 	name: str
 	version: str = UNKNOWN
-	namever: str  = field(init=False)
+	namever: str = field(init=False)
 	size: int = -1
 	homePage: str = UNKNOWN
 	author: str = UNKNOWN

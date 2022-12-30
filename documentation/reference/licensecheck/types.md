@@ -12,7 +12,7 @@ Types
 
 ## License
 
-[Show source in types.py:26](../../../licensecheck/types.py#L26)
+[Show source in types.py:29](../../../licensecheck/types.py#L29)
 
 #### Attributes
 
