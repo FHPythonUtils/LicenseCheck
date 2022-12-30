@@ -176,7 +176,7 @@ Add optional path to requirements.txt as outlined in https://github.com/FHPython
 		{
 			"name": "requirements-parser",
 			"version": "0.5.0",
-			"namever": "requirements-parser 0.5.0",
+			"namever": "requirements-parser-0.5.0",
 			"size": 11523,
 			"homePage": "https://github.com/madpah/requirements-parser",
 			"author": "Paul Horton",

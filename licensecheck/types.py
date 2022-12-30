@@ -2,7 +2,7 @@
 """
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 
 UNKNOWN = "UNKNOWN"
@@ -14,13 +14,16 @@ class PackageInfo:
 
 	name: str
 	version: str = UNKNOWN
-	namever: str = UNKNOWN
+	namever: str  = field(init=False)
 	size: int = -1
 	homePage: str = UNKNOWN
 	author: str = UNKNOWN
 	license: str = UNKNOWN
 	licenseCompat: bool = False
 	errorCode: int = 0
+
+	def __post_init__(self):
+		self.namever = f"{self.name}-{self.version}"
 
 
 class License(Enum):

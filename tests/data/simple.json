@@ -1,0 +1,19 @@
+{
+	"info": {
+		"program": "licensecheck",
+		"version": "2022.2.0"
+	},
+	"packages": [
+		{
+			"name": "example",
+			"version": "UNKNOWN",
+			"size": -1,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "UNKNOWN",
+			"licenseCompat": false,
+			"errorCode": 0,
+			"namever": "example-UNKNOWN"
+		}
+	]
+}

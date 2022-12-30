@@ -41,7 +41,6 @@ def getPackageInfoLocal(requirement: str) -> PackageInfo:
 		return PackageInfo(
 			name=name,
 			version=version,
-			namever=f"{name}-{version}",
 			homePage=homePage,
 			author=author,
 			size=size,
@@ -68,7 +67,6 @@ def getPackageInfoPypi(requirement: str) -> PackageInfo:
 		return PackageInfo(
 			name=requirement,
 			version=info["version"],
-			namever=f"{requirement} {info['version']}",
 			homePage=info["home_page"],
 			author=info["author"],
 			size=int(response["urls"][-1]["size"]),
