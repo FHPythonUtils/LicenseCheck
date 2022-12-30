@@ -6,10 +6,10 @@
 	version: str
 	namever: str
 	size: int
-	home_page: str
+	homePage: str
 	author: str
 	license: str
-	license_compat: bool
+	licenseCompat: bool
 }
 ```
 
@@ -21,6 +21,7 @@ To one of the following formats:
 - json
 - csv
 """
+from __future__ import annotations
 
 import csv
 import json
@@ -30,7 +31,7 @@ from io import StringIO
 from rich.console import Console
 from rich.table import Table
 
-from licensecheck.types import PackageCompat
+from licensecheck.types import PackageInfo
 
 INFO = {"program": "licensecheck", "version": "2022.2.0"}
 
@@ -47,11 +48,11 @@ def stripAnsi(string: str) -> str:
 	return re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", string)
 
 
-def ansi(packages: list[PackageCompat]) -> str:
+def ansi(packages: list[PackageInfo]) -> str:
 	"""Format to ansi
 
 	Args:
-		packages (list[PackageCompat]): list of PackageCompats to format.
+		packages (list[PackageInfo]): list of PackageCompats to format.
 
 	Returns:
 		str: string to send to specified output in ansi format
@@ -63,6 +64,13 @@ def ansi(packages: list[PackageCompat]) -> str:
 
 	console = Console(file=string, color_system="truecolor")
 
+	errors = [x for x in packages if x.errorCode > 0]
+	if len(errors) > 0:
+		table = Table(title="\nlist of errors")
+		table.add_column("Package", style="magenta")
+		_ = [table.add_row(x.name) for x in errors]
+		console.print(table)
+
 	table = Table(title="\nlist of packages")
 	table.add_column("Compatible", style="cyan")
 	table.add_column("Package", style="magenta")
@@ -71,16 +79,16 @@ def ansi(packages: list[PackageCompat]) -> str:
 		"[red]✖[/]",
 		"[green]✔[/]",
 	)
-	_ = [table.add_row(licenseCompat[x["license_compat"]], x["name"], x["license"]) for x in packages]
+	_ = [table.add_row(licenseCompat[x.licenseCompat], x.name, x.license) for x in packages]
 	console.print(table)
 	return string.getvalue()
 
 
-def plainText(packages: list[PackageCompat]) -> str:
+def plainText(packages: list[PackageInfo]) -> str:
 	"""Format to plain text
 
 	Args:
-		packages (list[PackageCompat]): list of PackageCompats to format.
+		packages (list[PackageInfo]): list of PackageCompats to format.
 
 	Returns:
 		str: string to send to specified output in plain text format
@@ -88,11 +96,11 @@ def plainText(packages: list[PackageCompat]) -> str:
 	return stripAnsi(ansi(packages))
 
 
-def markdown(packages: list[PackageCompat]) -> str:
+def markdown(packages: list[PackageInfo]) -> str:
 	"""Format to markdown
 
 	Args:
-		packages (list[PackageCompat]): list of PackageCompats to format.
+		packages (list[PackageInfo]): list of PackageCompats to format.
 
 	Returns:
 		str: string to send to specified output in markdown format
@@ -101,54 +109,53 @@ def markdown(packages: list[PackageCompat]) -> str:
 		return "No packages"
 
 	strBuf = ["\n# Packages\nFind a list of packages below\n"]
-	packages = sorted(packages, key=lambda i: i["name"])
+	packages = sorted(packages, key=lambda i: i.name)
 
 	# Summary Table
 	strBuf.append("|Compatible|Package|\n|:--|:--|")
 	for pkg in packages:
-		strBuf.append(f"|{pkg['license_compat']}|{pkg['name']}|")
+		strBuf.append(f"|{pkg.licenseCompat}|{pkg.name}|")
 
 	# Details
 	for pkg in packages:
 		strBuf.extend(
 			[
-				f"\n## {pkg['namever']}",
-				f"\n- HomePage: {pkg['home_page']}",
-				f"- Author: {pkg['author']}",
-				f"- License: {pkg['license']}",
-				f"- Compatible: {pkg['license_compat']}",
-				f"- Size: {pkg['size']}",
+				f"\n## {pkg.namever}",
+				f"\n- HomePage: {pkg.homePage}",
+				f"- Author: {pkg.author}",
+				f"- License: {pkg.license}",
+				f"- Compatible: {pkg.licenseCompat}",
+				f"- Size: {pkg.size}",
 			]
 		)
 	return "\n".join(strBuf) + "\n"
 
 
-
-def raw(packages: list[PackageCompat]) -> str:
+def raw(packages: list[PackageInfo]) -> str:
 	"""Format to raw json
 
 	Args:
-		packages (list[PackageCompat]): list of PackageCompats to format.
+		packages (list[PackageInfo]): list of PackageCompats to format.
 
 	Returns:
 		str: string to send to specified output in raw json format
 	"""
-	return json.dumps({"info": INFO, "packages": packages}, indent="\t")
+	return json.dumps({"info": INFO, "packages": [x.__dict__ for x in packages]}, indent="\t")
 
 
-def rawCsv(packages: list[PackageCompat]) -> str:
+def rawCsv(packages: list[PackageInfo]) -> str:
 	"""Format to raw csv
 
 	Args:
-		packages (list[PackageCompat]): list of PackageCompats to format.
+		packages (list[PackageInfo]): list of PackageCompats to format.
 
 	Returns:
 		str: string to send to specified output in raw csv format
 	"""
 	string = StringIO()
-	writer = csv.DictWriter(string, fieldnames=list(packages[0]), lineterminator="\n")
+	writer = csv.DictWriter(string, fieldnames=list(packages[0].__dict__), lineterminator="\n")
 	writer.writeheader()
-	writer.writerows(packages)
+	writer.writerows([x.__dict__ for x in packages])
 	return string.getvalue()
 
 

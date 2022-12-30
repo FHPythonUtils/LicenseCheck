@@ -87,7 +87,7 @@ def cli() -> None:
 	)
 
 	# Get list of licenses
-	dependenciesWLicenses = get_deps.getDepsWithLicenses(
+	depsWithLicenses = get_deps.getDepsWithLicenses(
 		simpleConf.get("using", "poetry"),
 		simpleConf.get("ignore_packages", []),
 		simpleConf.get("fail_packages", []),
@@ -96,12 +96,12 @@ def cli() -> None:
 	)
 
 	# Are any licenses incompatible?
-	incompatible = any(not lice["license_compat"] for lice in dependenciesWLicenses)
+	incompatible = any(not lice.licenseCompat for lice in depsWithLicenses)
 
 	# Format the results
 	if simpleConf.get("format", "simple") in formatter.formatMap:
 		print(
-			formatter.formatMap[simpleConf.get("format", "simple")](dependenciesWLicenses),
+			formatter.formatMap[simpleConf.get("format", "simple")](list(depsWithLicenses)),
 			file=filename,
 		)
 	else:

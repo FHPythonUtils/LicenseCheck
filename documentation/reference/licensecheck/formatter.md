@@ -16,13 +16,13 @@ Formatter
 
 ## ansi
 
-[Show source in formatter.py:50](../../../licensecheck/formatter.py#L50)
+[Show source in formatter.py:51](../../../licensecheck/formatter.py#L51)
 
 Format to ansi
 
 #### Arguments
 
-- `packages` *list[PackageCompat]* - list of PackageCompats to format.
+- `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
@@ -31,25 +31,25 @@ Format to ansi
 #### Signature
 
 ```python
-def ansi(packages: list[PackageCompat]) -> str:
+def ansi(packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
-- [PackageCompat](./types.md#packagecompat)
+- [PackageInfo](./types.md#packageinfo)
 
 
 
 ## markdown
 
-[Show source in formatter.py:91](../../../licensecheck/formatter.py#L91)
+[Show source in formatter.py:99](../../../licensecheck/formatter.py#L99)
 
 Format to markdown
 
 #### Arguments
 
-- `packages` *list[PackageCompat]* - list of PackageCompats to format.
+- `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
@@ -58,25 +58,25 @@ Format to markdown
 #### Signature
 
 ```python
-def markdown(packages: list[PackageCompat]) -> str:
+def markdown(packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
-- [PackageCompat](./types.md#packagecompat)
+- [PackageInfo](./types.md#packageinfo)
 
 
 
 ## plainText
 
-[Show source in formatter.py:79](../../../licensecheck/formatter.py#L79)
+[Show source in formatter.py:87](../../../licensecheck/formatter.py#L87)
 
 Format to plain text
 
 #### Arguments
 
-- `packages` *list[PackageCompat]* - list of PackageCompats to format.
+- `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
@@ -85,25 +85,25 @@ Format to plain text
 #### Signature
 
 ```python
-def plainText(packages: list[PackageCompat]) -> str:
+def plainText(packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
-- [PackageCompat](./types.md#packagecompat)
+- [PackageInfo](./types.md#packageinfo)
 
 
 
 ## raw
 
-[Show source in formatter.py:127](../../../licensecheck/formatter.py#L127)
+[Show source in formatter.py:134](../../../licensecheck/formatter.py#L134)
 
 Format to raw json
 
 #### Arguments
 
-- `packages` *list[PackageCompat]* - list of PackageCompats to format.
+- `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
@@ -112,25 +112,25 @@ Format to raw json
 #### Signature
 
 ```python
-def raw(packages: list[PackageCompat]) -> str:
+def raw(packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
-- [PackageCompat](./types.md#packagecompat)
+- [PackageInfo](./types.md#packageinfo)
 
 
 
 ## rawCsv
 
-[Show source in formatter.py:139](../../../licensecheck/formatter.py#L139)
+[Show source in formatter.py:146](../../../licensecheck/formatter.py#L146)
 
 Format to raw csv
 
 #### Arguments
 
-- `packages` *list[PackageCompat]* - list of PackageCompats to format.
+- `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
@@ -139,19 +139,19 @@ Format to raw csv
 #### Signature
 
 ```python
-def rawCsv(packages: list[PackageCompat]) -> str:
+def rawCsv(packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
-- [PackageCompat](./types.md#packagecompat)
+- [PackageInfo](./types.md#packageinfo)
 
 
 
 ## stripAnsi
 
-[Show source in formatter.py:38](../../../licensecheck/formatter.py#L38)
+[Show source in formatter.py:39](../../../licensecheck/formatter.py#L39)
 
 Strip ansi codes from a given string
 

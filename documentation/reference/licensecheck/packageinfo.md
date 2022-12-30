@@ -10,20 +10,20 @@ Packageinfo
   - [getClassifiersLicense](#getclassifierslicense)
   - [getModuleSize](#getmodulesize)
   - [getMyPackageLicense](#getmypackagelicense)
+  - [getPackageInfoLocal](#getpackageinfolocal)
+  - [getPackageInfoPypi](#getpackageinfopypi)
   - [getPackages](#getpackages)
-  - [getPackagesFromLocal](#getpackagesfromlocal)
   - [licenseFromClassifierlist](#licensefromclassifierlist)
-  - [packageInfoFromPypi](#packageinfofrompypi)
 
 ## getClassifiersLicense
 
-[Show source in packageinfo.py:128](../../../licensecheck/packageinfo.py#L128)
+[Show source in packageinfo.py:121](../../../licensecheck/packageinfo.py#L121)
 
 Get the package classifiers and license from "setup.cfg", "pyproject.toml" or user input
 
 #### Returns
 
-- `dict[str,` *Any]* - {"classifiers": list[str], "license": str}
+- `dict[str,` *Any]* - {"classifiers": set[str], "license": str}
 
 #### Signature
 
@@ -36,7 +36,7 @@ def getClassifiersLicense() -> dict[str, Any]:
 
 ## getModuleSize
 
-[Show source in packageinfo.py:166](../../../licensecheck/packageinfo.py#L166)
+[Show source in packageinfo.py:157](../../../licensecheck/packageinfo.py#L157)
 
 Get the size of a given module as an int.
 
@@ -60,7 +60,7 @@ def getModuleSize(path: Path, name: str) -> int:
 
 ## getMyPackageLicense
 
-[Show source in packageinfo.py:150](../../../licensecheck/packageinfo.py#L150)
+[Show source in packageinfo.py:142](../../../licensecheck/packageinfo.py#L142)
 
 Get the package license from "setup.cfg", "pyproject.toml" or user input
 
@@ -77,24 +77,30 @@ def getMyPackageLicense() -> str:
 
 
 
-## getPackages
+## getPackageInfoLocal
 
-[Show source in packageinfo.py:113](../../../licensecheck/packageinfo.py#L113)
+[Show source in packageinfo.py:16](../../../licensecheck/packageinfo.py#L16)
 
-Get dependency info.
+Get package info from local files including version, author
+and	the license.
 
 #### Arguments
 
-- `reqs` *list[str]* - list of dependency names to gather info on
+- `requirement` *str* - name of the package
+
+#### Raises
+
+- `ModuleNotFoundError` -  if the package does not exist
 
 #### Returns
 
-- `list[PackageInfo]` - list of dependencies
+Type: *PackageInfo*
+package information
 
 #### Signature
 
 ```python
-def getPackages(reqs: list[str]) -> list[PackageInfo]:
+def getPackageInfoLocal(requirement: str) -> PackageInfo:
     ...
 ```
 
@@ -104,25 +110,57 @@ def getPackages(reqs: list[str]) -> list[PackageInfo]:
 
 
 
-## getPackagesFromLocal
+## getPackageInfoPypi
 
-[Show source in packageinfo.py:18](../../../licensecheck/packageinfo.py#L18)
+[Show source in packageinfo.py:55](../../../licensecheck/packageinfo.py#L55)
 
-Get a list of package info from local files including version, author
+Get package info from local files including version, author
 and	the license.
 
 #### Arguments
 
-- `requirements` *list[str]* - [description]
+- `requirement` *str* - name of the package
+
+#### Raises
+
+- `ModuleNotFoundError` -  if the package does not exist
 
 #### Returns
 
-- `list[PackageInfo]` - [description]
+Type: *PackageInfo*
+package information
 
 #### Signature
 
 ```python
-def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
+def getPackageInfoPypi(requirement: str) -> PackageInfo:
+    ...
+```
+
+#### See also
+
+- [PackageInfo](./types.md#packageinfo)
+
+
+
+## getPackages
+
+[Show source in packageinfo.py:99](../../../licensecheck/packageinfo.py#L99)
+
+Get dependency info.
+
+#### Arguments
+
+- `reqs` *set[str]* - set of dependency names to gather info on
+
+#### Returns
+
+- `set[PackageInfo]` - set of dependencies
+
+#### Signature
+
+```python
+def getPackages(reqs: set[str]) -> set[PackageInfo]:
     ...
 ```
 
@@ -134,7 +172,7 @@ def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
 
 ## licenseFromClassifierlist
 
-[Show source in packageinfo.py:95](../../../licensecheck/packageinfo.py#L95)
+[Show source in packageinfo.py:81](../../../licensecheck/packageinfo.py#L81)
 
 Get license string from a list of project classifiers.
 
@@ -152,33 +190,5 @@ Get license string from a list of project classifiers.
 def licenseFromClassifierlist(classifiers: list[str]) -> str:
     ...
 ```
-
-
-
-## packageInfoFromPypi
-
-[Show source in packageinfo.py:65](../../../licensecheck/packageinfo.py#L65)
-
-Get a list of package info from pypi.org including version, author
-and	the license.
-
-#### Arguments
-
-- `requirements` *list[str]* - [description]
-
-#### Returns
-
-- `list[PackageInfo]` - [description]
-
-#### Signature
-
-```python
-def packageInfoFromPypi(requirements: list[str]) -> list[PackageInfo]:
-    ...
-```
-
-#### See also
-
-- [PackageInfo](./types.md#packageinfo)
 
 

@@ -8,7 +8,7 @@ import warnings
 import requirements
 
 from licensecheck import license_matrix, packageinfo
-from licensecheck.types import PackageCompat
+from licensecheck.types import PackageInfo
 
 USINGS = ["requirements", "poetry"]
 
@@ -38,7 +38,7 @@ def _doSysExec(command: str) -> tuple[int, str]:
 	return exitCode, out
 
 
-def getReqs(using: str) -> list[str]:
+def getReqs(using: str) -> set[str]:
 	"""Get requirements for the end user project/ lib.
 
 	>>> getReqs("poetry")
@@ -50,7 +50,7 @@ def getReqs(using: str) -> list[str]:
 		using (str): use requirements or poetry.
 
 	Returns:
-		list[str]: list of requirement packages
+		set[str]: set of requirement packages
 	"""
 	_ = using.split(":", 1)
 	using, extras = _[0], _[1] if len(_) > 1 else None
@@ -69,7 +69,7 @@ def getReqs(using: str) -> list[str]:
 		for line in lines:
 			try:
 				parts = line.split()
-				reqs.add(parts[0])
+				reqs.add(parts[0].lower())
 			except IndexError:
 				print(
 					"An error occurred with poetry, try running 'poetry show' to "
@@ -83,8 +83,8 @@ def getReqs(using: str) -> list[str]:
 		for reqTxt in (extras or "requirements.txt").split(";"):
 			with open(reqTxt, encoding="utf-8") as requirementsTxt:
 				for req in requirements.parse(requirementsTxt):
-					reqs.add(req.name)
-	return [x.lower() for x in reqs]
+					reqs.add(str(req.name).lower())
+	return reqs
 
 
 def getDepsWithLicenses(
@@ -93,8 +93,8 @@ def getDepsWithLicenses(
 	failPackages: list[str],
 	ignoreLicenses: list[str],
 	failLicenses: list[str],
-) -> list[PackageCompat]:
-	"""Get a list of dependencies with licenses and determin license compatibility.
+) -> set[PackageInfo]:
+	"""Get a set of dependencies with licenses and determin license compatibility.
 
 	Args:
 		using (str): use requirements or poetry
@@ -104,7 +104,7 @@ def getDepsWithLicenses(
 		failLicenses (list[str]): a list of licenses to fail (compat=False)
 
 	Returns:
-		list[PackageCompat]: list of packagecompat types: dependency info + licence compat
+		set[PackageInfo]: set of updated dependencies with licenseCompat set
 	"""
 	reqs = getReqs(using)
 
@@ -113,22 +113,20 @@ def getDepsWithLicenses(
 	myLice = license_matrix.licenseType(myLiceTxt)[0]
 
 	# Check it is compatible with packages and add a note
-	dependenciesWLicenses = []
-	for package in packageinfo.getPackages(reqs):
+	packages = packageinfo.getPackages(reqs)
+	for package in packages:
 		# Deal with --ignore-packages and --fail-packages
-		licenseCompat = False
-		if package["name"].lower() in [x.lower() for x in ignorePackages]:
-			licenseCompat = True
-		elif package["name"].lower() in [x.lower() for x in failPackages]:
-			pass  # licenseCompat=False
+		package.licenseCompat = False
+		if package.name.lower() in [x.lower() for x in ignorePackages]:
+			package.licenseCompat = True
+		elif package.name.lower() in [x.lower() for x in failPackages]:
+			pass  # package.licenseCompat = False
 		# Old behaviour
 		else:
-			licenseCompat = license_matrix.depCompatWMyLice(
+			package.licenseCompat = license_matrix.depCompatWMyLice(  # type: ignore
 				myLice,
-				license_matrix.licenseType(package["license"]),
+				license_matrix.licenseType(package.license),
 				license_matrix.licenseType(", ".join(ignoreLicenses)),
 				license_matrix.licenseType(", ".join(failLicenses)),
 			)
-		# Add to list of dependenciesWLicenses
-		dependenciesWLicenses.append(PackageCompat(**package, license_compat=licenseCompat))
-	return dependenciesWLicenses
+	return packages

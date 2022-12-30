@@ -2,94 +2,80 @@
 """
 from __future__ import annotations
 
+import configparser
 from importlib import metadata, resources
 from pathlib import Path
 from typing import Any, cast
-import configparser
 
 import requests
 import tomli
 
-from licensecheck.types import PackageInfo
-
-UNKNOWN = "UNKNOWN"
+from licensecheck.types import UNKNOWN, PackageInfo
 
 
-def getPackagesFromLocal(requirements: list[str]) -> list[PackageInfo]:
-	"""Get a list of package info from local files including version, author
+def getPackageInfoLocal(requirement: str) -> PackageInfo:
+	"""Get package info from local files including version, author
 	and	the license.
 
-	Args:
-		requirements (list[str]): [description]
-
-	Returns:
-		list[PackageInfo]: [description]
+	:param str requirement: name of the package
+	:raises ModuleNotFoundError: if the package does not exist
+	:return PackageInfo: package information
 	"""
-	pkgInfo = []
-	for requirement in requirements:
+	try:
+		# Get pkg metadata: license, homepage + author
+		pkgMetadata = metadata.metadata(requirement)
+		lice = licenseFromClassifierlist(pkgMetadata.get_all("Classifier"))
+		if lice == UNKNOWN:
+			lice = pkgMetadata.get("License", UNKNOWN)
+		homePage = pkgMetadata.get("Home-page", UNKNOWN)
+		author = pkgMetadata.get("Author", UNKNOWN)
+		name = pkgMetadata.get("Name", UNKNOWN)
+		version = pkgMetadata.get("Version", UNKNOWN)
+		size = 0
 		try:
-			# Get pkg metadata: license, homepage + author
-			pkgMetadata = metadata.metadata(requirement)
-			lice = licenseFromClassifierlist(
-				[val for key, val in pkgMetadata.items() if key == "Classifier"]
-			)
-			if lice == UNKNOWN:
-				lice = pkgMetadata.get("License", UNKNOWN)
-			homePage = pkgMetadata.get("Home-page", UNKNOWN)
-			author = pkgMetadata.get("Author", UNKNOWN)
-			name = pkgMetadata.get("Name", UNKNOWN)
-			version = pkgMetadata.get("Version", UNKNOWN)
-			size = 0
-			try:
-				packagePath = resources.files(requirement)
-				size = getModuleSize(cast(Path, packagePath), name)
-			except TypeError:
-				pass
-			# append to pkgInfo
-			pkgInfo.append(
-				{
-					"name": name,
-					"version": version,
-					"namever": f"{name}-{version}",
-					"home_page": homePage,
-					"author": author,
-					"size": size,
-					"license": lice,
-				}
-			)
-		except (metadata.PackageNotFoundError, ModuleNotFoundError):
+			packagePath = resources.files(requirement)
+			size = getModuleSize(cast(Path, packagePath), name)
+		except TypeError:
 			pass
-	return pkgInfo
+		# append to pkgInfo
+		return PackageInfo(
+			name=name,
+			version=version,
+			namever=f"{name}-{version}",
+			homePage=homePage,
+			author=author,
+			size=size,
+			license=lice,
+		)
+
+	except (metadata.PackageNotFoundError, ModuleNotFoundError) as error:
+		raise ModuleNotFoundError from error
 
 
-def packageInfoFromPypi(requirements: list[str]) -> list[PackageInfo]:
-	"""Get a list of package info from pypi.org including version, author
+def getPackageInfoPypi(requirement: str) -> PackageInfo:
+	"""Get package info from local files including version, author
 	and	the license.
 
-	Args:
-		requirements (list[str]): [description]
-
-	Returns:
-		list[PackageInfo]: [description]
+	:param str requirement: name of the package
+	:raises ModuleNotFoundError: if the package does not exist
+	:return PackageInfo: package information
 	"""
-	pkgInfo = []
-	for pkg in requirements:
-		request = requests.get(f"https://pypi.org/pypi/{pkg}/json", timeout=60)
-		response = request.json()
+	request = requests.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
+	response = request.json()
+	try:
 		info = response["info"]
 		licenseClassifier = licenseFromClassifierlist(info["classifiers"])
-		pkgInfo.append(
-			{
-				"name": pkg,
-				"version": info["version"],
-				"namever": f"{pkg} {info['version']}",
-				"home_page": info["home_page"],
-				"author": info["author"],
-				"size": int(response["urls"][-1]["size"]),
-				"license": licenseClassifier if licenseClassifier != UNKNOWN else info["license"],
-			}
+		return PackageInfo(
+			name=requirement,
+			version=info["version"],
+			namever=f"{requirement} {info['version']}",
+			homePage=info["home_page"],
+			author=info["author"],
+			size=int(response["urls"][-1]["size"]),
+			license=licenseClassifier if licenseClassifier != UNKNOWN else info["license"],
 		)
-	return pkgInfo
+	except KeyError as error:
+		raise ModuleNotFoundError from error
 
 
 def licenseFromClassifierlist(classifiers: list[str]) -> str:
@@ -110,26 +96,33 @@ def licenseFromClassifierlist(classifiers: list[str]) -> str:
 	return ", ".join(licenses) if len(licenses) > 0 else UNKNOWN
 
 
-def getPackages(reqs: list[str]) -> list[PackageInfo]:
+def getPackages(reqs: set[str]) -> set[PackageInfo]:
 	"""Get dependency info.
 
 	Args:
-		reqs (list[str]): list of dependency names to gather info on
+		reqs (set[str]): set of dependency names to gather info on
 
 	Returns:
-		list[PackageInfo]: list of dependencies
+		set[PackageInfo]: set of dependencies
 	"""
-	localReqs = getPackagesFromLocal(reqs)
-	for localReq in localReqs:
-		reqs.remove(localReq["name"].lower())
-	onlineReqs = packageInfoFromPypi(reqs)
-	return localReqs + onlineReqs
+	packageinfo = set()
+	for requirement in reqs:
+		try:
+			packageinfo.add(getPackageInfoLocal(requirement))
+		except ModuleNotFoundError:
+			try:
+				packageinfo.add(getPackageInfoPypi(requirement))
+			except ModuleNotFoundError:
+				packageinfo.add(PackageInfo(name=requirement, errorCode=1))
+
+	return packageinfo
+
 
 def getClassifiersLicense() -> dict[str, Any]:
 	"""Get the package classifiers and license from "setup.cfg", "pyproject.toml" or user input
 
 	Returns:
-		dict[str, Any]: {"classifiers": list[str], "license": str}
+		dict[str, Any]: {"classifiers": set[str], "license": str}
 	"""
 	if Path("setup.cfg").exists():
 		config = configparser.ConfigParser()
@@ -146,7 +139,6 @@ def getClassifiersLicense() -> dict[str, Any]:
 	return {"classifiers": [], "license": ""}
 
 
-
 def getMyPackageLicense() -> str:
 	"""Get the package license from "setup.cfg", "pyproject.toml" or user input
 
@@ -160,7 +152,6 @@ def getMyPackageLicense() -> str:
 	if "license" in metaData:
 		return str(metaData["license"])
 	return input("Enter the project license")
-
 
 
 def getModuleSize(path: Path, name: str) -> int:

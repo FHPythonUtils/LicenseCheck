@@ -65,54 +65,67 @@ See below for the output if you run `licensecheck` in this directory
 
 ```txt
 >> licensecheck
-┌──────┬────────────────────┬──────────────────────────────┐
-│Compat│      Package       │           License            │
-├──────┼────────────────────┼──────────────────────────────┤
-│  ✅  │attrs               │MIT License                   │
-│  ✅  │certifi             │Mozilla Public License 2.0 (MP│
-│  ✅  │charset-normalizer  │MIT License                   │
-│  ✅  │fhconfparser        │MIT License                   │
-│  ✅  │idna                │BSD License                   │
-│  ✅  │requests            │Apache Software License       │
-│  ✅  │requirements-parser │Apache Software License       │
-│  ✅  │tomli               │MIT License                   │
-│  ✅  │types-setuptools    │Apache Software License       │
-│  ✅  │urllib3             │MIT License                   │
-└──────┴────────────────────┴──────────────────────────────┘
+
+                             list of packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                           ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✔          │ urllib3             │ MIT License                          │
+│ ✔          │ types-setuptools    │ Apache Software License              │
+│ ✔          │ tomli               │ MIT License                          │
+│ ✔          │ idna                │ BSD License                          │
+│ ✔          │ Pygments            │ BSD License                          │
+│ ✔          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0) │
+│ ✔          │ fhconfparser        │ MIT License                          │
+│ ✔          │ rich                │ MIT License                          │
+│ ✔          │ charset-normalizer  │ MIT License                          │
+│ ✔          │ requirements-parser │ Apache Software License              │
+│ ✔          │ commonmark          │ BSD License                          │
+│ ✔          │ requests            │ Apache Software License              │
+│ ✔          │ attrs               │ MIT License                          │
+└────────────┴─────────────────────┴──────────────────────────────────────┘
 ```
 
 ### Using requirements
 
 ```txt
 >> licensecheck -u requirements
-┌──────┬────────────────────┬──────────────────────────────┐
-│Compat│      Package       │           License            │
-├──────┼────────────────────┼──────────────────────────────┤
-│  ✅  │fhconfparser        │MIT License                   │
-│  ✅  │requests            │Apache Software License       │
-│  ✅  │requirements-parser │Apache Software License       │
-│  ✅  │tomli               │MIT License                   │
-└──────┴────────────────────┴──────────────────────────────┘
+
+                       list of packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)              ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✔          │ requirements-parser │ Apache Software License │
+│ ✔          │ requests            │ Apache Software License │
+│ ✔          │ rich                │ MIT License             │
+│ ✔          │ fhconfparser        │ MIT License             │
+│ ✔          │ tomli               │ MIT License             │
+└────────────┴─────────────────────┴─────────────────────────┘
 ```
 
 ### Failing on packages under MIT license
 
 ```txt
 >> licensecheck --fail-licenses mit
-┌──────┬────────────────────┬──────────────────────────────┐
-│Compat│      Package       │           License            │
-├──────┼────────────────────┼──────────────────────────────┤
-│  ❌  │attrs               │MIT License                   │
-│  ✅  │certifi             │Mozilla Public License 2.0 (MP│
-│  ❌  │charset-normalizer  │MIT License                   │
-│  ❌  │fhconfparser        │MIT License                   │
-│  ✅  │idna                │BSD License                   │
-│  ✅  │requests            │Apache Software License       │
-│  ✅  │requirements-parser │Apache Software License       │
-│  ❌  │tomli               │MIT License                   │
-│  ✅  │types-setuptools    │Apache Software License       │
-│  ❌  │urllib3             │MIT License                   │
-└──────┴────────────────────┴──────────────────────────────┘
+
+                             list of packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                           ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✔          │ idna                │ BSD License                          │
+│ ✔          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0) │
+│ ✔          │ Pygments            │ BSD License                          │
+│ ✔          │ commonmark          │ BSD License                          │
+│ ✔          │ requirements-parser │ Apache Software License              │
+│ ✖          │ fhconfparser        │ MIT License                          │
+│ ✖          │ tomli               │ MIT License                          │
+│ ✔          │ types-setuptools    │ Apache Software License              │
+│ ✖          │ attrs               │ MIT License                          │
+│ ✖          │ charset-normalizer  │ MIT License                          │
+│ ✖          │ rich                │ MIT License                          │
+│ ✖          │ urllib3             │ MIT License                          │
+│ ✔          │ requests            │ Apache Software License              │
+└────────────┴─────────────────────┴──────────────────────────────────────┘
 ```
 
 ### Custom requirements.txt in json format
@@ -122,30 +135,67 @@ Add optional path to requirements.txt as outlined in https://github.com/FHPython
 ```txt
 >> licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json
 {
-        "heading": "# Packages - Find a list of packages below",
-        "packages": [
-                {
-                        "name": "fhconfparser",
-                        "version": "2022",
-                        "namever": "fhconfparser-2022",
-                        "home_page": "https://github.com/FHPythonUtils/FHConfParser",
-                        "author": "FredHappyface",
-                        "size": 14586,
-                        "license": "MIT License",
-                        "license_compat": true
-                },
-                ...
-                {
-                        "name": "tomli",
-                        "version": "2.0.1",
-                        "namever": "tomli-2.0.1",
-                        "home_page": "UNKNOWN",
-                        "author": "UNKNOWN",
-                        "size": 26252,
-                        "license": "MIT License",
-                        "license_compat": true
-                }
-        ]
+	"info": {
+		"program": "licensecheck",
+		"version": "2022.2.0"
+	},
+	"packages": [
+		{
+			"name": "requests",
+			"version": "2.28.1",
+			"namever": "requests-2.28.1",
+			"size": 180253,
+			"homePage": "https://requests.readthedocs.io",
+			"author": "Kenneth Reitz",
+			"license": "Apache Software License",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "rich",
+			"version": "12.6.0",
+			"namever": "rich-12.6.0",
+			"size": 905975,
+			"homePage": "https://github.com/willmcgugan/rich",
+			"author": "Will McGugan",
+			"license": "MIT License",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "tomli",
+			"version": "2.0.1",
+			"namever": "tomli-2.0.1",
+			"size": 26252,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT License",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "requirements-parser",
+			"version": "0.5.0",
+			"namever": "requirements-parser 0.5.0",
+			"size": 11523,
+			"homePage": "https://github.com/madpah/requirements-parser",
+			"author": "Paul Horton",
+			"license": "Apache Software License",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "fhconfparser",
+			"version": "2022",
+			"namever": "fhconfparser-2022",
+			"size": 14586,
+			"homePage": "https://github.com/FHPythonUtils/FHConfParser",
+			"author": "FredHappyface",
+			"license": "MIT License",
+			"licenseCompat": true,
+			"errorCode": 0
+		}
+	]
 }
 ```
 
@@ -155,29 +205,46 @@ Add `-u poetry:dev` to command-line to include dev packages (excluded by default
 
 ```txt
 >> licensecheck -u poetry:dev
-┌──────┬────────────────────┬──────────────────────────────┐
-│Compat│      Package       │           License            │
-├──────┼────────────────────┼──────────────────────────────┤
-│  ✅  │atomicwrites        │MIT License                   │
-│  ✅  │attrs               │MIT License                   │
-│  ✅  │certifi             │Mozilla Public License 2.0 (MP│
-│  ✅  │charset-normalizer  │MIT License                   │
-│  ✅  │colorama            │BSD License                   │
-│  ✅  │fhconfparser        │MIT License                   │
-│  ✅  │idna                │BSD License                   │
-│  ✅  │iniconfig           │MIT License                   │
-│  ✅  │packaging           │Apache Software License, BSD L│
-│  ✅  │pluggy              │MIT License                   │
-│  ✅  │py                  │MIT License                   │
-│  ✅  │pyparsing           │MIT License                   │
-│  ✅  │pytest              │MIT License                   │
-│  ✅  │requests            │Apache Software License       │
-│  ✅  │requirements-parser │Apache Software License       │
-│  ✅  │toml                │MIT License                   │
-│  ✅  │tomli               │MIT License                   │
-│  ✅  │types-setuptools    │Apache Software License       │
-│  ✅  │urllib3             │MIT License                   │
-└──────┴────────────────────┴──────────────────────────────┘
+
+                                  list of packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                                    ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✔          │ astroid             │ GNU Lesser General Public License v2 (LGPLv2) │
+│ ✔          │ rich                │ MIT License                                   │
+│ ✔          │ types-setuptools    │ Apache Software License                       │
+│ ✔          │ fhconfparser        │ MIT License                                   │
+│ ✔          │ typed-ast           │ Apache License 2.0                            │
+│ ✔          │ py                  │ MIT License                                   │
+│ ✔          │ mccabe              │ MIT License                                   │
+│ ✔          │ tomlkit             │ MIT License                                   │
+│ ✔          │ coverage            │ Apache Software License                       │
+│ ✔          │ Pygments            │ BSD License                                   │
+│ ✔          │ requests            │ Apache Software License                       │
+│ ✔          │ requirements-parser │ Apache Software License                       │
+│ ✔          │ tomli               │ MIT License                                   │
+│ ✔          │ pluggy              │ MIT License                                   │
+│ ✔          │ isort               │ MIT License                                   │
+│ ✔          │ urllib3             │ MIT License                                   │
+│ ✖          │ pylint              │ GNU General Public License v2 (GPLv2)         │
+│ ✔          │ iniconfig           │ MIT License                                   │
+│ ✔          │ wrapt               │ BSD License                                   │
+│ ✔          │ pytest              │ MIT License                                   │
+│ ✔          │ pip                 │ MIT License                                   │
+│ ✔          │ charset-normalizer  │ MIT License                                   │
+│ ✔          │ packaging           │ Apache Software License, BSD License          │
+│ ✔          │ commonmark          │ BSD License                                   │
+│ ✔          │ lazy-object-proxy   │ BSD License                                   │
+│ ✔          │ platformdirs        │ MIT License                                   │
+│ ✔          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0)          │
+│ ✔          │ colorama            │ BSD License                                   │
+│ ✔          │ attrs               │ MIT License                                   │
+│ ✔          │ dill                │ BSD License                                   │
+│ ✔          │ idna                │ BSD License                                   │
+│ ✔          │ importlib-resources │ Apache Software License                       │
+│ ✔          │ handsdown           │ MIT License                                   │
+│ ✔          │ pyparsing           │ MIT License                                   │
+└────────────┴─────────────────────┴───────────────────────────────────────────────┘
 ```
 
 ## Help
@@ -191,7 +258,7 @@ usage: __main__.py [-h] [--format FORMAT] [--file FILE] [--using USING]
 
 Output the licenses used by dependencies and check if these are compatible with the project license.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   --format FORMAT, -f FORMAT
                         Output format. one of: json, markdown, csv, ansi, simple. default=simple

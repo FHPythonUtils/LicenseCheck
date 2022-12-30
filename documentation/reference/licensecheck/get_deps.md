@@ -14,7 +14,7 @@ Get Deps
 
 [Show source in get_deps.py:90](../../../licensecheck/get_deps.py#L90)
 
-Get a list of dependencies with licenses and determin license compatibility.
+Get a set of dependencies with licenses and determin license compatibility.
 
 #### Arguments
 
@@ -26,7 +26,7 @@ Get a list of dependencies with licenses and determin license compatibility.
 
 #### Returns
 
-- `list[PackageCompat]` - list of packagecompat types: dependency info + licence compat
+- `set[PackageInfo]` - set of updated dependencies with licenseCompat set
 
 #### Signature
 
@@ -37,13 +37,13 @@ def getDepsWithLicenses(
     failPackages: list[str],
     ignoreLicenses: list[str],
     failLicenses: list[str],
-) -> list[PackageCompat]:
+) -> set[PackageInfo]:
     ...
 ```
 
 #### See also
 
-- [PackageCompat](./types.md#packagecompat)
+- [PackageInfo](./types.md#packageinfo)
 
 
 
@@ -66,12 +66,12 @@ Get requirements for the end user project/ lib.
 
 #### Returns
 
-- `list[str]` - list of requirement packages
+- `set[str]` - set of requirement packages
 
 #### Signature
 
 ```python
-def getReqs(using: str) -> list[str]:
+def getReqs(using: str) -> set[str]:
     ...
 ```
 

@@ -52,8 +52,8 @@ Identify if the end user license is compatible with the dependency license(s).
 def depCompatWMyLice(
     myLicense: L,
     depLice: list[L],
-    ignoreLicenses: list[L] = None,
-    failLicenses: list[L] = None,
+    ignoreLicenses: list[L] | None = None,
+    failLicenses: list[L] | None = None,
 ) -> bool:
     ...
 ```

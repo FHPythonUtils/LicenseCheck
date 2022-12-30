@@ -8,12 +8,11 @@ Types
 
 - [Types](#types)
   - [License](#license)
-  - [PackageCompat](#packagecompat)
   - [PackageInfo](#packageinfo)
 
 ## License
 
-[Show source in types.py:27](../../../licensecheck/types.py#L27)
+[Show source in types.py:26](../../../licensecheck/types.py#L26)
 
 #### Attributes
 
@@ -47,35 +46,16 @@ class License(Enum):
 
 
 
-## PackageCompat
-
-[Show source in types.py:21](../../../licensecheck/types.py#L21)
-
-PackageCompat type.
-
-#### Signature
-
-```python
-class PackageCompat(PackageInfo):
-    ...
-```
-
-#### See also
-
-- [PackageInfo](#packageinfo)
-
-
-
 ## PackageInfo
 
-[Show source in types.py:9](../../../licensecheck/types.py#L9)
+[Show source in types.py:12](../../../licensecheck/types.py#L12)
 
 PackageInfo type.
 
 #### Signature
 
 ```python
-class PackageInfo(typing.TypedDict):
+class PackageInfo:
     ...
 ```
 

@@ -2,26 +2,25 @@
 """
 from __future__ import annotations
 
-import typing
+from dataclasses import dataclass
 from enum import Enum
 
+UNKNOWN = "UNKNOWN"
 
-class PackageInfo(typing.TypedDict):
+
+@dataclass(unsafe_hash=True)
+class PackageInfo:
 	"""PackageInfo type."""
 
 	name: str
-	version: str
-	namever: str
-	size: int
-	home_page: str
-	author: str
-	license: str
-
-
-class PackageCompat(PackageInfo):
-	"""PackageCompat type."""
-
-	license_compat: bool
+	version: str = UNKNOWN
+	namever: str = UNKNOWN
+	size: int = -1
+	homePage: str = UNKNOWN
+	author: str = UNKNOWN
+	license: str = UNKNOWN
+	licenseCompat: bool = False
+	errorCode: int = 0
 
 
 class License(Enum):

@@ -3,6 +3,12 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2022.3.0 - 2022/12/30
+
+- Combined `PackageCompat` and `PackageInfo` to a `@dataclass` of `PackageInfo`
+- `get_deps.py` and `packageinfo.py` use sets in-place of lists. NOTE: `list(depsWithLicenses)` is passed to `formatter.py` (which expects lists of `PackageInfo`)
+
+
 ## 2022.2.0 - 2022/10/22
 
 - Add support for `setup.cfg` https://github.com/FHPythonUtils/LicenseCheck/issues/21
