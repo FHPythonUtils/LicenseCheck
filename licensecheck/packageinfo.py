@@ -3,7 +3,12 @@
 from __future__ import annotations
 
 import configparser
-from importlib import metadata, resources
+import sys
+from importlib import metadata
+if sys.version_info < (3, 9, 0):
+    import importlib_resources as ilr
+else:
+    import importlib.resources as ilr
 from pathlib import Path
 from typing import Any, cast
 
@@ -33,7 +38,7 @@ def getPackageInfoLocal(requirement: str) -> PackageInfo:
 		version = pkgMetadata.get("Version", UNKNOWN)
 		size = 0
 		try:
-			packagePath = resources.files(requirement)
+			packagePath = ilr.files(requirement)
 			size = getModuleSize(cast(Path, packagePath), name)
 		except TypeError:
 			pass
