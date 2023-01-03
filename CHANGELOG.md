@@ -3,6 +3,11 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2023
+
+- Fix: https://github.com/FHPythonUtils/LicenseCheck/issues/26
+- Fix python 3.8 compatibility, thanks https://github.com/NicolaDonelli !
+
 ## 2022.3.2 - 2022/12/30
 
 - Fix: use constant `JOINS` (";; ") in place of hardcoded ", " string to avoid splitting single license with commas
