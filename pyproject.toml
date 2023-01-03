@@ -33,6 +33,7 @@ requests = "<3,>=2.28.1"
 fhconfparser = "<2024,>=2022"
 tomli = "<3,>=2.0.1"
 rich = "<13,>=12.6.0"
+importlib-resources = { version = ">=3.0.0", python = "<3.9" }
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.1"
