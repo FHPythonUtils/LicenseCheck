@@ -5,10 +5,11 @@ from __future__ import annotations
 import configparser
 import sys
 from importlib import metadata
+
 if sys.version_info < (3, 9, 0):
-    import importlib_resources as ilr
+	import importlib_resources as ilr
 else:
-    import importlib.resources as ilr
+	import importlib.resources as ilr
 from pathlib import Path
 from typing import Any, cast
 
