@@ -42,7 +42,7 @@ coverage = "^6.3.2"
 
 [tool.black]
 line-length = 100
-target-version = ["py37"]
+target-version = ["py38"]
 
 [tool.isort]
 profile = "black"
@@ -67,15 +67,26 @@ variable-naming-style = "camelCase"
 indent-string = "\t"
 
 [tool.pylint.master]
-ignore-patterns = "test_.*?py"
+ignore-paths = ["tests"]
 
 [tool.pylint.messages_control]
 enable = ["F", "E", "W", "R", "C"]
-disable = [
-	"pointless-string-statement",
-	"superfluous-parens"
-]
+disable = ["pointless-string-statement", "superfluous-parens"]
 
 [tool.licensecheck]
 # using = "requirements:requirements.txt;requirements_optional.txt"
 # format = "json"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+env_list =
+	py311
+	py310
+	py39
+	py38
+
+[testenv]
+deps = pytest
+commands = pytest tests
+"""

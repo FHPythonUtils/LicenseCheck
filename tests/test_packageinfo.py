@@ -5,6 +5,15 @@ from licensecheck import packageinfo
 THISDIR = str(Path(__file__).resolve().parent)
 
 
+def test_getPackageInfoLocal():
+
+	try:
+		package = packageinfo.getPackageInfoLocal("requests")
+		assert package.name == "requests"
+	except ModuleNotFoundError:
+		assert True
+
+
 def test_getPackageInfoPypi():
 	package = packageinfo.getPackageInfoPypi("requests")
 
