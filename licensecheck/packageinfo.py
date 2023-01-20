@@ -91,6 +91,8 @@ def licenseFromClassifierlist(classifiers: list[str]) -> str:
 	Returns:
 		str: the license name
 	"""
+	if not classifiers:
+		return UNKNOWN
 	licenses = []
 	for val in classifiers:
 		if val.startswith("License"):
