@@ -91,6 +91,8 @@ def licenseFromClassifierlist(classifiers: list[str]) -> str:
 	Returns:
 		str: the license name
 	"""
+	if not classifiers:
+		return UNKNOWN
 	licenses = []
 	for val in classifiers:
 		if val.startswith("License"):
@@ -173,9 +175,15 @@ def getModuleSize(path: Path, name: str) -> int:
 	Returns:
 		int: size in bytes
 	"""
-	size = sum(
-		f.stat().st_size for f in path.glob("**/*") if f.is_file() and "__pycache__" not in str(f)
-	)
+	size = 0
+	try:
+		size = sum(
+			f.stat().st_size
+			for f in path.glob("**/*")
+			if f.is_file() and "__pycache__" not in str(f)
+		)
+	except AttributeError:
+		pass
 	if size > 0:
 		return size
 	request = requests.get(f"https://pypi.org/pypi/{name}/json", timeout=60)
