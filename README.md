@@ -249,6 +249,26 @@ Add `-u poetry:dev` to command-line to include dev packages (excluded by default
 └────────────┴─────────────────────┴───────────────────────────────────────────────┘
 ```
 
+### PEP 631 (with or without optional dependencies)
+
+PEP 631 mode enables support for reading dependency information from `pyproject.yaml` in the format specified by PEP 631.
+This format is used by build systems such as hatch.
+
+You can enable this mode by using `-u PEP631`, and include the optional dependencies of extras by using `-u PEP631:tests;dev;docs`, 
+but it's recommended to use this instead:
+
+```toml
+[tool.licensecheck]
+using = "PEP631"
+
+# OR
+
+[tool.licensecheck]
+using = "PEP631:tests;dev;docs"
+```
+
+By default no optional dependencies are included.
+
 ## Help
 
 ```txt
@@ -266,7 +286,7 @@ options:
                         Output format. one of: json, markdown, csv, ansi, simple. default=simple
   --file FILE, -o FILE  Filename to write to (omit for stdout)
   --using USING, -u USING
-                        Environment to use e.g. requirements.txt. one of: requirements, poetry. default=poetry
+                        Environment to use e.g. requirements.txt. one of: requirements, poetry, PEP631. default=poetry
   --ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]
                         a list of packages to ignore (compat=True)
   --fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]
