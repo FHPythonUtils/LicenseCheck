@@ -9,7 +9,7 @@ UNKNOWN = "UNKNOWN"
 JOINS = ";; "
 
 
-@dataclass(unsafe_hash=True)
+@dataclass(unsafe_hash=True, order=True)
 class PackageInfo:
 	"""PackageInfo type."""
 
