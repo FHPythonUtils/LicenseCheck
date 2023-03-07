@@ -208,6 +208,7 @@ def depCompatWMyLice(
 		L.MPL: LGPL + GPL + [L.EU],
 		L.EU: PERMISSIVE_GPL_INCOMPATIBLE + LGPL + GPL + [L.MPL],
 		L.PROPRIETARY: PERMISSIVE_INCOMPATIBLE,
+		L.NO_LICENSE: PERMISSIVE_INCOMPATIBLE,
 	}
 	# Protect against None
 	failLicenses = failLicenses or []

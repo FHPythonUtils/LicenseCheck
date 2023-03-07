@@ -4,13 +4,16 @@ from __future__ import annotations
 
 import subprocess
 import warnings
+from pathlib import Path
 
 import requirements
+import tomli
+from requirements.requirement import Requirement
 
 from licensecheck import license_matrix, packageinfo
 from licensecheck.types import JOINS, PackageInfo
 
-USINGS = ["requirements", "poetry"]
+USINGS = ["requirements", "poetry", "PEP631"]
 
 
 def _doSysExec(command: str) -> tuple[int, str]:
@@ -45,9 +48,11 @@ def getReqs(using: str) -> set[str]:
 	>>> getReqs("poetry:dev")
 	>>> getReqs("requirements")
 	>>> getReqs("requirements:requirements.txt;requirements-dev.txt")
+	>>> getReqs("PEP631")
+	>>> getReqs("PEP631:tests")
 
 	Args:
-		using (str): use requirements or poetry.
+		using (str): use requirements, poetry or PEP631.
 
 	Returns:
 		set[str]: set of requirement packages
@@ -77,6 +82,16 @@ def getReqs(using: str) -> set[str]:
 				)
 				using = "requirements"  # Poetry died - fall back to requirements
 				break
+
+	# PEP631 (hatch)
+	if using == "PEP631":
+		project = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]
+		reqLists = [project["dependencies"]]
+		if extras:
+			reqLists.extend(project["optional-dependencies"][x] for x in extras.split(";"))
+		for reqList in reqLists:
+			for req in reqList:
+				reqs.add(str(Requirement.parse(req).name).lower())
 
 	# Requirements
 	if using == "requirements":
