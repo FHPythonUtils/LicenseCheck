@@ -24,6 +24,7 @@ the project license
 	- [Failing on packages under MIT license](#failing-on-packages-under-mit-license)
 	- [Custom requirements.txt in json format](#custom-requirementstxt-in-json-format)
 	- [Poetry with dev requirements](#poetry-with-dev-requirements)
+	- [PEP 631 (with or without optional dependencies)](#pep-631-with-or-without-optional-dependencies)
 - [Help](#help)
 - [Configuration Example](#configuration-example)
 	- [Example 1: pyproject.toml](#example-1-pyprojecttoml)
@@ -251,10 +252,10 @@ Add `-u poetry:dev` to command-line to include dev packages (excluded by default
 
 ### PEP 631 (with or without optional dependencies)
 
-PEP 631 mode enables support for reading dependency information from `pyproject.yaml` in the format specified by PEP 631.
+PEP 631 mode enables support for reading dependency information from `pyproject.toml` in the format specified by PEP 631.
 This format is used by build systems such as hatch.
 
-You can enable this mode by using `-u PEP631`, and include the optional dependencies of extras by using `-u PEP631:tests;dev;docs`, 
+You can enable this mode by using `-u PEP631`, and include the optional dependencies of extras by using `-u PEP631:tests;dev;docs`,
 but it's recommended to use this instead:
 
 ```toml

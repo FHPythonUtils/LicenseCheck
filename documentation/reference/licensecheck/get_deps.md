@@ -12,7 +12,7 @@ Get Deps
 
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:90](../../../licensecheck/get_deps.py#L90)
+[Show source in get_deps.py:105](../../../licensecheck/get_deps.py#L105)
 
 Get a set of dependencies with licenses and determine license compatibility.
 
@@ -49,7 +49,7 @@ def getDepsWithLicenses(
 
 ## getReqs
 
-[Show source in get_deps.py:41](../../../licensecheck/get_deps.py#L41)
+[Show source in get_deps.py:44](../../../licensecheck/get_deps.py#L44)
 
 Get requirements for the end user project/ lib.
 
@@ -58,11 +58,13 @@ Get requirements for the end user project/ lib.
 >>> getReqs("poetry:dev")
 >>> getReqs("requirements")
 >>> getReqs("requirements:requirements.txt;requirements-dev.txt")
+>>> getReqs("PEP631")
+>>> getReqs("PEP631:tests")
 ```
 
 #### Arguments
 
-- `using` *str* - use requirements or poetry.
+- `using` *str* - use requirements, poetry or PEP631.
 
 #### Returns
 
