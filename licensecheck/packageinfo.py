@@ -133,7 +133,7 @@ def getMyPackageMetadata() -> dict[str, Any]:
 	if Path("setup.cfg").exists():
 		config = configparser.ConfigParser()
 		config.read("setup.cfg")
-		if "license" in config["metadata"]:
+		if "metadata" in config.sections() and "license" in config["metadata"]:
 			return config["metadata"].__dict__
 	if Path("pyproject.toml").exists():
 		pyproject = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))

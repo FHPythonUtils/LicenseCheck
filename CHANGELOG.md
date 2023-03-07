@@ -3,6 +3,13 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2023.1.1 - 2023/03/07
+
+- Merge PR https://github.com/FHPythonUtils/LicenseCheck/pull/33
+  (implements feature: Support for PEP631: Declaring dependencies in pyproject.toml enhancement)
+- Fix crash if setup.cfg exists with no metadata section
+  (https://github.com/FHPythonUtils/LicenseCheck/issues/34)
+
 ## 2023
 
 - Fix: https://github.com/FHPythonUtils/LicenseCheck/issues/26
