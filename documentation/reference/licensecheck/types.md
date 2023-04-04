@@ -58,5 +58,3 @@ PackageInfo type.
 class PackageInfo:
     ...
 ```
-
-

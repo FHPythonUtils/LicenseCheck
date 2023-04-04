@@ -115,5 +115,3 @@ def licenseType(lice: str) -> list[L]:
 #### See also
 
 - [License](./types.md#license)
-
-

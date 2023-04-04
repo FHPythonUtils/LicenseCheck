@@ -190,5 +190,3 @@ Get license string from a list of project classifiers.
 def licenseFromClassifierlist(classifiers: list[str]) -> str:
     ...
 ```
-
-
