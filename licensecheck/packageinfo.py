@@ -3,15 +3,9 @@
 from __future__ import annotations
 
 import configparser
-import sys
 from importlib import metadata
-
-if sys.version_info < (3, 9, 0):
-	import importlib_resources as ilr
-else:
-	import importlib.resources as ilr
 from pathlib import Path
-from typing import Any, cast
+from typing import Any
 
 import requests
 import tomli
@@ -37,7 +31,11 @@ def getPackageInfoLocal(requirement: str) -> PackageInfo:
 		author = pkgMetadata.get("Author", UNKNOWN)
 		name = pkgMetadata.get("Name", UNKNOWN)
 		version = pkgMetadata.get("Version", UNKNOWN)
-		size = sum([pp.size for pp in metadata.Distribution.from_name(requirement).files if pp.size is not None])
+		size = 0
+		packagePaths = metadata.Distribution.from_name(requirement).files
+		if packagePaths is not None:
+			size = sum(pp.size for pp in packagePaths if pp.size is not None)
+
 		# append to pkgInfo
 		return PackageInfo(
 			name=name,
