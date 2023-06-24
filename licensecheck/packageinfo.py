@@ -37,12 +37,7 @@ def getPackageInfoLocal(requirement: str) -> PackageInfo:
 		author = pkgMetadata.get("Author", UNKNOWN)
 		name = pkgMetadata.get("Name", UNKNOWN)
 		version = pkgMetadata.get("Version", UNKNOWN)
-		size = 0
-		try:
-			packagePath = ilr.files(requirement)
-			size = getModuleSize(cast(Path, packagePath), name)
-		except TypeError:
-			pass
+		size = sum([pp.size for pp in metadata.Distribution.from_name(requirement).files if pp.size is not None])
 		# append to pkgInfo
 		return PackageInfo(
 			name=name,
@@ -53,7 +48,7 @@ def getPackageInfoLocal(requirement: str) -> PackageInfo:
 			license=lice,
 		)
 
-	except (metadata.PackageNotFoundError, ModuleNotFoundError) as error:
+	except metadata.PackageNotFoundError as error:
 		raise ModuleNotFoundError from error
 
 
