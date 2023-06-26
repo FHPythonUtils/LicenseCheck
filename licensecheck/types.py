@@ -65,3 +65,48 @@ class License(Enum):
 	PROPRIETARY = 190
 	# No License
 	NO_LICENSE = 200
+
+
+L = License
+
+
+def printLicense(licenseEnum: L) -> str:
+	"""Output a license as plain text
+
+	:param L licenseEnum: License
+	:return str: license of plain text
+	"""
+
+	licenseMap = {
+		L.PUBLIC: "public domain/ cc-pddc/ cc0-1.0",
+		L.UNLICENSE: "unlicense/ wtfpl",
+		L.BOOST: "boost/ bsl-1.0",
+		L.MIT: "mit",
+		L.BSD: "bsd",
+		L.ISC: "isc",
+		L.NCSA: "ncsa",
+		L.PSFL: "python/ psf-2.0",
+		L.APACHE: "apache",
+		L.ECLIPSE: "eclipse",
+		L.ACADEMIC_FREE: "afl",
+		L.LGPL_2_PLUS: "lgplv2+/ lgpl-2.0-or-later",
+		L.LGPL_3_PLUS: "lgplv3+/ lgpl-3.0-or-later",
+		L.LGPL_2: "lgpl-2.0-only/ lgplv2",
+		L.LGPL_3: "lgpl-3.0-only/ lgplv3",
+		L.LGPL_X: "lgpl",
+		L.AGPL_3_PLUS: "agpl",
+		L.GPL_2_PLUS: "gpl-2.0-or-later/ gplv2+",
+		L.GPL_3_PLUS: "gpl-3.0-or-later/ gplv3+",
+		L.GPL_2: "gplv2/ gpl-2.0",
+		L.GPL_3: "gplv3/ gpl-3.0",
+		L.GPL_X: "gpl",
+		L.MPL: "mpl",
+		L.EU: "eupl",
+		L.PROPRIETARY: "proprietary",
+		L.NO_LICENSE: "no license/ unknown",
+	}
+
+	if licenseEnum not in licenseMap:
+		return "no license/ unknown"
+
+	return licenseMap[licenseEnum]

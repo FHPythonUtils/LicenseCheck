@@ -26,7 +26,9 @@ Get a set of dependencies with licenses and determine license compatibility.
 
 #### Returns
 
-- `set[PackageInfo]` - set of updated dependencies with licenseCompat set
+- `tuple[License,` *set[PackageInfo]]* - tuple of
+ my package license
+ set of updated dependencies with licenseCompat set
 
 #### Signature
 
@@ -37,12 +39,13 @@ def getDepsWithLicenses(
     failPackages: list[str],
     ignoreLicenses: list[str],
     failLicenses: list[str],
-) -> set[PackageInfo]:
+) -> tuple[License, set[PackageInfo]]:
     ...
 ```
 
 #### See also
 
+- [License](./types.md#license)
 - [PackageInfo](./types.md#packageinfo)
 
 

@@ -1,5 +1,5 @@
 fhconfparser<2024,>=2022
-requests<3,>=2.28.1
+requests<3,>=2.31.0
 requirements-parser<2,>=0.5.0
-rich<13,>=12.6.0
+rich<14,>=13.4.2
 tomli<3,>=2.0.1

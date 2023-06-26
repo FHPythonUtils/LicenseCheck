@@ -1,5 +1,15 @@
+                                  
+               Info               
+┌─────────────────┬──────────────┐
+│ Item            │ Value        │
+├─────────────────┼──────────────┤
+│ program         │ licensecheck │
+│ version         │ 2023.1.3     │
+│ license         │ mit          │
+│ project_license │ mit          │
+└─────────────────┴──────────────┘
                                      
-          list of packages           
+          List Of Packages           
 ┌────────────┬─────────┬────────────┐
 │ Compatible │ Package │ License(s) │
 ├────────────┼─────────┼────────────┤

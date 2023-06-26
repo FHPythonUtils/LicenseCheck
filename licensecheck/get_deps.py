@@ -11,7 +11,7 @@ import tomli
 from requirements.requirement import Requirement
 
 from licensecheck import license_matrix, packageinfo
-from licensecheck.types import JOINS, PackageInfo
+from licensecheck.types import JOINS, License, PackageInfo
 
 USINGS = ["requirements", "poetry", "PEP631"]
 
@@ -108,7 +108,7 @@ def getDepsWithLicenses(
 	failPackages: list[str],
 	ignoreLicenses: list[str],
 	failLicenses: list[str],
-) -> set[PackageInfo]:
+) -> tuple[License, set[PackageInfo]]:
 	"""Get a set of dependencies with licenses and determine license compatibility.
 
 	Args:
@@ -119,7 +119,9 @@ def getDepsWithLicenses(
 		failLicenses (list[str]): a list of licenses to fail (compat=False)
 
 	Returns:
-		set[PackageInfo]: set of updated dependencies with licenseCompat set
+		tuple[License, set[PackageInfo]]: tuple of
+			my package license
+			set of updated dependencies with licenseCompat set
 	"""
 	reqs = getReqs(using)
 
@@ -144,4 +146,4 @@ def getDepsWithLicenses(
 				license_matrix.licenseType(JOINS.join(ignoreLicenses)),
 				license_matrix.licenseType(JOINS.join(failLicenses)),
 			)
-	return packages
+	return myLice, packages

@@ -3,6 +3,11 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2023.1.4 - 2023/06/26
+
+- Update format to output info and detected package license
+- Bump dep versions
+
 ## 2023.1.2 - 2023/06/24
 
 - Merge PR https://github.com/FHPythonUtils/LicenseCheck/pull/39 (Fixes #38)

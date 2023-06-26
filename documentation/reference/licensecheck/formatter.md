@@ -22,6 +22,7 @@ Format to ansi
 
 #### Arguments
 
+- `myLice` *License* - project license
 - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
@@ -31,24 +32,26 @@ Format to ansi
 #### Signature
 
 ```python
-def ansi(packages: list[PackageInfo]) -> str:
+def ansi(myLice: License, packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
+- [License](./types.md#license)
 - [PackageInfo](./types.md#packageinfo)
 
 
 
 ## markdown
 
-[Show source in formatter.py:99](../../../licensecheck/formatter.py#L99)
+[Show source in formatter.py:109](../../../licensecheck/formatter.py#L109)
 
 Format to markdown
 
 #### Arguments
 
+- `myLice` *License* - project license
 - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
@@ -58,24 +61,26 @@ Format to markdown
 #### Signature
 
 ```python
-def markdown(packages: list[PackageInfo]) -> str:
+def markdown(myLice: License, packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
+- [License](./types.md#license)
 - [PackageInfo](./types.md#packageinfo)
 
 
 
 ## plainText
 
-[Show source in formatter.py:87](../../../licensecheck/formatter.py#L87)
+[Show source in formatter.py:96](../../../licensecheck/formatter.py#L96)
 
-Format to plain text
+Format to ansi
 
 #### Arguments
 
+- `myLice` *License* - project license
 - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
@@ -85,24 +90,26 @@ Format to plain text
 #### Signature
 
 ```python
-def plainText(packages: list[PackageInfo]) -> str:
+def plainText(myLice: License, packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
+- [License](./types.md#license)
 - [PackageInfo](./types.md#packageinfo)
 
 
 
 ## raw
 
-[Show source in formatter.py:134](../../../licensecheck/formatter.py#L134)
+[Show source in formatter.py:148](../../../licensecheck/formatter.py#L148)
 
-Format to raw json
+Format to json
 
 #### Arguments
 
+- `myLice` *License* - project license
 - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
@@ -112,24 +119,26 @@ Format to raw json
 #### Signature
 
 ```python
-def raw(packages: list[PackageInfo]) -> str:
+def raw(myLice: License, packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
+- [License](./types.md#license)
 - [PackageInfo](./types.md#packageinfo)
 
 
 
 ## rawCsv
 
-[Show source in formatter.py:146](../../../licensecheck/formatter.py#L146)
+[Show source in formatter.py:168](../../../licensecheck/formatter.py#L168)
 
-Format to raw csv
+Format to csv
 
 #### Arguments
 
+- `myLice` *License* - project license
 - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
@@ -139,12 +148,13 @@ Format to raw csv
 #### Signature
 
 ```python
-def rawCsv(packages: list[PackageInfo]) -> str:
+def rawCsv(myLice: License, packages: list[PackageInfo]) -> str:
     ...
 ```
 
 #### See also
 
+- [License](./types.md#license)
 - [PackageInfo](./types.md#packageinfo)
 
 

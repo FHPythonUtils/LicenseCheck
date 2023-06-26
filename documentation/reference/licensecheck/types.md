@@ -9,6 +9,7 @@ Types
 - [Types](#types)
   - [License](#license)
   - [PackageInfo](#packageinfo)
+  - [printLicense](#printlicense)
 
 ## License
 
@@ -58,5 +59,33 @@ PackageInfo type.
 class PackageInfo:
     ...
 ```
+
+
+
+## printLicense
+
+[Show source in types.py:73](../../../licensecheck/types.py#L73)
+
+Output a license as plain text
+
+#### Arguments
+
+- `licenseEnum` *L* - License
+
+#### Returns
+
+Type: *str*
+license of plain text
+
+#### Signature
+
+```python
+def printLicense(licenseEnum: L) -> str:
+    ...
+```
+
+#### See also
+
+- [L](#l)
 
 

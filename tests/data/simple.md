@@ -1,12 +1,22 @@
+## Info
 
-# Packages
+- **program**: licensecheck
+- **version**: 2023.1.3
+- **license**: mit
+
+## Project License
+
+mit
+
+## Packages
+
 Find a list of packages below
 
 |Compatible|Package|
 |:--|:--|
-|False|example|
+|✖|example|
 
-## example-UNKNOWN
+### example-UNKNOWN
 
 - HomePage: UNKNOWN
 - Author: UNKNOWN

@@ -1,13 +1,23 @@
+## Info
 
-# Packages
+- **program**: licensecheck
+- **version**: 2023.1.3
+- **license**: mit
+
+## Project License
+
+mit
+
+## Packages
+
 Find a list of packages below
 
 |Compatible|Package|
 |:--|:--|
-|True|example0|
-|False|example1|
+|✔|example0|
+|✖|example1|
 
-## example0-1.0.0
+### example0-1.0.0
 
 - HomePage: https://example.com
 - Author: example_author
@@ -15,7 +25,7 @@ Find a list of packages below
 - Compatible: True
 - Size: 10
 
-## example1-UNKNOWN
+### example1-UNKNOWN
 
 - HomePage: https://example.com
 - Author: example_author
