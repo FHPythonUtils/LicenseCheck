@@ -13,6 +13,15 @@
 
 <img src="readme-assets/icons/name.png" alt="Project Icon" width="750">
 
+NOTICE: I am not a lawyer (IANAL)
+
+**Any output provided by this software is for general informational purposes only and
+should not be construed as legal advice. I am not a lawyer and there is no guarantee that the
+information provided here is complete or correct. Any reliance on the information provided by this
+software is at your own risk.**
+
+See also: https://en.wikipedia.org/wiki/IANAL, [project license (MIT)](/LICENSE.md)
+
 Output the licences used by dependencies and check if these are compatible with
 the project license
 
