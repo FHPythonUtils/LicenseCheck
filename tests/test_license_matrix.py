@@ -30,3 +30,19 @@ def test_licenseType():
 		licenseNames
 		== Path(f"{THISDIR}/data/licenseCheckLicenses.txt").read_text("utf-8").splitlines()
 	)
+
+
+def test_licenseType_empty():
+	no_licenses = [
+		all(x == types.L.NO_LICENSE for x in license_matrix.licenseType(y))
+		for y in ["", None, "this_license_does_not_exist"]
+	]
+	assert all(no_licenses)
+
+
+def test_apacheCompatWithLGPL3():
+	assert license_matrix.depCompatWMyLice(types.L.LGPL_3, [types.L.APACHE])
+
+
+def test_dualLicenseCompat():
+	assert license_matrix.depCompatWMyLice(types.L.MIT, [types.L.GPL_2, types.L.MIT])

@@ -101,7 +101,9 @@ def cli() -> None:
 	# Format the results
 	if simpleConf.get("format", "simple") in formatter.formatMap:
 		print(
-			formatter.formatMap[simpleConf.get("format", "simple")](myLice, sorted(depsWithLicenses)),
+			formatter.formatMap[simpleConf.get("format", "simple")](
+				myLice, sorted(depsWithLicenses)
+			),
 			file=filename,
 		)
 	else:

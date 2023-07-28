@@ -3,6 +3,15 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2023.2 - 2023/07/28
+
+- New Feature: Improve error messages (#44)
+- New Feature: Support Transitive Dependencies 1 layer deep (#42)
+- Fixed Bug: Unexpected warnings for ignored license (#48)
+- Fixed Bug: A compatible dual licensed library is shown as incompatible (#47)
+- Fixed Bug: licensecheck gives IndexError: list index out of range (#41)
+- Fixed Bug: Apache2 is shown as incompatible with LGPL3 (#40)
+
 ## 2023.1.4 - 2023/06/26
 
 - Update format to output info and detected package license

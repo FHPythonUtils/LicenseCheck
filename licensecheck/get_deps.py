@@ -2,43 +2,17 @@
 """
 from __future__ import annotations
 
-import subprocess
-import warnings
+from importlib import metadata
 from pathlib import Path
 
-import requirements
+import pkg_resources
+import requests
 import tomli
-from requirements.requirement import Requirement
 
 from licensecheck import license_matrix, packageinfo
 from licensecheck.types import JOINS, License, PackageInfo
 
 USINGS = ["requirements", "poetry", "PEP631"]
-
-
-def _doSysExec(command: str) -> tuple[int, str]:
-	"""Execute a command and check for errors.
-
-	Args:
-		command (str): commands as a string
-
-	Raises:
-		RuntimeWarning: throw a warning should there be a non exit code
-
-	Returns:
-		tuple[int, str]: exit code and message
-	"""
-	with subprocess.Popen(
-		command,
-		shell=True,
-		stdout=subprocess.PIPE,
-		stderr=subprocess.STDOUT,
-		encoding="utf-8",
-		errors="ignore",
-	) as process:
-		out = process.communicate()[0]
-		exitCode = process.returncode
-	return exitCode, out
 
 
 def getReqs(using: str) -> set[str]:
@@ -57,49 +31,86 @@ def getReqs(using: str) -> set[str]:
 	Returns:
 		set[str]: set of requirement packages
 	"""
+
+	resolveReq = lambda req: pkg_resources.Requirement.parse(req).project_name.lower()
+
 	_ = using.split(":", 1)
 	using, extras = _[0], _[1] if len(_) > 1 else None
 	if using not in USINGS:
 		using = "poetry"
 	reqs = set()
 
-	# Is poetry installed?
-	if using == "poetry" and _doSysExec("poetry -h")[0] != 0:
-		using = "requirements"  # Poetry not installed - fall back to requirements
-		warnings.warn(RuntimeWarning("poetry is not on the system path"))
+	pyprojectPath = Path("pyproject.toml")
+	pyproject = {}
+	if pyprojectPath.exists():
+		pyproject = tomli.loads(pyprojectPath.read_text(encoding="utf-8"))
 
-	# Poetry
-	if using == "poetry":  # Use poetry show to get dependents of dependencies
-		lines = _doSysExec("poetry show " + ("" if extras else "--only main"))[1].splitlines(False)
-		for line in lines:
-			try:
-				parts = line.split()
-				reqs.add(parts[0].lower())
-			except IndexError:
-				print(
-					"An error occurred with poetry, try running 'poetry show' to "
-					"see what went wrong! - (fall back to requirements)"
-				)
-				using = "requirements"  # Poetry died - fall back to requirements
-				break
+	if using == "poetry":
+		try:
+			project = pyproject["tool"]["poetry"]
+			reqLists = [project["dependencies"]]
+		except KeyError as error:
+			raise RuntimeError(
+				"Could not find specification of requirements (pyproject.toml)."
+			) from error
+		if extras:
+			reqLists.extend(
+				project.get("group", {x: {"dependencies": {}}})[x]["dependencies"]
+				for x in extras.split(";")
+			)
+			reqLists.append(project.get("dev-dependencies", {}))
+		for reqList in reqLists:
+			for req in reqList:
+				reqs.add(resolveReq(req))
 
 	# PEP631 (hatch)
 	if using == "PEP631":
-		project = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))["project"]
-		reqLists = [project["dependencies"]]
+		try:
+			project = pyproject["project"]
+			reqLists = [project["dependencies"]]
+		except KeyError as error:
+			raise RuntimeError(
+				"Could not find specification of requirements (pyproject.toml)."
+			) from error
 		if extras:
 			reqLists.extend(project["optional-dependencies"][x] for x in extras.split(";"))
 		for reqList in reqLists:
 			for req in reqList:
-				reqs.add(str(Requirement.parse(req).name).lower())
+				reqs.add(resolveReq(req))
 
 	# Requirements
 	if using == "requirements":
 		for reqTxt in (extras or "requirements.txt").split(";"):
-			with open(reqTxt, encoding="utf-8") as requirementsTxt:
-				for req in requirements.parse(requirementsTxt):
-					reqs.add(str(req.name).lower())
-	return reqs
+
+			reqPath = Path(reqTxt)
+			if not reqPath.exists():
+				raise RuntimeError(f"Could not find specification of requirements ({reqPath}).")
+
+			for req in reqPath.read_text("utf-8").strip().split("\n"):
+				reqs.add(resolveReq(req))
+
+	try:
+		reqs.remove("python")
+	except KeyError:
+		pass
+
+	# Get Dependencies (1 deep)
+	requirementsWithDeps = reqs.copy()
+	for requirement in reqs:
+		try:
+			pkgMetadata = metadata.metadata(resolveReq(requirement))
+			for req in [resolveReq(req) for req in pkgMetadata.get_all("Requires-Dist") or []]:
+				requirementsWithDeps.add(req)
+		except metadata.PackageNotFoundError:
+			request = requests.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
+			response = request.json()
+			try:
+				for req in [resolveReq(req) for req in response["info"]["requires_dist"]]:
+					requirementsWithDeps.add(req)
+			except KeyError:
+				pass
+
+	return requirementsWithDeps
 
 
 def getDepsWithLicenses(

@@ -6,32 +6,15 @@ License Matrix
 
 > Auto-generated documentation for [licensecheck.license_matrix](../../../licensecheck/license_matrix.py) module.
 
-#### Attributes
-
-- `PERMISSIVE` - Permissive licenses compatible with GPL: `[L.MIT, L.BOOST, L.BSD, L.ISC, L.NCSA, L.PSFL]`
-
-- `PERMISSIVE_OTHER` - Permissive licenses NOT compatible with GPL: `[L.APACHE, L.ECLIPSE, L.ACADEMIC_FREE]`
-
-- `LGPL` - LGPL licenses: `[L.LGPL_2, L.LGPL_3, L.LGPL_2_PLUS, L.LGPL_3_PLUS, L.LGPL_X]`
-
-- `GPL` - GPL licenses (including AGPL): `[L.GPL_2, L.GPL_3, L.GPL_2_PLUS, L.GPL_3_PLUS, L.GPL_X, L.AGPL_3_PLUS]`
-
-- `OTHER_COPYLEFT` - Other Copyleft licenses: `[L.MPL, L.EU]`
-
-- `UNLICENSE_INCOMPATIBLE` - Basic compat matrix: `PERMISSIVE + PERMISSIVE_OTHER + GPL + LGPL + OTHER_COPYLEFT + [L.NO_LICENSE, L.PROPRIETARY]`
-
-- `GPL_2_INCOMPATIBLE` - GPL compat matrix
-  https://www.gnu.org/licenses/gpl-faq.html#AllCompatibility: `[L.GPL_3, L.GPL_3_PLUS, L.LGPL_3, L.LGPL_3_PLUS]`
-
-
 - [License Matrix](#license-matrix)
   - [depCompatWMyLice](#depcompatwmylice)
+  - [liceCompat](#licecompat)
   - [licenseLookup](#licenselookup)
   - [licenseType](#licensetype)
 
 ## depCompatWMyLice
 
-[Show source in license_matrix.py:168](../../../licensecheck/license_matrix.py#L168)
+[Show source in license_matrix.py:123](../../../licensecheck/license_matrix.py#L123)
 
 Identify if the end user license is compatible with the dependency license(s).
 
@@ -64,9 +47,42 @@ def depCompatWMyLice(
 
 
 
+## liceCompat
+
+[Show source in license_matrix.py:156](../../../licensecheck/license_matrix.py#L156)
+
+Identify if the end user license is compatible with the dependency license
+
+#### Arguments
+
+- `myLicense` *L* - end user license
+- `lice` *L* - dependency license
+:param list[L] ignoreLicenses: list of licenses to ignore. Defaults to None.
+:param list[L] failLicenses: list of licenses to fail on. Defaults to None.
+
+#### Returns
+
+Type: *bool*
+True if compatible, otherwise False
+
+#### Signature
+
+```python
+def liceCompat(
+    myLicense: L, lice: L, ignoreLicenses: list[L], failLicenses: list[L]
+) -> bool:
+    ...
+```
+
+#### See also
+
+- [License](./types.md#license)
+
+
+
 ## licenseLookup
 
-[Show source in license_matrix.py:44](../../../licensecheck/license_matrix.py#L44)
+[Show source in license_matrix.py:52](../../../licensecheck/license_matrix.py#L52)
 
 Identify a license from an uppercase string representation of a license.
 
@@ -81,7 +97,7 @@ Identify a license from an uppercase string representation of a license.
 #### Signature
 
 ```python
-def licenseLookup(licenseStr: str) -> L:
+def licenseLookup(licenseStr: str, ignoreLicenses: list[str] | None = None) -> L:
     ...
 ```
 
@@ -93,7 +109,7 @@ def licenseLookup(licenseStr: str) -> L:
 
 ## licenseType
 
-[Show source in license_matrix.py:101](../../../licensecheck/license_matrix.py#L101)
+[Show source in license_matrix.py:109](../../../licensecheck/license_matrix.py#L109)
 
 Return a list of license types from a license string.
 

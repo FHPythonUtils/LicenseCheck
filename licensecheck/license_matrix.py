@@ -37,11 +37,19 @@ EU -> gpl -> agpl (3 only)
 """
 from __future__ import annotations
 
+import csv
+from pathlib import Path
+
 from licensecheck.types import JOINS
 from licensecheck.types import License as L
 
+THISDIR = Path(__file__).resolve().parent
 
-def licenseLookup(licenseStr: str) -> L:
+with Path(THISDIR / "matrix.csv").open(mode="r", newline="", encoding="utf-8") as csv_file:
+	LICENSE_MATRIX = list(csv.reader(csv_file))
+
+
+def licenseLookup(licenseStr: str, ignoreLicenses: list[str] | None = None) -> L:
 	"""Identify a license from an uppercase string representation of a license.
 
 	Args:
@@ -93,8 +101,8 @@ def licenseLookup(licenseStr: str) -> L:
 	for liceStr, lice in termToLicense.items():
 		if liceStr in licenseStr:
 			return lice
-
-	print(f"WARN: '{licenseStr}' License not identified so falling back to NO_LICENSE")
+	if licenseStr not in (ignoreLicenses or ""):
+		print(f"WARN: '{licenseStr}' License not identified so falling back to NO_LICENSE")
 	return L.NO_LICENSE
 
 
@@ -107,62 +115,9 @@ def licenseType(lice: str) -> list[L]:
 	Returns:
 		list[L]: the license
 	"""
-	if len(lice) < 1:
-		return []
+	if len(lice or "") < 1:
+		return [L.NO_LICENSE]
 	return [licenseLookup(x) for x in lice.upper().split(JOINS)]
-
-
-# Permissive licenses compatible with GPL
-PERMISSIVE = [
-	L.MIT,
-	L.BOOST,
-	L.BSD,
-	L.ISC,
-	L.NCSA,
-	L.PSFL,
-]
-# Permissive licenses NOT compatible with GPL
-PERMISSIVE_OTHER = [
-	L.APACHE,
-	L.ECLIPSE,
-	L.ACADEMIC_FREE,
-]
-# LGPL licenses
-LGPL = [
-	L.LGPL_2,
-	L.LGPL_3,
-	L.LGPL_2_PLUS,
-	L.LGPL_3_PLUS,
-	L.LGPL_X,
-]
-# GPL licenses (including AGPL)
-GPL = [
-	L.GPL_2,
-	L.GPL_3,
-	L.GPL_2_PLUS,
-	L.GPL_3_PLUS,
-	L.GPL_X,
-	L.AGPL_3_PLUS,
-]
-# Other Copyleft licenses
-OTHER_COPYLEFT = [
-	L.MPL,
-	L.EU,
-]
-
-# Basic compat matrix
-UNLICENSE_INCOMPATIBLE = (
-	PERMISSIVE + PERMISSIVE_OTHER + GPL + LGPL + OTHER_COPYLEFT + [L.NO_LICENSE, L.PROPRIETARY]
-)
-PERMISSIVE_INCOMPATIBLE = GPL + [L.EU, L.NO_LICENSE, L.PROPRIETARY]
-LGPL_INCOMPATIBLE = GPL + OTHER_COPYLEFT + PERMISSIVE_OTHER + [L.NO_LICENSE, L.PROPRIETARY]
-GPL_INCOMPATIBLE = PERMISSIVE_OTHER + [L.AGPL_3_PLUS, L.NO_LICENSE, L.PROPRIETARY]
-PERMISSIVE_GPL_INCOMPATIBLE = PERMISSIVE_OTHER + [L.NO_LICENSE, L.PROPRIETARY]
-
-# GPL compat matrix
-# https://www.gnu.org/licenses/gpl-faq.html#AllCompatibility
-GPL_2_INCOMPATIBLE = [L.GPL_3, L.GPL_3_PLUS, L.LGPL_3, L.LGPL_3_PLUS]
-L_GPL_3_INCOMPATIBLE = [L.GPL_2]
 
 
 def depCompatWMyLice(
@@ -182,39 +137,43 @@ def depCompatWMyLice(
 	Returns:
 		bool: True if compatible, otherwise False
 	"""
-	blacklist = {
-		L.UNLICENSE: UNLICENSE_INCOMPATIBLE,
-		L.PUBLIC: UNLICENSE_INCOMPATIBLE,
-		L.MIT: PERMISSIVE_INCOMPATIBLE,
-		L.BOOST: PERMISSIVE_INCOMPATIBLE,
-		L.BSD: PERMISSIVE_INCOMPATIBLE,
-		L.ISC: PERMISSIVE_INCOMPATIBLE,
-		L.NCSA: PERMISSIVE_INCOMPATIBLE,
-		L.PSFL: PERMISSIVE_INCOMPATIBLE,
-		L.APACHE: PERMISSIVE_INCOMPATIBLE,
-		L.ECLIPSE: PERMISSIVE_INCOMPATIBLE,
-		L.ACADEMIC_FREE: PERMISSIVE_INCOMPATIBLE,
-		L.LGPL_X: LGPL_INCOMPATIBLE,
-		L.LGPL_2: LGPL_INCOMPATIBLE,
-		L.LGPL_3: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
-		L.LGPL_2_PLUS: LGPL_INCOMPATIBLE,
-		L.LGPL_3_PLUS: LGPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
-		L.GPL_X: GPL_INCOMPATIBLE,
-		L.GPL_2: GPL_INCOMPATIBLE + GPL_2_INCOMPATIBLE,
-		L.GPL_3: GPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
-		L.GPL_2_PLUS: GPL_INCOMPATIBLE,
-		L.GPL_3_PLUS: GPL_INCOMPATIBLE + L_GPL_3_INCOMPATIBLE,
-		L.AGPL_3_PLUS: PERMISSIVE_GPL_INCOMPATIBLE,
-		L.MPL: LGPL + GPL + [L.EU],
-		L.EU: PERMISSIVE_GPL_INCOMPATIBLE + LGPL + GPL + [L.MPL],
-		L.PROPRIETARY: PERMISSIVE_INCOMPATIBLE,
-		L.NO_LICENSE: PERMISSIVE_INCOMPATIBLE,
-	}
+
 	# Protect against None
 	failLicenses = failLicenses or []
 	ignoreLicenses = ignoreLicenses or []
-	blacklistResolved = blacklist[myLicense]
-	for lice in depLice:
-		if lice in failLicenses or (lice not in ignoreLicenses and lice in blacklistResolved):
-			return False
-	return True
+
+	return any(
+		liceCompat(
+			myLicense,
+			lice,
+			ignoreLicenses,
+			failLicenses,
+		)
+		for lice in depLice
+	)
+
+
+def liceCompat(
+	myLicense: L,
+	lice: L,
+	ignoreLicenses: list[L],
+	failLicenses: list[L],
+) -> bool:
+	"""Identify if the end user license is compatible with the dependency license
+
+	:param L myLicense: end user license
+	:param L lice: dependency license
+	:param list[L] ignoreLicenses: list of licenses to ignore. Defaults to None.
+	:param list[L] failLicenses: list of licenses to fail on. Defaults to None.
+	:return bool: True if compatible, otherwise False
+	"""
+	if lice in failLicenses:
+		return False
+	if lice in ignoreLicenses:
+		return True
+	licenses = list(L)
+	row, col = licenses.index(myLicense) + 1, licenses.index(lice) + 1
+
+	if LICENSE_MATRIX[row][col] == "1":
+		return True
+	return False

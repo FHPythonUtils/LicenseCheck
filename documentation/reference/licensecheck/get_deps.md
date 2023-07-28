@@ -12,7 +12,7 @@ Get Deps
 
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:105](../../../licensecheck/get_deps.py#L105)
+[Show source in get_deps.py:116](../../../licensecheck/get_deps.py#L116)
 
 Get a set of dependencies with licenses and determine license compatibility.
 
@@ -52,7 +52,7 @@ def getDepsWithLicenses(
 
 ## getReqs
 
-[Show source in get_deps.py:44](../../../licensecheck/get_deps.py#L44)
+[Show source in get_deps.py:18](../../../licensecheck/get_deps.py#L18)
 
 Get requirements for the end user project/ lib.
 
