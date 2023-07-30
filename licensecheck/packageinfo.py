@@ -7,13 +7,12 @@ from importlib import metadata
 from pathlib import Path
 from typing import Any
 
-import requests
 import tomli
 
-from licensecheck.types import JOINS, UNKNOWN, PackageInfo
+from licensecheck.types import JOINS, UNKNOWN, PackageInfo, session, ucstr
 
 
-def getPackageInfoLocal(requirement: str) -> PackageInfo:
+def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:
 	"""Get package info from local files including version, author
 	and	the license.
 
@@ -43,14 +42,14 @@ def getPackageInfoLocal(requirement: str) -> PackageInfo:
 			homePage=homePage,
 			author=author,
 			size=size,
-			license=lice,
+			license=ucstr(lice),
 		)
 
 	except metadata.PackageNotFoundError as error:
 		raise ModuleNotFoundError from error
 
 
-def getPackageInfoPypi(requirement: str) -> PackageInfo:
+def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
 	"""Get package info from local files including version, author
 	and	the license.
 
@@ -58,24 +57,24 @@ def getPackageInfoPypi(requirement: str) -> PackageInfo:
 	:raises ModuleNotFoundError: if the package does not exist
 	:return PackageInfo: package information
 	"""
-	request = requests.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
+	request = session.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
 	response = request.json()
 	try:
 		info = response["info"]
 		licenseClassifier = licenseFromClassifierlist(info["classifiers"])
 		return PackageInfo(
-			name=requirement,
+			name=info["name"],
 			version=info["version"],
 			homePage=info["home_page"],
 			author=info["author"],
 			size=int(response["urls"][-1]["size"]),
-			license=licenseClassifier if licenseClassifier != UNKNOWN else info["license"],
+			license=ucstr(licenseClassifier if licenseClassifier != UNKNOWN else info["license"]),
 		)
 	except KeyError as error:
 		raise ModuleNotFoundError from error
 
 
-def licenseFromClassifierlist(classifiers: list[str]) -> str:
+def licenseFromClassifierlist(classifiers: list[str]) -> ucstr:
 	"""Get license string from a list of project classifiers.
 
 	Args:
@@ -92,14 +91,14 @@ def licenseFromClassifierlist(classifiers: list[str]) -> str:
 			lice = val.split(" :: ")[-1]
 			if lice != "OSI Approved":
 				licenses.append(lice)
-	return JOINS.join(licenses) if len(licenses) > 0 else UNKNOWN
+	return ucstr(JOINS.join(licenses) if len(licenses) > 0 else UNKNOWN)
 
 
-def getPackages(reqs: set[str]) -> set[PackageInfo]:
+def getPackages(reqs: set[ucstr]) -> set[PackageInfo]:
 	"""Get dependency info.
 
 	Args:
-		reqs (set[str]): set of dependency names to gather info on
+		reqs (set[ucstr]): set of dependency names to gather info on
 
 	Returns:
 		set[PackageInfo]: set of dependencies
@@ -121,7 +120,7 @@ def getMyPackageMetadata() -> dict[str, Any]:
 	"""Get the package classifiers and license from "setup.cfg", "pyproject.toml"
 
 	Returns:
-		dict[str, Any]: {"classifiers": list[str], "license": str}
+		dict[str, Any]: {"classifiers": list[str], "license": ucstr}
 	"""
 	if Path("setup.cfg").exists():
 		config = configparser.ConfigParser()
@@ -138,10 +137,10 @@ def getMyPackageMetadata() -> dict[str, Any]:
 		if pyproject.get("project") is not None:
 			return pyproject["project"]
 
-	return {"classifiers": [], "license": ""}
+	return {"classifiers": [], "license": ucstr("")}
 
 
-def getMyPackageLicense() -> str:
+def getMyPackageLicense() -> ucstr:
 	"""Get the package license from "setup.cfg", "pyproject.toml" or user input
 
 	Returns:
@@ -153,12 +152,12 @@ def getMyPackageLicense() -> str:
 		return licenseClassifier
 	if "license" in metaData:
 		if isinstance(metaData["license"], dict) and metaData["license"].get("text") is not None:
-			return str(metaData["license"].get("text"))
-		return str(metaData["license"])
-	return input("Enter the project license\n>")
+			return ucstr(metaData["license"].get("text"))
+		return ucstr(metaData["license"])
+	return ucstr(input("Enter the project license\n>"))
 
 
-def getModuleSize(path: Path, name: str) -> int:
+def getModuleSize(path: Path, name: ucstr) -> int:
 	"""Get the size of a given module as an int.
 
 	Args:
@@ -179,6 +178,8 @@ def getModuleSize(path: Path, name: str) -> int:
 		pass
 	if size > 0:
 		return size
-	request = requests.get(f"https://pypi.org/pypi/{name}/json", timeout=60)
+	request = session.get(f"https://pypi.org/pypi/{name}/json", timeout=60)
+	if request.status_code != 200:
+		return 0
 	response = request.json()
 	return int(response["urls"][-1]["size"])

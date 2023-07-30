@@ -3,6 +3,14 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2023.3 - 2023/07/29
+
+- Fixed Bug: Permissive libraries are not compatible with closed licenses. Closes #49
+- Fixed Bug: Unexpected warnings for ignored license. Closes #48
+- New Feature: Support option ignore-licenses in pyproject.toml. Closes #46
+- Performance enhancements
+- Extended test suite
+
 ## 2023.2 - 2023/07/28
 
 - New Feature: Improve error messages (#44)

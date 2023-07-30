@@ -1,4 +1,6 @@
 import logging
+import sys
+from io import StringIO
 from pathlib import Path
 
 from licensecheck import license_matrix, types
@@ -9,7 +11,7 @@ THISDIR = str(Path(__file__).resolve().parent)
 def test_licenseLookup():
 	licenses = []
 	for rawLicense in Path(f"{THISDIR}/data/rawLicenses.txt").read_text("utf-8").splitlines():
-		licenseName = license_matrix.licenseLookup(rawLicense.upper())._name_
+		licenseName = license_matrix.licenseLookup(types.ucstr(rawLicense))._name_
 		licenses.append(licenseName)
 
 	for x in types.License._member_names_:
@@ -46,3 +48,22 @@ def test_apacheCompatWithLGPL3():
 
 def test_dualLicenseCompat():
 	assert license_matrix.depCompatWMyLice(types.L.MIT, [types.L.GPL_2, types.L.MIT])
+
+
+def test_warningsForIgnoredLicense():
+	_stdout = sys.stdout
+	sys.stdout = StringIO()
+	zope = types.ucstr("ZOPE PUBLIC LICENSE")
+	license_matrix.licenseLookup(zope, [])
+	assert (
+		sys.stdout.getvalue()
+		== "WARN: 'ZOPE PUBLIC LICENSE' License not identified so falling back to NO_LICENSE\n"
+	)
+
+
+def test_warningsForIgnoredLicenseIgnored():
+	_stdout = sys.stdout
+	sys.stdout = StringIO()
+	zope = types.ucstr("ZOPE PUBLIC LICENSE")
+	license_matrix.licenseLookup(zope, [zope])
+	assert sys.stdout.getvalue() == ""

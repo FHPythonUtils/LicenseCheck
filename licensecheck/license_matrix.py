@@ -42,6 +42,7 @@ from pathlib import Path
 
 from licensecheck.types import JOINS
 from licensecheck.types import License as L
+from licensecheck.types import ucstr
 
 THISDIR = Path(__file__).resolve().parent
 
@@ -49,11 +50,11 @@ with Path(THISDIR / "matrix.csv").open(mode="r", newline="", encoding="utf-8") a
 	LICENSE_MATRIX = list(csv.reader(csv_file))
 
 
-def licenseLookup(licenseStr: str, ignoreLicenses: list[str] | None = None) -> L:
+def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) -> L:
 	"""Identify a license from an uppercase string representation of a license.
 
 	Args:
-		licenseStr (str): uppercase string representation of a license
+		licenseStr (ucstr): uppercase string representation of a license
 
 	Returns:
 		L: License represented by licenseStr
@@ -106,18 +107,18 @@ def licenseLookup(licenseStr: str, ignoreLicenses: list[str] | None = None) -> L
 	return L.NO_LICENSE
 
 
-def licenseType(lice: str) -> list[L]:
+def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[L]:
 	"""Return a list of license types from a license string.
 
 	Args:
-		lice (str): license name
+		lice (ucstr): license name
 
 	Returns:
 		list[L]: the license
 	"""
 	if len(lice or "") < 1:
 		return [L.NO_LICENSE]
-	return [licenseLookup(x) for x in lice.upper().split(JOINS)]
+	return [licenseLookup(ucstr(x), ignoreLicenses) for x in lice.split(JOINS)]
 
 
 def depCompatWMyLice(

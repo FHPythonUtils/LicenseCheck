@@ -14,7 +14,7 @@ License Matrix
 
 ## depCompatWMyLice
 
-[Show source in license_matrix.py:123](../../../licensecheck/license_matrix.py#L123)
+[Show source in license_matrix.py:124](../../../licensecheck/license_matrix.py#L124)
 
 Identify if the end user license is compatible with the dependency license(s).
 
@@ -49,7 +49,7 @@ def depCompatWMyLice(
 
 ## liceCompat
 
-[Show source in license_matrix.py:156](../../../licensecheck/license_matrix.py#L156)
+[Show source in license_matrix.py:157](../../../licensecheck/license_matrix.py#L157)
 
 Identify if the end user license is compatible with the dependency license
 
@@ -82,13 +82,13 @@ def liceCompat(
 
 ## licenseLookup
 
-[Show source in license_matrix.py:52](../../../licensecheck/license_matrix.py#L52)
+[Show source in license_matrix.py:53](../../../licensecheck/license_matrix.py#L53)
 
 Identify a license from an uppercase string representation of a license.
 
 #### Arguments
 
-- `licenseStr` *str* - uppercase string representation of a license
+- `licenseStr` *ucstr* - uppercase string representation of a license
 
 #### Returns
 
@@ -97,25 +97,26 @@ Identify a license from an uppercase string representation of a license.
 #### Signature
 
 ```python
-def licenseLookup(licenseStr: str, ignoreLicenses: list[str] | None = None) -> L:
+def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) -> L:
     ...
 ```
 
 #### See also
 
 - [License](./types.md#license)
+- [ucstr](./types.md#ucstr)
 
 
 
 ## licenseType
 
-[Show source in license_matrix.py:109](../../../licensecheck/license_matrix.py#L109)
+[Show source in license_matrix.py:110](../../../licensecheck/license_matrix.py#L110)
 
 Return a list of license types from a license string.
 
 #### Arguments
 
-- `lice` *str* - license name
+- `lice` *ucstr* - license name
 
 #### Returns
 
@@ -124,12 +125,13 @@ Return a list of license types from a license string.
 #### Signature
 
 ```python
-def licenseType(lice: str) -> list[L]:
+def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[L]:
     ...
 ```
 
 #### See also
 
 - [License](./types.md#license)
+- [ucstr](./types.md#ucstr)
 
 

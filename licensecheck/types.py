@@ -4,9 +4,24 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
+from pathlib import Path
 
-UNKNOWN = "UNKNOWN"
-JOINS = ";; "
+THISDIR = Path(__file__).resolve().parent
+
+import requests_cache
+
+session = requests_cache.CachedSession(f"{THISDIR}/licensecheck")
+
+
+class ucstr(str):
+	"""Uppercase string"""
+
+	def __new__(cls, v) -> ucstr:
+		return super().__new__(cls, v.upper())
+
+
+UNKNOWN = ucstr("UNKNOWN")
+JOINS = ucstr(";; ")
 
 
 @dataclass(unsafe_hash=True, order=True)
@@ -19,7 +34,7 @@ class PackageInfo:
 	size: int = -1
 	homePage: str = UNKNOWN
 	author: str = UNKNOWN
-	license: str = UNKNOWN
+	license: ucstr = UNKNOWN
 	licenseCompat: bool = False
 	errorCode: int = 0
 
@@ -78,35 +93,35 @@ def printLicense(licenseEnum: L) -> str:
 	"""
 
 	licenseMap = {
-		L.PUBLIC: "public domain/ cc-pddc/ cc0-1.0",
-		L.UNLICENSE: "unlicense/ wtfpl",
-		L.BOOST: "boost/ bsl-1.0",
-		L.MIT: "mit",
-		L.BSD: "bsd",
-		L.ISC: "isc",
-		L.NCSA: "ncsa",
-		L.PSFL: "python/ psf-2.0",
-		L.APACHE: "apache",
-		L.ECLIPSE: "eclipse",
-		L.ACADEMIC_FREE: "afl",
-		L.LGPL_2_PLUS: "lgplv2+/ lgpl-2.0-or-later",
-		L.LGPL_3_PLUS: "lgplv3+/ lgpl-3.0-or-later",
-		L.LGPL_2: "lgpl-2.0-only/ lgplv2",
-		L.LGPL_3: "lgpl-3.0-only/ lgplv3",
-		L.LGPL_X: "lgpl",
-		L.AGPL_3_PLUS: "agpl",
-		L.GPL_2_PLUS: "gpl-2.0-or-later/ gplv2+",
-		L.GPL_3_PLUS: "gpl-3.0-or-later/ gplv3+",
-		L.GPL_2: "gplv2/ gpl-2.0",
-		L.GPL_3: "gplv3/ gpl-3.0",
-		L.GPL_X: "gpl",
-		L.MPL: "mpl",
-		L.EU: "eupl",
-		L.PROPRIETARY: "proprietary",
-		L.NO_LICENSE: "no license/ unknown",
+		L.PUBLIC: "PUBLIC DOMAIN/ CC-PDDC/ CC0-1.0",
+		L.UNLICENSE: "UNLICENSE/ WTFPL",
+		L.BOOST: "BOOST/ BSL-1.0",
+		L.MIT: "MIT",
+		L.BSD: "BSD",
+		L.ISC: "ISC",
+		L.NCSA: "NCSA",
+		L.PSFL: "PYTHON/ PSF-2.0",
+		L.APACHE: "APACHE",
+		L.ECLIPSE: "ECLIPSE",
+		L.ACADEMIC_FREE: "AFL",
+		L.LGPL_2_PLUS: "LGPLV2+/ LGPL-2.0-OR-LATER",
+		L.LGPL_3_PLUS: "LGPLV3+/ LGPL-3.0-OR-LATER",
+		L.LGPL_2: "LGPL-2.0-ONLY/ LGPLV2",
+		L.LGPL_3: "LGPL-3.0-ONLY/ LGPLV3",
+		L.LGPL_X: "LGPL",
+		L.AGPL_3_PLUS: "AGPL",
+		L.GPL_2_PLUS: "GPL-2.0-OR-LATER/ GPLV2+",
+		L.GPL_3_PLUS: "GPL-3.0-OR-LATER/ GPLV3+",
+		L.GPL_2: "GPLV2/ GPL-2.0",
+		L.GPL_3: "GPLV3/ GPL-3.0",
+		L.GPL_X: "GPL",
+		L.MPL: "MPL",
+		L.EU: "EUPL",
+		L.PROPRIETARY: "PROPRIETARY",
+		L.NO_LICENSE: "NO LICENSE/ UNKNOWN",
 	}
 
 	if licenseEnum not in licenseMap:
-		return "no license/ unknown"
+		return "NO LICENSE/ UNKNOWN LICENSE"
 
-	return licenseMap[licenseEnum]
+	return f"{licenseMap[licenseEnum]} LICENSE"

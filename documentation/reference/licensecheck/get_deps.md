@@ -12,17 +12,17 @@ Get Deps
 
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:116](../../../licensecheck/get_deps.py#L116)
+[Show source in get_deps.py:127](../../../licensecheck/get_deps.py#L127)
 
 Get a set of dependencies with licenses and determine license compatibility.
 
 #### Arguments
 
 - `using` *str* - use requirements or poetry
-- `ignorePackages` *list[str]* - a list of packages to ignore (compat=True)
-- `failPackages` *list[str]* - a list of packages to fail (compat=False)
-- `ignoreLicenses` *list[str]* - a list of licenses to ignore (skipped, compat may still be False)
-- `failLicenses` *list[str]* - a list of licenses to fail (compat=False)
+- `ignorePackages` *list[ucstr]* - a list of packages to ignore (compat=True)
+- `failPackages` *list[ucstr]* - a list of packages to fail (compat=False)
+- `ignoreLicenses` *list[ucstr]* - a list of licenses to ignore (skipped, compat may still be False)
+- `failLicenses` *list[ucstr]* - a list of licenses to fail (compat=False)
 
 #### Returns
 
@@ -35,10 +35,10 @@ Get a set of dependencies with licenses and determine license compatibility.
 ```python
 def getDepsWithLicenses(
     using: str,
-    ignorePackages: list[str],
-    failPackages: list[str],
-    ignoreLicenses: list[str],
-    failLicenses: list[str],
+    ignorePackages: list[ucstr],
+    failPackages: list[ucstr],
+    ignoreLicenses: list[ucstr],
+    failLicenses: list[ucstr],
 ) -> tuple[License, set[PackageInfo]]:
     ...
 ```
@@ -47,6 +47,7 @@ def getDepsWithLicenses(
 
 - [License](./types.md#license)
 - [PackageInfo](./types.md#packageinfo)
+- [ucstr](./types.md#ucstr)
 
 
 
@@ -76,8 +77,12 @@ Get requirements for the end user project/ lib.
 #### Signature
 
 ```python
-def getReqs(using: str) -> set[str]:
+def getReqs(using: str) -> set[ucstr]:
     ...
 ```
+
+#### See also
+
+- [ucstr](./types.md#ucstr)
 
 

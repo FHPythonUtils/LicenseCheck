@@ -2,11 +2,11 @@
 
 - **program**: licensecheck
 - **version**: 2023.1.3
-- **license**: mit
+- **license**: MIT LICENSE
 
 ## Project License
 
-mit
+MIT LICENSE
 
 ## Packages
 

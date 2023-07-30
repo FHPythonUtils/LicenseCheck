@@ -9,11 +9,12 @@ Types
 - [Types](#types)
   - [License](#license)
   - [PackageInfo](#packageinfo)
+  - [ucstr](#ucstr)
   - [printLicense](#printlicense)
 
 ## License
 
-[Show source in types.py:30](../../../licensecheck/types.py#L30)
+[Show source in types.py:45](../../../licensecheck/types.py#L45)
 
 #### Attributes
 
@@ -49,7 +50,7 @@ class License(Enum):
 
 ## PackageInfo
 
-[Show source in types.py:13](../../../licensecheck/types.py#L13)
+[Show source in types.py:28](../../../licensecheck/types.py#L28)
 
 PackageInfo type.
 
@@ -62,9 +63,24 @@ class PackageInfo:
 
 
 
+## ucstr
+
+[Show source in types.py:16](../../../licensecheck/types.py#L16)
+
+Uppercase string
+
+#### Signature
+
+```python
+class ucstr(str):
+    ...
+```
+
+
+
 ## printLicense
 
-[Show source in types.py:73](../../../licensecheck/types.py#L73)
+[Show source in types.py:88](../../../licensecheck/types.py#L88)
 
 Output a license as plain text
 

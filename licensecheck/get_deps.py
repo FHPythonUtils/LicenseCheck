@@ -4,18 +4,18 @@ from __future__ import annotations
 
 from importlib import metadata
 from pathlib import Path
+from typing import Any
 
 import pkg_resources
-import requests
 import tomli
 
 from licensecheck import license_matrix, packageinfo
-from licensecheck.types import JOINS, License, PackageInfo
+from licensecheck.types import JOINS, License, PackageInfo, session, ucstr
 
 USINGS = ["requirements", "poetry", "PEP631"]
 
 
-def getReqs(using: str) -> set[str]:
+def getReqs(using: str) -> set[ucstr]:
 	"""Get requirements for the end user project/ lib.
 
 	>>> getReqs("poetry")
@@ -32,18 +32,31 @@ def getReqs(using: str) -> set[str]:
 		set[str]: set of requirement packages
 	"""
 
-	resolveReq = lambda req: pkg_resources.Requirement.parse(req).project_name.lower()
-
 	_ = using.split(":", 1)
 	using, extras = _[0], _[1] if len(_) > 1 else None
 	if using not in USINGS:
 		using = "poetry"
-	reqs = set()
+
+	pyproject = {}
+	requirementsPaths = []
 
 	pyprojectPath = Path("pyproject.toml")
-	pyproject = {}
 	if pyprojectPath.exists():
 		pyproject = tomli.loads(pyprojectPath.read_text(encoding="utf-8"))
+
+	# Requirements
+	if using == "requirements":
+		requirementsPaths = [Path(x) for x in (extras or "requirements.txt").split(";")]
+
+	return _doGetReqs(using, extras, pyproject, requirementsPaths)
+
+
+def _doGetReqs(
+	using: str, extras: str | None, pyproject: dict[str, Any], requirementsPaths: list[Path]
+) -> set[ucstr]:
+	resolveReq = lambda req: ucstr(pkg_resources.Requirement.parse(req).project_name)
+
+	reqs = set()
 
 	if using == "poetry":
 		try:
@@ -53,7 +66,7 @@ def getReqs(using: str) -> set[str]:
 			raise RuntimeError(
 				"Could not find specification of requirements (pyproject.toml)."
 			) from error
-		if extras:
+		if extras is not None:
 			reqLists.extend(
 				project.get("group", {x: {"dependencies": {}}})[x]["dependencies"]
 				for x in extras.split(";")
@@ -80,9 +93,7 @@ def getReqs(using: str) -> set[str]:
 
 	# Requirements
 	if using == "requirements":
-		for reqTxt in (extras or "requirements.txt").split(";"):
-
-			reqPath = Path(reqTxt)
+		for reqPath in requirementsPaths:
 			if not reqPath.exists():
 				raise RuntimeError(f"Could not find specification of requirements ({reqPath}).")
 
@@ -90,7 +101,7 @@ def getReqs(using: str) -> set[str]:
 				reqs.add(resolveReq(req))
 
 	try:
-		reqs.remove("python")
+		reqs.remove("PYTHON")
 	except KeyError:
 		pass
 
@@ -98,16 +109,16 @@ def getReqs(using: str) -> set[str]:
 	requirementsWithDeps = reqs.copy()
 	for requirement in reqs:
 		try:
-			pkgMetadata = metadata.metadata(resolveReq(requirement))
+			pkgMetadata = metadata.metadata(requirement)
 			for req in [resolveReq(req) for req in pkgMetadata.get_all("Requires-Dist") or []]:
 				requirementsWithDeps.add(req)
 		except metadata.PackageNotFoundError:
-			request = requests.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
+			request = session.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
 			response = request.json()
 			try:
 				for req in [resolveReq(req) for req in response["info"]["requires_dist"]]:
 					requirementsWithDeps.add(req)
-			except KeyError:
+			except (KeyError, TypeError):
 				pass
 
 	return requirementsWithDeps
@@ -115,19 +126,19 @@ def getReqs(using: str) -> set[str]:
 
 def getDepsWithLicenses(
 	using: str,
-	ignorePackages: list[str],
-	failPackages: list[str],
-	ignoreLicenses: list[str],
-	failLicenses: list[str],
+	ignorePackages: list[ucstr],
+	failPackages: list[ucstr],
+	ignoreLicenses: list[ucstr],
+	failLicenses: list[ucstr],
 ) -> tuple[License, set[PackageInfo]]:
 	"""Get a set of dependencies with licenses and determine license compatibility.
 
 	Args:
 		using (str): use requirements or poetry
-		ignorePackages (list[str]): a list of packages to ignore (compat=True)
-		failPackages (list[str]): a list of packages to fail (compat=False)
-		ignoreLicenses (list[str]): a list of licenses to ignore (skipped, compat may still be False)
-		failLicenses (list[str]): a list of licenses to fail (compat=False)
+		ignorePackages (list[ucstr]): a list of packages to ignore (compat=True)
+		failPackages (list[ucstr]): a list of packages to fail (compat=False)
+		ignoreLicenses (list[ucstr]): a list of licenses to ignore (skipped, compat may still be False)
+		failLicenses (list[ucstr]): a list of licenses to fail (compat=False)
 
 	Returns:
 		tuple[License, set[PackageInfo]]: tuple of
@@ -139,22 +150,27 @@ def getDepsWithLicenses(
 	# Get my license
 	myLiceTxt = packageinfo.getMyPackageLicense()
 	myLice = license_matrix.licenseType(myLiceTxt)[0]
+	ignoreLicensesType = license_matrix.licenseType(
+		ucstr(JOINS.join(ignoreLicenses)), ignoreLicenses
+	)
+	failLicensesType = license_matrix.licenseType(ucstr(JOINS.join(failLicenses)), ignoreLicenses)
 
 	# Check it is compatible with packages and add a note
 	packages = packageinfo.getPackages(reqs)
 	for package in packages:
 		# Deal with --ignore-packages and --fail-packages
 		package.licenseCompat = False
-		if package.name.lower() in [x.lower() for x in ignorePackages]:
+		packageName = package.name
+		if packageName in ignorePackages:
 			package.licenseCompat = True
-		elif package.name.lower() in [x.lower() for x in failPackages]:
+		elif packageName in failPackages:
 			pass  # package.licenseCompat = False
 		# Old behaviour
 		else:
 			package.licenseCompat = license_matrix.depCompatWMyLice(  # type: ignore
 				myLice,
-				license_matrix.licenseType(package.license),
-				license_matrix.licenseType(JOINS.join(ignoreLicenses)),
-				license_matrix.licenseType(JOINS.join(failLicenses)),
+				license_matrix.licenseType(package.license, ignoreLicenses),
+				ignoreLicensesType,
+				failLicensesType,
 			)
 	return myLice, packages

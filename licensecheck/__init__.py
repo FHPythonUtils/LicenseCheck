@@ -10,7 +10,7 @@ from sys import stdout
 
 from fhconfparser import FHConfParser, SimpleConf
 
-from licensecheck import formatter, get_deps
+from licensecheck import formatter, get_deps, types
 
 stdout.reconfigure(encoding="utf-8")
 
@@ -67,6 +67,7 @@ def cli() -> None:
 	# `setup.cfg`, `licensecheck.toml`, `licensecheck.json`,
 	# `licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`)
 	configparser = FHConfParser()
+	namespace = ["tool"]
 	configparser.parseConfigList(
 		[("pyproject.toml", "toml"), ("setup.cfg", "ini")]
 		+ [
@@ -74,8 +75,8 @@ def cli() -> None:
 			for ext in ("toml", "json", "ini")
 			for directory in [".", str(Path.home())]
 		],
-		["tool"],
-		["tool"],
+		namespace,
+		namespace,
 	)
 	simpleConf = SimpleConf(configparser, "licensecheck", args)
 
@@ -89,10 +90,10 @@ def cli() -> None:
 	# Get list of licenses
 	myLice, depsWithLicenses = get_deps.getDepsWithLicenses(
 		simpleConf.get("using", "poetry"),
-		simpleConf.get("ignore_packages", []),
-		simpleConf.get("fail_packages", []),
-		simpleConf.get("ignore_licenses", []),
-		simpleConf.get("fail_licenses", []),
+		list(map(types.ucstr, simpleConf.get("ignore_packages", []))),
+		list(map(types.ucstr, simpleConf.get("fail_packages", []))),
+		list(map(types.ucstr, simpleConf.get("ignore_licenses", []))),
+		list(map(types.ucstr, simpleConf.get("fail_licenses", []))),
 	)
 
 	# Are any licenses incompatible?

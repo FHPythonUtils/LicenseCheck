@@ -8,7 +8,7 @@
 	size: int
 	homePage: str
 	author: str
-	license: str
+	license: ucstr
 	licenseCompat: bool
 }
 ```
@@ -33,7 +33,7 @@ from rich.table import Table
 
 from licensecheck.types import License, PackageInfo, printLicense
 
-INFO = {"program": "licensecheck", "version": "2023.1.3", "license": "mit"}
+INFO = {"program": "licensecheck", "version": "2023.1.3", "license": "MIT LICENSE"}
 
 
 def stripAnsi(string: str) -> str:

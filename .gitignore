@@ -1,6 +1,7 @@
 requirements_optional.txt
 poetry.lock
-.~lock*
+*.~lock*
+*.sqlite
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
