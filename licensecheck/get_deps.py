@@ -6,6 +6,7 @@ from importlib import metadata
 from pathlib import Path
 from typing import Any
 
+import requirements
 import pkg_resources
 import tomli
 
@@ -97,8 +98,9 @@ def _doGetReqs(
 			if not reqPath.exists():
 				raise RuntimeError(f"Could not find specification of requirements ({reqPath}).")
 
-			for req in reqPath.read_text("utf-8").strip().split("\n"):
-				reqs.add(resolveReq(req))
+			with open(reqPath, encoding="utf-8") as requirementsTxt:
+				for req in requirements.parse(requirementsTxt):
+					reqs.add(str(req.name).lower())
 
 	try:
 		reqs.remove("PYTHON")
