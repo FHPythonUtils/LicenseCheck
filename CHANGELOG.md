@@ -5,6 +5,7 @@ patch-level version changes can be found in [commit messages](../../commits/mast
 
 ## 2023.3 - 2023/07/29
 
+- Fixed Bug: requirements:requirements.txt reading mode, thank you https://github.com/NicolaDonelli
 - Fixed Bug: Permissive libraries are not compatible with closed licenses. Closes #49
 - Fixed Bug: Unexpected warnings for ignored license. Closes #48
 - New Feature: Support option ignore-licenses in pyproject.toml. Closes #46
