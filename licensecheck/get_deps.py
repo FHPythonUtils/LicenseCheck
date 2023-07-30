@@ -6,8 +6,8 @@ from importlib import metadata
 from pathlib import Path
 from typing import Any
 
-import requirements
 import pkg_resources
+import requirements
 import tomli
 
 from licensecheck import license_matrix, packageinfo
