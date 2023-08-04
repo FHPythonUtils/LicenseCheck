@@ -7,7 +7,7 @@ from licensecheck import get_deps
 THISDIR = Path(__file__).resolve().parent
 
 
-def test_doGetReqs():
+def test_doGetReqs_PEP631():
 
 	using = "PEP631"
 	extras = "socks"
@@ -15,50 +15,47 @@ def test_doGetReqs():
 	requirementsPaths = []
 
 	assert get_deps._doGetReqs(using, extras, pyproject, requirementsPaths) == {
-		"ATTRS",
-		"BACKPORTS.SHUTIL-GET-TERMINAL-SIZE",
-		"BACKPORTS.SSL-MATCH-HOSTNAME",
-		"CACHED-PROPERTY",
-		"CERTIFI",
-		"CHARDET",
-		"CHARSET-NORMALIZER",
-		"CLICK",
-		"COLORAMA",
-		"DISTRO",
-		"DOCKER",
-		"DOCKERPTY",
-		"DOCOPT",
-		"ENUM34",
-		"FQDN",
-		"IDNA",
-		"IMPORTLIB-RESOURCES",
-		"IPADDRESS",
-		"ISODURATION",
-		"JSONPOINTER",
-		"JSONSCHEMA",
-		"JSONSCHEMA-SPECIFICATIONS",
-		"PACKAGING",
-		"PARAMIKO",
-		"PKGUTIL-RESOLVE-NAME",
-		"PYSOCKS",
-		"PYTHON-DOTENV",
-		"PYTHON-SOCKS",
-		"PYWIN32",
-		"PYYAML",
-		"REFERENCING",
-		"REQUESTS",
-		"RFC3339-VALIDATOR",
-		"RFC3986-VALIDATOR",
-		"RFC3987",
-		"RPDS-PY",
-		"SPHINX",
-		"SPHINX-RTD-THEME",
-		"SUBPROCESS32",
-		"TEXTTABLE",
-		"URI-TEMPLATE",
-		"URLLIB3",
-		"WEBCOLORS",
-		"WEBSOCKET-CLIENT",
-		"WEBSOCKETS",
-		"WSACCEL",
+		'DOCKERPTY',
+		'PACKAGING',
+		'ATTRS',
+		'JSONSCHEMA',
+		'PYYAML',
+		'PYSOCKS',
+		'CERTIFI',
+		'ENUM34',
+		'DOCKER',
+		'TEXTTABLE',
+		'PYWIN32',
+		'JSONSCHEMA-SPECIFICATIONS',
+		'IPADDRESS',
+		'PKGUTIL-RESOLVE-NAME',
+		'DOCOPT',
+		'BACKPORTS.SSL-MATCH-HOSTNAME',
+		'PARAMIKO',
+		'IDNA',
+		'COLORAMA',
+		'IMPORTLIB-RESOURCES',
+		'CACHED-PROPERTY',
+		'DISTRO',
+		'BACKPORTS.SHUTIL-GET-TERMINAL-SIZE',
+		'CHARSET-NORMALIZER',
+		'URLLIB3',
+		'WEBSOCKET-CLIENT',
+		'RPDS-PY',
+		'SUBPROCESS32',
+		'REQUESTS',
+		'REFERENCING',
+		'CHARDET',
+		'PYTHON-DOTENV'
 	}
+
+def test_doGetReqs_requirements():
+
+	using = "requirements"
+	extras = f"{THISDIR}/data/test_requirements.txt"
+	pyproject = {}
+	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements.txt")]
+	deps = get_deps._doGetReqs(using, extras, pyproject, requirementsPaths)
+	assert deps == {'NUMPY', 'ODFPY', 'OPENPYXL', 'PANDAS', 'PYTHON-DATEUTIL', 'PYTZ', 'PYXLSB', 'TZDATA', 'XLRD', 'XLSXWRITER'}
+	assert 'OPENPYXL' in deps
+	assert 'XARRAY' not in deps #xarray is an optional dependecy of pandas associated with 'computation' key that is not tracked in test_requirements.txt
