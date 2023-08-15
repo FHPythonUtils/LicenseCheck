@@ -162,7 +162,7 @@ def getDepsWithLicenses(
 	for package in packages:
 		# Deal with --ignore-packages and --fail-packages
 		package.licenseCompat = False
-		packageName = package.name
+		packageName = package.name.upper()
 		if packageName in ignorePackages:
 			package.licenseCompat = True
 		elif packageName in failPackages:
