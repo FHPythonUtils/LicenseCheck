@@ -2,6 +2,7 @@
 """
 from __future__ import annotations
 
+import re
 from importlib import metadata
 from pathlib import Path
 from typing import Any
@@ -56,8 +57,10 @@ def _doGetReqs(
 	using: str, extras: str | None, pyproject: dict[str, Any], requirementsPaths: list[Path]
 ) -> set[ucstr]:
 	resolveReq = lambda req: ucstr(pkg_resources.Requirement.parse(req).project_name)
+	resolveExtraReq = lambda extra_req: re.sub("extra == ", "", re.findall(r"extra == '.*?'",extra_req)[0].replace("'", "")) if len(re.findall(r"extra == '.*?'",extra_req)) > 0 else None
 
 	reqs = set()
+	extras_reqs = dict()
 
 	if using == "poetry":
 		try:
@@ -75,8 +78,12 @@ def _doGetReqs(
 			reqLists.append(project.get("dev-dependencies", {}))
 		for reqList in reqLists:
 			for req in reqList:
-				reqs.add(resolveReq(req))
-
+				try:
+					extra = re.search(r'(?<=\[)(.*?)(?=\])',req).group(0)
+					extras_reqs[resolveReq(req)] = extra
+					reqs.add(f"{resolveReq(req)}[{extra}]")
+				except (KeyError, AttributeError):
+					reqs.add(resolveReq(req))
 	# PEP631 (hatch)
 	if using == "PEP631":
 		try:
@@ -90,7 +97,12 @@ def _doGetReqs(
 			reqLists.extend(project["optional-dependencies"][x] for x in extras.split(";"))
 		for reqList in reqLists:
 			for req in reqList:
-				reqs.add(resolveReq(req))
+				try:
+					extra = re.search(r'(?<=\[)(.*?)(?=\])',req).group(0)
+					extras_reqs[resolveReq(req)] = extra
+					reqs.add(f"{resolveReq(req)}[{extra}]")
+				except (KeyError, AttributeError):
+					reqs.add(resolveReq(req))
 
 	# Requirements
 	if using == "requirements":
@@ -100,7 +112,12 @@ def _doGetReqs(
 
 			with open(reqPath, encoding="utf-8") as requirementsTxt:
 				for req in requirements.parse(requirementsTxt):
-					reqs.add(str(req.name).lower())
+					if len(req.extras)>0:
+						extras_reqs[resolveReq(req.name)] = req.extras
+						for extra in req.extras:
+							reqs.add(f"{resolveReq(req.name)}[{extra}]")
+					else:
+						reqs.add(resolveReq(req.name))
 
 	try:
 		reqs.remove("PYTHON")
@@ -115,16 +132,19 @@ def _doGetReqs(
 			for req in [resolveReq(req) for req in pkgMetadata.get_all("Requires-Dist") or []]:
 				requirementsWithDeps.add(req)
 		except metadata.PackageNotFoundError:
-			request = session.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
+			request = session.get(f"https://pypi.org/pypi/{requirement.split('[')[0]}/json", timeout=60)
 			response = request.json()
 			try:
-				for req in [resolveReq(req) for req in response["info"]["requires_dist"]]:
-					requirementsWithDeps.add(req)
+				for dependency in response["info"]["requires_dist"]:
+					if resolveExtraReq(dependency) is not None:
+						if (resolveReq(requirement) in extras_reqs.keys()) and (resolveExtraReq(dependency) in extras_reqs[resolveReq(requirement)]):
+							requirementsWithDeps.add(resolveReq(dependency))
+					else:
+						requirementsWithDeps.add(resolveReq(dependency))
 			except (KeyError, TypeError):
 				pass
 
-	return requirementsWithDeps
-
+	return {r.split('[')[0] for r in requirementsWithDeps}
 
 def getDepsWithLicenses(
 	using: str,
