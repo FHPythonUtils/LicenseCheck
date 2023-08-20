@@ -17,7 +17,7 @@ session = requests_cache.CachedSession(f"{THISDIR}/licensecheck")
 class ucstr(str):
 	"""Uppercase string"""
 
-	def __new__(cls, v) -> ucstr:
+	def __new__(cls, v: str) -> ucstr:
 		return super().__new__(cls, v.upper())
 
 

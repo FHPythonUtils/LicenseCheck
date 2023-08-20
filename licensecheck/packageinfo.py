@@ -68,7 +68,9 @@ def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
 			homePage=info["home_page"],
 			author=info["author"],
 			size=int(response["urls"][-1]["size"]),
-			license=ucstr(licenseClassifier if licenseClassifier != UNKNOWN else info["license"]),
+			license=ucstr(
+				licenseClassifier if licenseClassifier != UNKNOWN else info.get("license", UNKNOWN)
+			),
 		)
 	except KeyError as error:
 		raise ModuleNotFoundError from error
@@ -152,8 +154,8 @@ def getMyPackageLicense() -> ucstr:
 		return licenseClassifier
 	if "license" in metaData:
 		if isinstance(metaData["license"], dict) and metaData["license"].get("text") is not None:
-			return ucstr(metaData["license"].get("text"))
-		return ucstr(metaData["license"])
+			return ucstr(metaData["license"].get("text", UNKNOWN))
+		return ucstr(f'{metaData["license"]}')
 	return ucstr(input("Enter the project license\n>"))
 
 
