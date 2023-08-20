@@ -205,5 +205,3 @@ def licenseFromClassifierlist(classifiers: list[str]) -> ucstr:
 #### See also
 
 - [ucstr](./types.md#ucstr)
-
-

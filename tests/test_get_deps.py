@@ -15,39 +15,40 @@ def test_doGetReqs_PEP631():
 	requirementsPaths = []
 
 	assert get_deps._doGetReqs(using, extras, pyproject, requirementsPaths) == {
-		'DOCKERPTY',
-		'PACKAGING',
-		'ATTRS',
-		'JSONSCHEMA',
-		'PYYAML',
-		'PYSOCKS',
-		'CERTIFI',
-		'ENUM34',
-		'DOCKER',
-		'TEXTTABLE',
-		'PYWIN32',
-		'JSONSCHEMA-SPECIFICATIONS',
-		'IPADDRESS',
-		'PKGUTIL-RESOLVE-NAME',
-		'DOCOPT',
-		'BACKPORTS.SSL-MATCH-HOSTNAME',
-		'PARAMIKO',
-		'IDNA',
-		'COLORAMA',
-		'IMPORTLIB-RESOURCES',
-		'CACHED-PROPERTY',
-		'DISTRO',
-		'BACKPORTS.SHUTIL-GET-TERMINAL-SIZE',
-		'CHARSET-NORMALIZER',
-		'URLLIB3',
-		'WEBSOCKET-CLIENT',
-		'RPDS-PY',
-		'SUBPROCESS32',
-		'REQUESTS',
-		'REFERENCING',
-		'CHARDET',
-		'PYTHON-DOTENV'
+		"DOCKERPTY",
+		"PACKAGING",
+		"ATTRS",
+		"JSONSCHEMA",
+		"PYYAML",
+		"PYSOCKS",
+		"CERTIFI",
+		"ENUM34",
+		"DOCKER",
+		"TEXTTABLE",
+		"PYWIN32",
+		"JSONSCHEMA-SPECIFICATIONS",
+		"IPADDRESS",
+		"PKGUTIL-RESOLVE-NAME",
+		"DOCOPT",
+		"BACKPORTS-SSL-MATCH-HOSTNAME",
+		"PARAMIKO",
+		"IDNA",
+		"COLORAMA",
+		"IMPORTLIB-RESOURCES",
+		"CACHED-PROPERTY",
+		"DISTRO",
+		"BACKPORTS-SHUTIL-GET-TERMINAL-SIZE",
+		"CHARSET-NORMALIZER",
+		"URLLIB3",
+		"WEBSOCKET-CLIENT",
+		"RPDS-PY",
+		"SUBPROCESS32",
+		"REQUESTS",
+		"REFERENCING",
+		"CHARDET",
+		"PYTHON-DOTENV",
 	}
+
 
 def test_doGetReqs_requirements():
 
@@ -56,6 +57,19 @@ def test_doGetReqs_requirements():
 	pyproject = {}
 	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements.txt")]
 	deps = get_deps._doGetReqs(using, extras, pyproject, requirementsPaths)
-	assert deps == {'NUMPY', 'ODFPY', 'OPENPYXL', 'PANDAS', 'PYTHON-DATEUTIL', 'PYTZ', 'PYXLSB', 'TZDATA', 'XLRD', 'XLSXWRITER'}
-	assert 'OPENPYXL' in deps
-	assert 'XARRAY' not in deps #xarray is an optional dependecy of pandas associated with 'computation' key that is not tracked in test_requirements.txt
+	assert deps == {
+		"NUMPY",
+		"ODFPY",
+		"OPENPYXL",
+		"PANDAS",
+		"PYTHON-DATEUTIL",
+		"PYTZ",
+		"PYXLSB",
+		"TZDATA",
+		"XLRD",
+		"XLSXWRITER",
+	}
+	assert "OPENPYXL" in deps
+	assert (
+		"XARRAY" not in deps
+	)  # xarray is an optional dependecy of pandas associated with 'computation' key that is not tracked in test_requirements.txt

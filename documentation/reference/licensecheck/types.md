@@ -14,7 +14,7 @@ Types
 
 ## License
 
-[Show source in types.py:45](../../../licensecheck/types.py#L45)
+[Show source in types.py:46](../../../licensecheck/types.py#L46)
 
 #### Attributes
 
@@ -50,7 +50,7 @@ class License(Enum):
 
 ## PackageInfo
 
-[Show source in types.py:28](../../../licensecheck/types.py#L28)
+[Show source in types.py:29](../../../licensecheck/types.py#L29)
 
 PackageInfo type.
 
@@ -65,7 +65,7 @@ class PackageInfo:
 
 ## ucstr
 
-[Show source in types.py:16](../../../licensecheck/types.py#L16)
+[Show source in types.py:17](../../../licensecheck/types.py#L17)
 
 Uppercase string
 
@@ -80,7 +80,7 @@ class ucstr(str):
 
 ## printLicense
 
-[Show source in types.py:88](../../../licensecheck/types.py#L88)
+[Show source in types.py:89](../../../licensecheck/types.py#L89)
 
 Output a license as plain text
 
@@ -103,5 +103,3 @@ def printLicense(licenseEnum: L) -> str:
 #### See also
 
 - [L](#l)
-
-

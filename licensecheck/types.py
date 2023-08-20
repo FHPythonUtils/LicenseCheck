@@ -6,9 +6,10 @@ from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
 
+import requests_cache
+
 THISDIR = Path(__file__).resolve().parent
 
-import requests_cache
 
 session = requests_cache.CachedSession(f"{THISDIR}/licensecheck")
 

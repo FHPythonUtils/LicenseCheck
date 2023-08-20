@@ -3,6 +3,12 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2023.4 - 2023/08/20
+
+- Refactor and code enhancements
+- Fixed Bug: fix behaviour of dependency discovery for 'extras', thank you https://github.com/TuriJ95!
+- Fixed Bug: ignore-package not working, thank you https://github.com/mathiasbockwoldt !
+
 ## 2023.3 - 2023/07/29
 
 - Fixed Bug: requirements:requirements.txt reading mode, thank you https://github.com/NicolaDonelli

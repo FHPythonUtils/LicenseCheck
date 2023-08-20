@@ -133,5 +133,3 @@ def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[
 
 - [License](./types.md#license)
 - [ucstr](./types.md#ucstr)
-
-

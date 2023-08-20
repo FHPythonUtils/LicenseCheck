@@ -7,9 +7,9 @@ from importlib import metadata
 from pathlib import Path
 from typing import Any
 
-import pkg_resources
-import requirements
 import tomli
+from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
 
 from licensecheck import license_matrix, packageinfo
 from licensecheck.types import JOINS, License, PackageInfo, session, ucstr
@@ -56,11 +56,25 @@ def getReqs(using: str) -> set[ucstr]:
 def _doGetReqs(
 	using: str, extras: str | None, pyproject: dict[str, Any], requirementsPaths: list[Path]
 ) -> set[ucstr]:
-	resolveReq = lambda req: ucstr(pkg_resources.Requirement.parse(req).project_name)
-	resolveExtraReq = lambda extra_req: re.sub("extra == ", "", re.findall(r"extra == '.*?'",extra_req)[0].replace("'", "")) if len(re.findall(r"extra == '.*?'",extra_req)) > 0 else None
 
 	reqs = set()
-	extras_reqs = dict()
+	extrasReqs = {}
+
+	def resolveReq(req: str, extra: bool = True) -> ucstr:
+		requirement = Requirement(req)
+		extras = {ucstr(extra) for extra in requirement.extras}
+		name = ucstr(canonicalize_name(requirement.name))
+		canonicalName = name
+		if len(extras) > 0:
+			canonicalName = ucstr(f"{name}[{list(extras)[0]}]")
+			extrasReqs[name] = extras
+		return canonicalName if extra else name
+
+	def resolveExtraReq(extraReq: str) -> ucstr | None:
+		match = re.search(r"extra\s*==\s*'(.*?)'", extraReq)
+		if match is None:
+			return None
+		return ucstr(match.group(1))
 
 	if using == "poetry":
 		try:
@@ -78,12 +92,7 @@ def _doGetReqs(
 			reqLists.append(project.get("dev-dependencies", {}))
 		for reqList in reqLists:
 			for req in reqList:
-				try:
-					extra = re.search(r'(?<=\[)(.*?)(?=\])',req).group(0)
-					extras_reqs[resolveReq(req)] = extra
-					reqs.add(f"{resolveReq(req)}[{extra}]")
-				except (KeyError, AttributeError):
-					reqs.add(resolveReq(req))
+				reqs.add(resolveReq(req))
 	# PEP631 (hatch)
 	if using == "PEP631":
 		try:
@@ -97,12 +106,7 @@ def _doGetReqs(
 			reqLists.extend(project["optional-dependencies"][x] for x in extras.split(";"))
 		for reqList in reqLists:
 			for req in reqList:
-				try:
-					extra = re.search(r'(?<=\[)(.*?)(?=\])',req).group(0)
-					extras_reqs[resolveReq(req)] = extra
-					reqs.add(f"{resolveReq(req)}[{extra}]")
-				except (KeyError, AttributeError):
-					reqs.add(resolveReq(req))
+				reqs.add(resolveReq(req))
 
 	# Requirements
 	if using == "requirements":
@@ -110,14 +114,11 @@ def _doGetReqs(
 			if not reqPath.exists():
 				raise RuntimeError(f"Could not find specification of requirements ({reqPath}).")
 
-			with open(reqPath, encoding="utf-8") as requirementsTxt:
-				for req in requirements.parse(requirementsTxt):
-					if len(req.extras)>0:
-						extras_reqs[resolveReq(req.name)] = req.extras
-						for extra in req.extras:
-							reqs.add(f"{resolveReq(req.name)}[{extra}]")
-					else:
-						reqs.add(resolveReq(req.name))
+			for line in reqPath.read_text(encoding="utf-8").splitlines():
+				line = line.strip()
+				if not line or line[0] in {"#", "-"}:
+					continue
+				reqs.add(resolveReq(line))
 
 	try:
 		reqs.remove("PYTHON")
@@ -132,19 +133,26 @@ def _doGetReqs(
 			for req in [resolveReq(req) for req in pkgMetadata.get_all("Requires-Dist") or []]:
 				requirementsWithDeps.add(req)
 		except metadata.PackageNotFoundError:
-			request = session.get(f"https://pypi.org/pypi/{requirement.split('[')[0]}/json", timeout=60)
+			request = session.get(
+				f"https://pypi.org/pypi/{requirement.split('[')[0]}/json", timeout=60
+			)
 			response = request.json()
 			try:
 				for dependency in response["info"]["requires_dist"]:
-					if resolveExtraReq(dependency) is not None:
-						if (resolveReq(requirement) in extras_reqs.keys()) and (resolveExtraReq(dependency) in extras_reqs[resolveReq(requirement)]):
-							requirementsWithDeps.add(resolveReq(dependency))
+					dep = resolveReq(dependency, False)
+					req = resolveReq(requirement, False)
+					extra = resolveExtraReq(dependency)
+					if extra is not None:
+						if req in extrasReqs and extra in extrasReqs.get(req, []):
+							requirementsWithDeps.add(dep)
+						# else: pass
 					else:
-						requirementsWithDeps.add(resolveReq(dependency))
+						requirementsWithDeps.add(dep)
 			except (KeyError, TypeError):
 				pass
 
-	return {r.split('[')[0] for r in requirementsWithDeps}
+	return {r.split("[")[0] for r in requirementsWithDeps}
+
 
 def getDepsWithLicenses(
 	using: str,

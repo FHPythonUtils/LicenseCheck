@@ -179,5 +179,3 @@ Strip ansi codes from a given string
 def stripAnsi(string: str) -> str:
     ...
 ```
-
-
