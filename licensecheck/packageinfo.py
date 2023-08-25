@@ -62,12 +62,18 @@ def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
 	try:
 		info = response["info"]
 		licenseClassifier = licenseFromClassifierlist(info["classifiers"])
+
+		size = -1
+		urls = response.get("urls", [])
+		if urls:
+			size = int(urls[-1]["size"])
+
 		return PackageInfo(
 			name=info["name"],
 			version=info["version"],
 			homePage=info["home_page"],
 			author=info["author"],
-			size=int(response["urls"][-1]["size"]),
+			size=size,
 			license=ucstr(
 				licenseClassifier if licenseClassifier != UNKNOWN else info.get("license", UNKNOWN)
 			),
