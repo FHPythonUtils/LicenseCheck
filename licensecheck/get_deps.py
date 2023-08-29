@@ -17,7 +17,7 @@ from licensecheck.types import JOINS, License, PackageInfo, session, ucstr
 USINGS = ["requirements", "poetry", "PEP631"]
 
 
-def getReqs(using: str) -> set[ucstr]:
+def getReqs(using: str, skipDependencies: list(ucstr)) -> set[ucstr]:
 	"""Get requirements for the end user project/ lib.
 
 	>>> getReqs("poetry")
@@ -29,6 +29,7 @@ def getReqs(using: str) -> set[ucstr]:
 
 	Args:
 		using (str): use requirements, poetry or PEP631.
+		skipDependencies (list[str]): list of dependencies to skip.
 
 	Returns:
 		set[str]: set of requirement packages
@@ -50,13 +51,16 @@ def getReqs(using: str) -> set[ucstr]:
 	if using == "requirements":
 		requirementsPaths = [Path(x) for x in (extras or "requirements.txt").split(";")]
 
-	return _doGetReqs(using, extras, pyproject, requirementsPaths)
+	return _doGetReqs(using, skipDependencies, extras, pyproject, requirementsPaths)
 
 
 def _doGetReqs(
-	using: str, extras: str | None, pyproject: dict[str, Any], requirementsPaths: list[Path]
+	using: str,
+	skipDependencies: list(ucstr),
+	extras: str | None,
+	pyproject: dict[str, Any],
+	requirementsPaths: list[Path],
 ) -> set[ucstr]:
-
 	reqs = set()
 	extrasReqs = {}
 
@@ -99,9 +103,7 @@ def _doGetReqs(
 			project = pyproject["project"]
 			reqLists = [project["dependencies"]]
 		except KeyError as error:
-			raise RuntimeError(
-				"Could not find specification of requirements (pyproject.toml)."
-			) from error
+			raise RuntimeError("Could not find specification of requirements (pyproject.toml).") from error
 		if extras:
 			reqLists.extend(project["optional-dependencies"][x] for x in extras.split(";"))
 		for reqList in reqLists:
@@ -120,10 +122,17 @@ def _doGetReqs(
 					continue
 				reqs.add(resolveReq(line))
 
+	# Remove PYTHON if define as requirement
 	try:
 		reqs.remove("PYTHON")
 	except KeyError:
 		pass
+	# Remove skip dependencies
+	for skipDependency in skipDependencies:
+		try:
+			reqs.remove(skipDependency)
+		except KeyError:
+			pass
 
 	# Get Dependencies (1 deep)
 	requirementsWithDeps = reqs.copy()
@@ -160,6 +169,7 @@ def getDepsWithLicenses(
 	failPackages: list[ucstr],
 	ignoreLicenses: list[ucstr],
 	failLicenses: list[ucstr],
+	skipDependencies: list[ucstr],
 ) -> tuple[License, set[PackageInfo]]:
 	"""Get a set of dependencies with licenses and determine license compatibility.
 
@@ -169,13 +179,14 @@ def getDepsWithLicenses(
 		failPackages (list[ucstr]): a list of packages to fail (compat=False)
 		ignoreLicenses (list[ucstr]): a list of licenses to ignore (skipped, compat may still be False)
 		failLicenses (list[ucstr]): a list of licenses to fail (compat=False)
+		skipDependencies (list[ucstr]): a list of dependencies to skip (compat=False)
 
 	Returns:
 		tuple[License, set[PackageInfo]]: tuple of
 			my package license
 			set of updated dependencies with licenseCompat set
 	"""
-	reqs = getReqs(using)
+	reqs = getReqs(using, skipDependencies)
 
 	# Get my license
 	myLiceTxt = packageinfo.getMyPackageLicense()
