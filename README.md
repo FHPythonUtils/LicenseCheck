@@ -305,6 +305,8 @@ options:
                         a list of licenses to ignore (skipped, compat may still be False)
   --fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]
                         a list of licenses to fail (compat=False)
+  --skip-dependencies SKIP_DEPENDENCIES [SKIP_DEPENDENCIES ...]
+						a list of dependencies to skip (compat=False)
   --zero, -0            Return non zero exit code if an incompatible license is found
 ```
 
