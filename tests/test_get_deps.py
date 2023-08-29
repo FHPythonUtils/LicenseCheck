@@ -8,13 +8,13 @@ THISDIR = Path(__file__).resolve().parent
 
 
 def test_doGetReqs_PEP631():
-
 	using = "PEP631"
 	extras = "socks"
 	pyproject = tomli.loads((THISDIR / "data/pep631_socks.toml").read_text(encoding="utf-8"))
 	requirementsPaths = []
+	skipDependencies = ["TOSKIP"]
 
-	assert get_deps._doGetReqs(using, extras, pyproject, requirementsPaths) == {
+	assert get_deps._doGetReqs(using, skipDependencies, extras, pyproject, requirementsPaths) == {
 		"DOCKERPTY",
 		"PACKAGING",
 		"ATTRS",
@@ -51,12 +51,13 @@ def test_doGetReqs_PEP631():
 
 
 def test_doGetReqs_requirements():
-
 	using = "requirements"
 	extras = f"{THISDIR}/data/test_requirements.txt"
 	pyproject = {}
 	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements.txt")]
-	deps = get_deps._doGetReqs(using, extras, pyproject, requirementsPaths)
+	skipDependencies = ["TOSKIP"]
+	
+	deps = get_deps._doGetReqs(using, skipDependencies, extras, pyproject, requirementsPaths)
 	assert deps == {
 		"NUMPY",
 		"ODFPY",
