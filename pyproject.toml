@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2023.4.2"
+version = "2023.4.3"
 license = "mit"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
@@ -35,11 +35,12 @@ rich = "<14,>=13.4.2"
 requests-cache = "<2,>=1.1.0"
 packaging = "<24,>=23.1"
 
-[tool.poetry.dev-dependencies]
-pytest = "^7.1.1"
-pylint = "^2.13.5"
-handsdown = "^1.1.0"
-coverage = "^6.3.2"
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pylint = "^2.17.5"
+handsdown = "^2.0.1"
+fhmake = "^2023"
+coverage = "^7.3.0"
 
 [tool.black]
 line-length = 100

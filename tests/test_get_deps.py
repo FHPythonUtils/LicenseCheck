@@ -56,7 +56,7 @@ def test_doGetReqs_requirements():
 	pyproject = {}
 	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements.txt")]
 	skipDependencies = ["TOSKIP"]
-	
+
 	deps = get_deps._doGetReqs(using, skipDependencies, extras, pyproject, requirementsPaths)
 	assert deps == {
 		"NUMPY",

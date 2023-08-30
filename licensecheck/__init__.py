@@ -32,7 +32,8 @@ def cli() -> None:
 	parser.add_argument(
 		"--using",
 		"-u",
-		help="Environment to use e.g. requirements.txt. one of: " f"{', '.join(get_deps.USINGS)}. default=poetry",
+		help="Environment to use e.g. requirements.txt. one of: "
+		f"{', '.join(get_deps.USINGS)}. default=poetry",
 	)
 	parser.add_argument(
 		"--ignore-packages",
@@ -85,7 +86,11 @@ def cli() -> None:
 	simpleConf = SimpleConf(configparser, "licensecheck", args)
 
 	# File
-	filename = stdout if simpleConf.get("file") is None else open(simpleConf.get("file"), "w", encoding="utf-8")
+	filename = (
+		stdout
+		if simpleConf.get("file") is None
+		else open(simpleConf.get("file"), "w", encoding="utf-8")
+	)
 
 	# Get list of licenses
 	myLice, depsWithLicenses = get_deps.getDepsWithLicenses(
@@ -103,7 +108,9 @@ def cli() -> None:
 	# Format the results
 	if simpleConf.get("format", "simple") in formatter.formatMap:
 		print(
-			formatter.formatMap[simpleConf.get("format", "simple")](myLice, sorted(depsWithLicenses)),
+			formatter.formatMap[simpleConf.get("format", "simple")](
+				myLice, sorted(depsWithLicenses)
+			),
 			file=filename,
 		)
 	else:

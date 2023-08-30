@@ -103,7 +103,9 @@ def _doGetReqs(
 			project = pyproject["project"]
 			reqLists = [project["dependencies"]]
 		except KeyError as error:
-			raise RuntimeError("Could not find specification of requirements (pyproject.toml).") from error
+			raise RuntimeError(
+				"Could not find specification of requirements (pyproject.toml)."
+			) from error
 		if extras:
 			reqLists.extend(project["optional-dependencies"][x] for x in extras.split(";"))
 		for reqList in reqLists:

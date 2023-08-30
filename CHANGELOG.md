@@ -3,6 +3,10 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2023.4.3 - 2023/08/30
+
+- Add a new flag `--skip-dependencies` which will exclude from the processing a list of the current project dependencies. Suitable for private dependencies which are only available on a private registry and not on PyPi. Thank you https://github.com/Azraeht :)
+
 ## 2023.4.2 - 2023/08/25
 
 - Fixed Bug: handle missing urls for a pypi package https://github.com/FHPythonUtils/LicenseCheck/issues/57. Thank you https://github.com/Azraeht!

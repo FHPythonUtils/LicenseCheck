@@ -12,7 +12,7 @@ Get Deps
 
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:157](../../../licensecheck/get_deps.py#L157)
+[Show source in get_deps.py:168](../../../licensecheck/get_deps.py#L168)
 
 Get a set of dependencies with licenses and determine license compatibility.
 
@@ -23,6 +23,7 @@ Get a set of dependencies with licenses and determine license compatibility.
 - `failPackages` *list[ucstr]* - a list of packages to fail (compat=False)
 - `ignoreLicenses` *list[ucstr]* - a list of licenses to ignore (skipped, compat may still be False)
 - `failLicenses` *list[ucstr]* - a list of licenses to fail (compat=False)
+- `skipDependencies` *list[ucstr]* - a list of dependencies to skip (compat=False)
 
 #### Returns
 
@@ -39,6 +40,7 @@ def getDepsWithLicenses(
     failPackages: list[ucstr],
     ignoreLicenses: list[ucstr],
     failLicenses: list[ucstr],
+    skipDependencies: list[ucstr],
 ) -> tuple[License, set[PackageInfo]]:
     ...
 ```
@@ -69,6 +71,7 @@ Get requirements for the end user project/ lib.
 #### Arguments
 
 - `using` *str* - use requirements, poetry or PEP631.
+- `skipDependencies` *list[str]* - list of dependencies to skip.
 
 #### Returns
 
@@ -77,7 +80,7 @@ Get requirements for the end user project/ lib.
 #### Signature
 
 ```python
-def getReqs(using: str) -> set[ucstr]:
+def getReqs(using: str, skipDependencies: list(ucstr)) -> set[ucstr]:
     ...
 ```
 
