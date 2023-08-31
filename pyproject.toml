@@ -31,7 +31,7 @@ python = "^3.8"
 requests = "<3,>=2.31.0"
 fhconfparser = "<2024,>=2022"
 tomli = "<3,>=2.0.1"
-rich = "<14,>=13.4.2"
+rich = "<14,>=13.5.2"
 requests-cache = "<2,>=1.1.0"
 packaging = "<24,>=23.1"
 
