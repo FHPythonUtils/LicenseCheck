@@ -71,7 +71,10 @@ def _doGetReqs(
 		canonicalName = name
 		if len(extras) > 0:
 			canonicalName = ucstr(f"{name}[{list(extras)[0]}]")
-			extrasReqs[name] = extras
+			# To avoid overwriting the initial mapping in extrasReqs
+			# only overwrite when extra = True
+			if extra:
+				extrasReqs[name] = extras
 		return canonicalName if extra else name
 
 	def resolveExtraReq(extraReq: str) -> ucstr | None:
@@ -138,27 +141,30 @@ def _doGetReqs(
 
 	# Get Dependencies (1 deep)
 	requirementsWithDeps = reqs.copy()
+
+	def update_dependencies(dependency: str) -> None:
+		dep = resolveReq(dependency, False)
+		req = resolveReq(requirement, False)
+		extra = resolveExtraReq(dependency)
+		if extra is not None:
+			if req in extrasReqs and extra in extrasReqs.get(req, []):
+				requirementsWithDeps.add(dep)
+		else:
+			requirementsWithDeps.add(dep)
+
 	for requirement in reqs:
 		try:
 			pkgMetadata = metadata.metadata(requirement)
-			for req in [resolveReq(req) for req in pkgMetadata.get_all("Requires-Dist") or []]:
-				requirementsWithDeps.add(req)
+			for dependency in pkgMetadata.get_all("Require-Dist") or []:
+				update_dependencies(dependency)
 		except metadata.PackageNotFoundError:
 			request = session.get(
 				f"https://pypi.org/pypi/{requirement.split('[')[0]}/json", timeout=60
 			)
 			response = request.json()
 			try:
-				for dependency in response["info"]["requires_dist"]:
-					dep = resolveReq(dependency, False)
-					req = resolveReq(requirement, False)
-					extra = resolveExtraReq(dependency)
-					if extra is not None:
-						if req in extrasReqs and extra in extrasReqs.get(req, []):
-							requirementsWithDeps.add(dep)
-						# else: pass
-					else:
-						requirementsWithDeps.add(dep)
+				for dependency in response["info"]["requires_dist"] or []:
+					update_dependencies(dependency)
 			except (KeyError, TypeError):
 				pass
 
