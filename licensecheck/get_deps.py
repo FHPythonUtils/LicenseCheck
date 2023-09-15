@@ -155,7 +155,7 @@ def _doGetReqs(
 	for requirement in reqs:
 		try:
 			pkgMetadata = metadata.metadata(requirement)
-			for dependency in pkgMetadata.get_all("Require-Dist") or []:
+			for dependency in pkgMetadata.get_all("Requires-Dist") or []:
 				update_dependencies(dependency)
 		except metadata.PackageNotFoundError:
 			request = session.get(
