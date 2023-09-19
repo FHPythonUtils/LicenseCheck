@@ -26,6 +26,7 @@ from __future__ import annotations
 import csv
 import json
 import re
+from importlib.metadata import version
 from io import StringIO
 
 from rich.console import Console
@@ -33,7 +34,7 @@ from rich.table import Table
 
 from licensecheck.types import License, PackageInfo, printLicense
 
-INFO = {"program": "licensecheck", "version": "2023.1.3", "license": "MIT LICENSE"}
+INFO = {"program": "licensecheck", "version": version("licensecheck"), "license": "MIT LICENSE"}
 
 
 def stripAnsi(string: str) -> str:
