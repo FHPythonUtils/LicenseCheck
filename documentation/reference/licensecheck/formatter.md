@@ -32,8 +32,7 @@ Format to ansi
 #### Signature
 
 ```python
-def ansi(myLice: License, packages: list[PackageInfo]) -> str:
-    ...
+def ansi(myLice: License, packages: list[PackageInfo]) -> str: ...
 ```
 
 #### See also
@@ -61,8 +60,7 @@ Format to markdown
 #### Signature
 
 ```python
-def markdown(myLice: License, packages: list[PackageInfo]) -> str:
-    ...
+def markdown(myLice: License, packages: list[PackageInfo]) -> str: ...
 ```
 
 #### See also
@@ -90,8 +88,7 @@ Format to ansi
 #### Signature
 
 ```python
-def plainText(myLice: License, packages: list[PackageInfo]) -> str:
-    ...
+def plainText(myLice: License, packages: list[PackageInfo]) -> str: ...
 ```
 
 #### See also
@@ -119,8 +116,7 @@ Format to json
 #### Signature
 
 ```python
-def raw(myLice: License, packages: list[PackageInfo]) -> str:
-    ...
+def raw(myLice: License, packages: list[PackageInfo]) -> str: ...
 ```
 
 #### See also
@@ -148,8 +144,7 @@ Format to csv
 #### Signature
 
 ```python
-def rawCsv(myLice: License, packages: list[PackageInfo]) -> str:
-    ...
+def rawCsv(myLice: License, packages: list[PackageInfo]) -> str: ...
 ```
 
 #### See also
@@ -176,6 +171,5 @@ Strip ansi codes from a given string
 #### Signature
 
 ```python
-def stripAnsi(string: str) -> str:
-    ...
+def stripAnsi(string: str) -> str: ...
 ```

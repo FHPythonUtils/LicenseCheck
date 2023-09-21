@@ -41,8 +41,7 @@ def getDepsWithLicenses(
     ignoreLicenses: list[ucstr],
     failLicenses: list[ucstr],
     skipDependencies: list[ucstr],
-) -> tuple[License, set[PackageInfo]]:
-    ...
+) -> tuple[License, set[PackageInfo]]: ...
 ```
 
 #### See also
@@ -80,8 +79,7 @@ Get requirements for the end user project/ lib.
 #### Signature
 
 ```python
-def getReqs(using: str, skipDependencies: list(ucstr)) -> set[ucstr]:
-    ...
+def getReqs(using: str, skipDependencies: list(ucstr)) -> set[ucstr]: ...
 ```
 
 #### See also

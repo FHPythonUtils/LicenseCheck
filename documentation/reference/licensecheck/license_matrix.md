@@ -37,8 +37,7 @@ def depCompatWMyLice(
     depLice: list[L],
     ignoreLicenses: list[L] | None = None,
     failLicenses: list[L] | None = None,
-) -> bool:
-    ...
+) -> bool: ...
 ```
 
 #### See also
@@ -70,8 +69,7 @@ True if compatible, otherwise False
 ```python
 def liceCompat(
     myLicense: L, lice: L, ignoreLicenses: list[L], failLicenses: list[L]
-) -> bool:
-    ...
+) -> bool: ...
 ```
 
 #### See also
@@ -97,8 +95,7 @@ Identify a license from an uppercase string representation of a license.
 #### Signature
 
 ```python
-def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) -> L:
-    ...
+def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) -> L: ...
 ```
 
 #### See also
@@ -125,8 +122,7 @@ Return a list of license types from a license string.
 #### Signature
 
 ```python
-def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[L]:
-    ...
+def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[L]: ...
 ```
 
 #### See also

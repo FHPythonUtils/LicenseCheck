@@ -42,8 +42,7 @@ License Enum to hold a set of potential licenses.
 #### Signature
 
 ```python
-class License(Enum):
-    ...
+class License(Enum): ...
 ```
 
 
@@ -57,8 +56,7 @@ PackageInfo type.
 #### Signature
 
 ```python
-class PackageInfo:
-    ...
+class PackageInfo: ...
 ```
 
 
@@ -72,8 +70,7 @@ Uppercase string
 #### Signature
 
 ```python
-class ucstr(str):
-    ...
+class ucstr(str): ...
 ```
 
 
@@ -96,8 +93,7 @@ license of plain text
 #### Signature
 
 ```python
-def printLicense(licenseEnum: L) -> str:
-    ...
+def printLicense(licenseEnum: L) -> str: ...
 ```
 
 #### See also

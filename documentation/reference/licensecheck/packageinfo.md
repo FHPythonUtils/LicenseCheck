@@ -33,8 +33,7 @@ Get the size of a given module as an int.
 #### Signature
 
 ```python
-def getModuleSize(path: Path, name: ucstr) -> int:
-    ...
+def getModuleSize(path: Path, name: ucstr) -> int: ...
 ```
 
 #### See also
@@ -56,8 +55,7 @@ Get the package license from "setup.cfg", "pyproject.toml" or user input
 #### Signature
 
 ```python
-def getMyPackageLicense() -> ucstr:
-    ...
+def getMyPackageLicense() -> ucstr: ...
 ```
 
 #### See also
@@ -79,8 +77,7 @@ Get the package classifiers and license from "setup.cfg", "pyproject.toml"
 #### Signature
 
 ```python
-def getMyPackageMetadata() -> dict[str, Any]:
-    ...
+def getMyPackageMetadata() -> dict[str, Any]: ...
 ```
 
 
@@ -108,8 +105,7 @@ package information
 #### Signature
 
 ```python
-def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:
-    ...
+def getPackageInfoLocal(requirement: ucstr) -> PackageInfo: ...
 ```
 
 #### See also
@@ -142,8 +138,7 @@ package information
 #### Signature
 
 ```python
-def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
-    ...
+def getPackageInfoPypi(requirement: ucstr) -> PackageInfo: ...
 ```
 
 #### See also
@@ -170,8 +165,7 @@ Get dependency info.
 #### Signature
 
 ```python
-def getPackages(reqs: set[ucstr]) -> set[PackageInfo]:
-    ...
+def getPackages(reqs: set[ucstr]) -> set[PackageInfo]: ...
 ```
 
 #### See also
@@ -198,8 +192,7 @@ Get license string from a list of project classifiers.
 #### Signature
 
 ```python
-def licenseFromClassifierlist(classifiers: list[str]) -> ucstr:
-    ...
+def licenseFromClassifierlist(classifiers: list[str]) -> ucstr: ...
 ```
 
 #### See also

@@ -18,8 +18,7 @@ Cli entry point.
 #### Signature
 
 ```python
-def cli() -> None:
-    ...
+def cli() -> None: ...
 ```
 
 
