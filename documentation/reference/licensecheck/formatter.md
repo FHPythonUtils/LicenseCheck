@@ -16,7 +16,7 @@ Formatter
 
 ## ansi
 
-[Show source in formatter.py:51](../../../licensecheck/formatter.py#L51)
+[Show source in formatter.py:56](../../../licensecheck/formatter.py#L56)
 
 Format to ansi
 
@@ -44,7 +44,7 @@ def ansi(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## markdown
 
-[Show source in formatter.py:109](../../../licensecheck/formatter.py#L109)
+[Show source in formatter.py:114](../../../licensecheck/formatter.py#L114)
 
 Format to markdown
 
@@ -72,7 +72,7 @@ def markdown(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## plainText
 
-[Show source in formatter.py:96](../../../licensecheck/formatter.py#L96)
+[Show source in formatter.py:101](../../../licensecheck/formatter.py#L101)
 
 Format to ansi
 
@@ -100,7 +100,7 @@ def plainText(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## raw
 
-[Show source in formatter.py:148](../../../licensecheck/formatter.py#L148)
+[Show source in formatter.py:153](../../../licensecheck/formatter.py#L153)
 
 Format to json
 
@@ -128,7 +128,7 @@ def raw(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## rawCsv
 
-[Show source in formatter.py:168](../../../licensecheck/formatter.py#L168)
+[Show source in formatter.py:173](../../../licensecheck/formatter.py#L173)
 
 Format to csv
 
@@ -156,7 +156,7 @@ def rawCsv(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## stripAnsi
 
-[Show source in formatter.py:39](../../../licensecheck/formatter.py#L39)
+[Show source in formatter.py:44](../../../licensecheck/formatter.py#L44)
 
 Strip ansi codes from a given string
 

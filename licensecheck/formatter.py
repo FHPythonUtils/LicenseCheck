@@ -26,7 +26,7 @@ from __future__ import annotations
 import csv
 import json
 import re
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 from io import StringIO
 
 from rich.console import Console
@@ -34,7 +34,11 @@ from rich.table import Table
 
 from licensecheck.types import License, PackageInfo, printLicense
 
-INFO = {"program": "licensecheck", "version": version("licensecheck"), "license": "MIT LICENSE"}
+try:
+	VERSION = version("licensecheck")
+except PackageNotFoundError:
+	VERSION = "dev"
+INFO = {"program": "licensecheck", "version": VERSION, "license": "MIT LICENSE"}
 
 
 def stripAnsi(string: str) -> str:

@@ -3,7 +3,7 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
-## 2023.5 - 2023/09/21
+## 2023.5.1 - 2023/09/21
 
 - Fix optional extras from dependencies being included by default. Thank you https://github.com/arunkumarpandian!
 - Dynamically get version from package metadata. Thank you https://github.com/emesar

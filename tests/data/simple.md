@@ -1,7 +1,7 @@
 ## Info
 
 - **program**: licensecheck
-- **version**: 2023.1.3
+- **version**: dev
 - **license**: MIT LICENSE
 
 ## Project License

@@ -12,7 +12,7 @@ Get Deps
 
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:168](../../../licensecheck/get_deps.py#L168)
+[Show source in get_deps.py:174](../../../licensecheck/get_deps.py#L174)
 
 Get a set of dependencies with licenses and determine license compatibility.
 

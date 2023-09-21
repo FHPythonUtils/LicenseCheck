@@ -45,7 +45,6 @@ def test_doGetReqs_PEP631():
 		"SUBPROCESS32",
 		"REQUESTS",
 		"REFERENCING",
-		"CHARDET",
 		"PYTHON-DOTENV",
 	}
 
