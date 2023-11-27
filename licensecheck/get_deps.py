@@ -78,7 +78,7 @@ def _doGetReqs(
 		return canonicalName if extra else name
 
 	def resolveExtraReq(extraReq: str) -> ucstr | None:
-		match = re.search(r"extra\s*==\s*'(.*?)'", extraReq)
+		match = re.search(r"extra\s*==\s*[\"'](.*?)[\"']", extraReq)
 		if match is None:
 			return None
 		return ucstr(match.group(1))
