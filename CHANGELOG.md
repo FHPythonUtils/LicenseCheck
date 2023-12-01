@@ -3,6 +3,12 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2023.5.2 - 2023/12/01
+
+- fix: crash when a namespace doesn't exist https://github.com/FHPythonUtils/LicenseCheck/issues/65
+- fix: add support for double quotes in extras https://github.com/FHPythonUtils/LicenseCheck/pull/64,
+  thanks https://github.com/arunkumarpandian
+
 ## 2023.5.1 - 2023/09/21
 
 - Fix optional extras from dependencies being included by default. Thank you https://github.com/arunkumarpandian!
