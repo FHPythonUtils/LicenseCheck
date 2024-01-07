@@ -1,6 +1,6 @@
 fhconfparser<2025,>=2023
-packaging<24,>=23.1
-requests-cache<2,>=1.1.0
+packaging<24,>=23.2
+requests-cache<2,>=1.1.1
 requests<3,>=2.31.0
-rich<14,>=13.5.2
+rich<14,>=13.7.0
 tomli<3,>=2.0.1

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2023.5.2"
+version = "2024"
 license = "mit"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
@@ -31,16 +31,16 @@ python = "^3.8"
 requests = "<3,>=2.31.0"
 fhconfparser = "<2025,>=2023"
 tomli = "<3,>=2.0.1"
-rich = "<14,>=13.5.2"
-requests-cache = "<2,>=1.1.0"
-packaging = "<24,>=23.1"
+rich = "<14,>=13.7.0"
+requests-cache = "<2,>=1.1.1"
+packaging = "<24,>=23.2"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.0"
-pylint = "^2.17.5"
-handsdown = "^2.0.1"
+pytest = "^7.4.4"
+pylint = "^3.0.3"
+handsdown = "^2.1.0"
 fhmake = "^2023"
-coverage = "^7.3.0"
+coverage = "^7.4.0"
 
 [tool.black]
 line-length = 100
