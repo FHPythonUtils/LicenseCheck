@@ -1,8 +1,6 @@
 # Formatter
 
-[Licensecheck Index](../README.md#licensecheck-index) /
-[Licensecheck](./index.md#licensecheck) /
-Formatter
+[Licensecheck Index](../README.md#licensecheck-index) / [Licensecheck](./index.md#licensecheck) / Formatter
 
 > Auto-generated documentation for [licensecheck.formatter](../../../licensecheck/formatter.py) module.
 
@@ -16,18 +14,20 @@ Formatter
 
 ## ansi
 
-[Show source in formatter.py:56](../../../licensecheck/formatter.py#L56)
+[Show source in formatter.py:58](../../../licensecheck/formatter.py#L58)
 
-Format to ansi
+Format to ansi.
 
 #### Arguments
 
-- `myLice` *License* - project license
-- `packages` *list[PackageInfo]* - list of PackageCompats to format.
+----
+ - `myLice` *License* - project license
+ - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
-- `str` - string to send to specified output in ansi format
+-------
+ - `str` - string to send to specified output in ansi format
 
 #### Signature
 
@@ -44,18 +44,20 @@ def ansi(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## markdown
 
-[Show source in formatter.py:114](../../../licensecheck/formatter.py#L114)
+[Show source in formatter.py:120](../../../licensecheck/formatter.py#L120)
 
-Format to markdown
+Format to markdown.
 
 #### Arguments
 
-- `myLice` *License* - project license
-- `packages` *list[PackageInfo]* - list of PackageCompats to format.
+----
+ - `myLice` *License* - project license
+ - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
-- `str` - string to send to specified output in markdown format
+-------
+ - `str` - string to send to specified output in markdown format
 
 #### Signature
 
@@ -72,18 +74,20 @@ def markdown(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## plainText
 
-[Show source in formatter.py:101](../../../licensecheck/formatter.py#L101)
+[Show source in formatter.py:105](../../../licensecheck/formatter.py#L105)
 
-Format to ansi
+Format to ansi.
 
 #### Arguments
 
-- `myLice` *License* - project license
-- `packages` *list[PackageInfo]* - list of PackageCompats to format.
+----
+ - `myLice` *License* - project license
+ - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
-- `str` - string to send to specified output in plain text format
+-------
+ - `str` - string to send to specified output in plain text format
 
 #### Signature
 
@@ -100,18 +104,20 @@ def plainText(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## raw
 
-[Show source in formatter.py:153](../../../licensecheck/formatter.py#L153)
+[Show source in formatter.py:161](../../../licensecheck/formatter.py#L161)
 
-Format to json
+Format to json.
 
 #### Arguments
 
-- `myLice` *License* - project license
-- `packages` *list[PackageInfo]* - list of PackageCompats to format.
+----
+ - `myLice` *License* - project license
+ - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
-- `str` - string to send to specified output in raw json format
+-------
+ - `str` - string to send to specified output in raw json format
 
 #### Signature
 
@@ -128,18 +134,20 @@ def raw(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## rawCsv
 
-[Show source in formatter.py:173](../../../licensecheck/formatter.py#L173)
+[Show source in formatter.py:183](../../../licensecheck/formatter.py#L183)
 
-Format to csv
+Format to csv.
 
 #### Arguments
 
-- `myLice` *License* - project license
-- `packages` *list[PackageInfo]* - list of PackageCompats to format.
+----
+ - `myLice` *License* - project license
+ - `packages` *list[PackageInfo]* - list of PackageCompats to format.
 
 #### Returns
 
-- `str` - string to send to specified output in raw csv format
+-------
+ - `str` - string to send to specified output in raw csv format
 
 #### Signature
 
@@ -158,15 +166,17 @@ def rawCsv(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 [Show source in formatter.py:44](../../../licensecheck/formatter.py#L44)
 
-Strip ansi codes from a given string
+Strip ansi codes from a given string.
 
 #### Arguments
 
-- `string` *str* - string to strip codes from
+----
+ - `string` *str* - string to strip codes from
 
 #### Returns
 
-- `str` - plaintext, utf-8 string (safe for writing to files)
+-------
+ - `str` - plaintext, utf-8 string (safe for writing to files)
 
 #### Signature
 

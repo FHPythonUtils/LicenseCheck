@@ -1,4 +1,5 @@
 fhconfparser<2025,>=2023
+loguru<2,>=0.7.2
 packaging<24,>=23.2
 requests-cache<2,>=1.1.1
 requests<3,>=2.31.0

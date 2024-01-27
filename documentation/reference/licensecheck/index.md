@@ -1,7 +1,6 @@
 # Licensecheck
 
-[Licensecheck Index](../README.md#licensecheck-index) /
-Licensecheck
+[Licensecheck Index](../README.md#licensecheck-index) / Licensecheck
 
 > Auto-generated documentation for [licensecheck](../../../licensecheck/__init__.py) module.
 

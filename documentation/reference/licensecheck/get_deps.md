@@ -1,35 +1,59 @@
 # Get Deps
 
-[Licensecheck Index](../README.md#licensecheck-index) /
-[Licensecheck](./index.md#licensecheck) /
-Get Deps
+[Licensecheck Index](../README.md#licensecheck-index) / [Licensecheck](./index.md#licensecheck) / Get Deps
 
 > Auto-generated documentation for [licensecheck.get_deps](../../../licensecheck/get_deps.py) module.
 
 - [Get Deps](#get-deps)
+  - [do_get_reqs](#do_get_reqs)
   - [getDepsWithLicenses](#getdepswithlicenses)
   - [getReqs](#getreqs)
 
+## do_get_reqs
+
+[Show source in get_deps.py:60](../../../licensecheck/get_deps.py#L60)
+
+#### Signature
+
+```python
+def do_get_reqs(
+    using: str,
+    skipDependencies: list[ucstr],
+    extras: str | None,
+    pyproject: dict[str, Any],
+    requirementsPaths: list[Path],
+) -> set[ucstr]: ...
+```
+
+#### See also
+
+- [ucstr](./types.md#ucstr)
+
+
+
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:174](../../../licensecheck/get_deps.py#L174)
+[Show source in get_deps.py:172](../../../licensecheck/get_deps.py#L172)
 
 Get a set of dependencies with licenses and determine license compatibility.
 
 #### Arguments
 
-- `using` *str* - use requirements or poetry
-- `ignorePackages` *list[ucstr]* - a list of packages to ignore (compat=True)
-- `failPackages` *list[ucstr]* - a list of packages to fail (compat=False)
-- `ignoreLicenses` *list[ucstr]* - a list of licenses to ignore (skipped, compat may still be False)
-- `failLicenses` *list[ucstr]* - a list of licenses to fail (compat=False)
-- `skipDependencies` *list[ucstr]* - a list of dependencies to skip (compat=False)
+----
+ - `using` *str* - use requirements or poetry
+ - `ignorePackages` *list[ucstr]* - a list of packages to ignore (compat=True)
+ - `failPackages` *list[ucstr]* - a list of packages to fail (compat=False)
+ - `ignoreLicenses` *list[ucstr]* - a list of licenses to ignore (skipped, compat may still be
+ False)
+ - `failLicenses` *list[ucstr]* - a list of licenses to fail (compat=False)
+ - `skipDependencies` *list[ucstr]* - a list of dependencies to skip (compat=False)
 
 #### Returns
 
-- `tuple[License,` *set[PackageInfo]]* - tuple of
- my package license
- set of updated dependencies with licenseCompat set
+-------
+ - `tuple[License,` *set[PackageInfo]]* - tuple of
+  my package license
+  set of updated dependencies with licenseCompat set
 
 #### Signature
 
@@ -54,7 +78,7 @@ def getDepsWithLicenses(
 
 ## getReqs
 
-[Show source in get_deps.py:20](../../../licensecheck/get_deps.py#L20)
+[Show source in get_deps.py:21](../../../licensecheck/get_deps.py#L21)
 
 Get requirements for the end user project/ lib.
 
@@ -69,17 +93,19 @@ Get requirements for the end user project/ lib.
 
 #### Arguments
 
-- `using` *str* - use requirements, poetry or PEP631.
-- `skipDependencies` *list[str]* - list of dependencies to skip.
+----
+ - `using` *str* - use requirements, poetry or PEP631.
+ - `skipDependencies` *list[str]* - list of dependencies to skip.
 
 #### Returns
 
-- `set[str]` - set of requirement packages
+-------
+ - `set[str]` - set of requirement packages
 
 #### Signature
 
 ```python
-def getReqs(using: str, skipDependencies: list(ucstr)) -> set[ucstr]: ...
+def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]: ...
 ```
 
 #### See also
