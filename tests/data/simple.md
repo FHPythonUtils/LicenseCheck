@@ -1,7 +1,7 @@
 ## Info
 
 - **program**: licensecheck
-- **version**: dev
+- **version**: 2024
 - **license**: MIT LICENSE
 
 ## Project License

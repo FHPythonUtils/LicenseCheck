@@ -34,46 +34,54 @@ tomli = "<3,>=2.0.1"
 rich = "<14,>=13.7.0"
 requests-cache = "<2,>=1.1.1"
 packaging = "<24,>=23.2"
+loguru = "^0.7.2"
+ddtrace = "^2.5.1"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.4.4"
-pylint = "^3.0.3"
 handsdown = "^2.1.0"
-fhmake = "^2023"
 coverage = "^7.4.0"
-
-[tool.black]
-line-length = 100
-target-version = ["py38"]
-
-[tool.isort]
-profile = "black"
-indent = "Tab"
-
-[tool.pydocstyle]
-convention = "google"
-ignore = "D205,D415"
+ruff = "^0.1.13"
+blackt = "^2024.0.1"
+pyright = "^1.1.347"
+pytest-loguru = "^0.3.0"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.pylint.basic]
-argument-naming-style = "camelCase"
-attr-naming-style = "camelCase"
-function-naming-style = "camelCase"
-method-naming-style = "camelCase"
-variable-naming-style = "camelCase"
 
-[tool.pylint.format]
-indent-string = "\t"
 
-[tool.pylint.master]
-ignore-paths = ["tests"]
+[tool.ruff]
+line-length = 100
+indent-width = 4
+target-version = "py38"
 
-[tool.pylint.messages_control]
-enable = ["F", "E", "W", "R", "C"]
-disable = ["pointless-string-statement", "superfluous-parens"]
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN101",  # type annotation for self in method
+    "COM812",  # enforce trailing comma
+	"D2",  # pydocstyle formatting
+    "N",  # pep8 naming
+    "PLR09",  # pylint refactor too many
+    "TCH",  # type check blocks
+    "W191"  # ignore this to allow tabs
+]
+fixable = ["ALL"]
+
+
+[tool.ruff.lint.per-file-ignores]
+"**/{tests,docs,tools}/*" = ["D", "S101", "E402"]
+
+[tool.black]
+line-length = 100
+target-version = ["py38"]
+
+[tool.pyright]
+venvPath = "."
+venv = ".venv"
+
 
 [tool.licensecheck]
 # using = "requirements:requirements.txt;requirements_optional.txt"

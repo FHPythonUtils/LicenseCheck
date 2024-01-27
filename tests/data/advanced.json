@@ -1,7 +1,7 @@
 {
 	"info": {
 		"program": "licensecheck",
-		"version": "dev",
+		"version": "2024",
 		"license": "MIT LICENSE"
 	},
 	"project_license": "MIT LICENSE",
@@ -12,7 +12,7 @@
 			"size": 10,
 			"homePage": "https://example.com",
 			"author": "example_author",
-			"license": "mit",
+			"license": "MIT",
 			"licenseCompat": true,
 			"errorCode": 0,
 			"namever": "example0-1.0.0"
@@ -23,7 +23,7 @@
 			"size": 10,
 			"homePage": "https://example.com",
 			"author": "example_author",
-			"license": "gpl3",
+			"license": "GPL3",
 			"licenseCompat": false,
 			"errorCode": 1,
 			"namever": "example1-UNKNOWN"

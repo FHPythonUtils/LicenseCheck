@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import configparser
+import contextlib
 from importlib import metadata
 from pathlib import Path
 from typing import Any
@@ -82,19 +83,22 @@ def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
 		raise ModuleNotFoundError from error
 
 
-def licenseFromClassifierlist(classifiers: list[str]) -> ucstr:
+def licenseFromClassifierlist(classifiers: list[str] | None | list[Any]) -> ucstr:
 	"""Get license string from a list of project classifiers.
 
 	Args:
+	----
 		classifiers (list[str]): list of classifiers
 
 	Returns:
+	-------
 		str: the license name
 	"""
 	if not classifiers:
 		return UNKNOWN
-	licenses = []
-	for val in classifiers:
+	licenses: list[str] = []
+	for _val in classifiers:
+		val = str(_val)
 		if val.startswith("License"):
 			lice = val.split(" :: ")[-1]
 			if lice != "OSI Approved":
@@ -106,9 +110,11 @@ def getPackages(reqs: set[ucstr]) -> set[PackageInfo]:
 	"""Get dependency info.
 
 	Args:
+	----
 		reqs (set[ucstr]): set of dependency names to gather info on
 
 	Returns:
+	-------
 		set[PackageInfo]: set of dependencies
 	"""
 	packageinfo = set()
@@ -125,9 +131,10 @@ def getPackages(reqs: set[ucstr]) -> set[PackageInfo]:
 
 
 def getMyPackageMetadata() -> dict[str, Any]:
-	"""Get the package classifiers and license from "setup.cfg", "pyproject.toml"
+	"""Get the package classifiers and license from "setup.cfg", "pyproject.toml".
 
-	Returns:
+	Returns
+	-------
 		dict[str, Any]: {"classifiers": list[str], "license": ucstr}
 	"""
 	if Path("setup.cfg").exists():
@@ -149,9 +156,10 @@ def getMyPackageMetadata() -> dict[str, Any]:
 
 
 def getMyPackageLicense() -> ucstr:
-	"""Get the package license from "setup.cfg", "pyproject.toml" or user input
+	"""Get the package license from "setup.cfg", "pyproject.toml" or user input.
 
-	Returns:
+	Returns
+	-------
 		str: license name
 	"""
 	metaData = getMyPackageMetadata()
@@ -169,21 +177,21 @@ def getModuleSize(path: Path, name: ucstr) -> int:
 	"""Get the size of a given module as an int.
 
 	Args:
+	----
 		path (Path): path to package
 		name (str): name of package
 
 	Returns:
+	-------
 		int: size in bytes
 	"""
 	size = 0
-	try:
+	with contextlib.suppress(AttributeError):
 		size = sum(
 			f.stat().st_size
 			for f in path.glob("**/*")
 			if f.is_file() and "__pycache__" not in str(f)
 		)
-	except AttributeError:
-		pass
 	if size > 0:
 		return size
 	request = session.get(f"https://pypi.org/pypi/{name}/json", timeout=60)

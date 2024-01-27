@@ -40,9 +40,10 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
-from licensecheck.types import JOINS
+from loguru import logger
+
+from licensecheck.types import JOINS, ucstr
 from licensecheck.types import License as L
-from licensecheck.types import ucstr
 
 THISDIR = Path(__file__).resolve().parent
 
@@ -54,9 +55,12 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 	"""Identify a license from an uppercase string representation of a license.
 
 	Args:
+	----
 		licenseStr (ucstr): uppercase string representation of a license
+		ignoreLicenses (list[ucstr] | None) licenses to ignore. Default=None
 
 	Returns:
+	-------
 		L: License represented by licenseStr
 	"""
 	termToLicense = {
@@ -86,6 +90,7 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 		"LGPLV3": L.LGPL_3,
 		"LGPL": L.LGPL_X,
 		"AGPL": L.AGPL_3_PLUS,
+		"GNU AFFERO GENERAL PUBLIC LICENSE V3": L.AGPL_3_PLUS,
 		"GPL-2.0-OR-LATER": L.GPL_2_PLUS,
 		"GPLV2+": L.GPL_2_PLUS,
 		"GPL-3.0-OR-LATER": L.GPL_3_PLUS,
@@ -103,7 +108,7 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 		if liceStr in licenseStr:
 			return lice
 	if licenseStr not in (ignoreLicenses or ""):
-		print(f"WARN: '{licenseStr}' License not identified so falling back to NO_LICENSE")
+		logger.warning(f"'{licenseStr}' License not identified so falling back to NO_LICENSE")
 	return L.NO_LICENSE
 
 
@@ -111,9 +116,13 @@ def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[
 	"""Return a list of license types from a license string.
 
 	Args:
+	----
 		lice (ucstr): license name
+		ignoreLicenses (list[ucstr]): a list of licenses to ignore (skipped, compat may still be
+		False)
 
 	Returns:
+	-------
 		list[L]: the license
 	"""
 	if len(lice or "") < 1:
@@ -130,12 +139,14 @@ def depCompatWMyLice(
 	"""Identify if the end user license is compatible with the dependency license(s).
 
 	Args:
+	----
 		myLicense (L): end user license to check
 		depLice (list[L]): dependency license
 		ignoreLicenses (list[L], optional): list of licenses to ignore. Defaults to None.
 		failLicenses (list[L], optional): list of licenses to fail on. Defaults to None.
 
 	Returns:
+	-------
 		bool: True if compatible, otherwise False
 	"""
 
@@ -160,7 +171,7 @@ def liceCompat(
 	ignoreLicenses: list[L],
 	failLicenses: list[L],
 ) -> bool:
-	"""Identify if the end user license is compatible with the dependency license
+	"""Identify if the end user license is compatible with the dependency license.
 
 	:param L myLicense: end user license
 	:param L lice: dependency license

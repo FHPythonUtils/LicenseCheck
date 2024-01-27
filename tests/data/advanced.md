@@ -1,7 +1,7 @@
 ## Info
 
 - **program**: licensecheck
-- **version**: dev
+- **version**: 2024
 - **license**: MIT LICENSE
 
 ## Project License
@@ -21,7 +21,7 @@ Find a list of packages below
 
 - HomePage: https://example.com
 - Author: example_author
-- License: mit
+- License: MIT
 - Compatible: True
 - Size: 10
 
@@ -29,6 +29,6 @@ Find a list of packages below
 
 - HomePage: https://example.com
 - Author: example_author
-- License: gpl3
+- License: GPL3
 - Compatible: False
 - Size: 10

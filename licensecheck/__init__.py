@@ -10,15 +10,20 @@ from sys import stdout
 
 from fhconfparser import FHConfParser, SimpleConf
 
-from licensecheck import formatter, get_deps, types
+from licensecheck import formatter, get_deps, license_matrix, types
 
-stdout.reconfigure(encoding="utf-8")
+stdout.reconfigure(encoding="utf-8")  # type: ignore[general-type-issues]
 
 
 def cli() -> None:
 	"""Cli entry point."""
 	exitCode = 0
 	parser = argparse.ArgumentParser(description=__doc__, argument_default=argparse.SUPPRESS)
+	parser.add_argument(
+		"--license",
+		"-l",
+		help="",
+	)
 	parser.add_argument(
 		"--format",
 		"-f",
@@ -86,7 +91,7 @@ def cli() -> None:
 	simpleConf = SimpleConf(configparser, "licensecheck", args)
 
 	# File
-	filename = (
+	textIO = (
 		stdout
 		if simpleConf.get("file") is None
 		else open(simpleConf.get("file"), "w", encoding="utf-8")
@@ -102,6 +107,8 @@ def cli() -> None:
 		list(map(types.ucstr, simpleConf.get("skip_dependencies", []))),
 	)
 
+	myLice = license_matrix.licenseType(args["license"])[0] if args.get("license") else myLice
+
 	# Are any licenses incompatible?
 	incompatible = any(not lice.licenseCompat for lice in depsWithLicenses)
 
@@ -111,7 +118,7 @@ def cli() -> None:
 			formatter.formatMap[simpleConf.get("format", "simple")](
 				myLice, sorted(depsWithLicenses)
 			),
-			file=filename,
+			file=textIO,
 		)
 	else:
 		exitCode = 2
@@ -121,5 +128,5 @@ def cli() -> None:
 		exitCode = 1
 
 	# Cleanup + exit
-	filename.close()
+	textIO.close()
 	sysexit(exitCode)

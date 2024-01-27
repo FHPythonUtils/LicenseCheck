@@ -3,6 +3,11 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2024 - 2024/01/27
+
+- code improvements
+- users can now specify a license from the command line with `--license` https://github.com/FHPythonUtils/LicenseCheck/issues/69
+
 ## 2024 - 2024/01/07
 
 - update dependencies

@@ -2,6 +2,7 @@
 """
 from __future__ import annotations
 
+import contextlib
 import re
 from importlib import metadata
 from pathlib import Path
@@ -17,7 +18,7 @@ from licensecheck.types import JOINS, License, PackageInfo, session, ucstr
 USINGS = ["requirements", "poetry", "PEP631"]
 
 
-def getReqs(using: str, skipDependencies: list(ucstr)) -> set[ucstr]:
+def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]:
 	"""Get requirements for the end user project/ lib.
 
 	>>> getReqs("poetry")
@@ -28,10 +29,12 @@ def getReqs(using: str, skipDependencies: list(ucstr)) -> set[ucstr]:
 	>>> getReqs("PEP631:tests")
 
 	Args:
+	----
 		using (str): use requirements, poetry or PEP631.
 		skipDependencies (list[str]): list of dependencies to skip.
 
 	Returns:
+	-------
 		set[str]: set of requirement packages
 	"""
 
@@ -51,12 +54,12 @@ def getReqs(using: str, skipDependencies: list(ucstr)) -> set[ucstr]:
 	if using == "requirements":
 		requirementsPaths = [Path(x) for x in (extras or "requirements.txt").split(";")]
 
-	return _doGetReqs(using, skipDependencies, extras, pyproject, requirementsPaths)
+	return do_get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
 
 
-def _doGetReqs(
+def do_get_reqs(
 	using: str,
-	skipDependencies: list(ucstr),
+	skipDependencies: list[ucstr],
 	extras: str | None,
 	pyproject: dict[str, Any],
 	requirementsPaths: list[Path],
@@ -64,13 +67,13 @@ def _doGetReqs(
 	reqs = set()
 	extrasReqs = {}
 
-	def resolveReq(req: str, extra: bool = True) -> ucstr:
+	def resolveReq(req: str, *, extra: bool = True) -> ucstr:
 		requirement = Requirement(req)
 		extras = {ucstr(extra) for extra in requirement.extras}
 		name = ucstr(canonicalize_name(requirement.name))
 		canonicalName = name
 		if len(extras) > 0:
-			canonicalName = ucstr(f"{name}[{list(extras)[0]}]")
+			canonicalName = ucstr(f"{name}[{next(iter(extras))}]")
 			# To avoid overwriting the initial mapping in extrasReqs
 			# only overwrite when extra = True
 			if extra:
@@ -88,9 +91,8 @@ def _doGetReqs(
 			project = pyproject["tool"]["poetry"]
 			reqLists = [project["dependencies"]]
 		except KeyError as error:
-			raise RuntimeError(
-				"Could not find specification of requirements (pyproject.toml)."
-			) from error
+			msg = "Could not find specification of requirements (pyproject.toml)."
+			raise RuntimeError(msg) from error
 		if extras is not None:
 			reqLists.extend(
 				project.get("group", {x: {"dependencies": {}}})[x]["dependencies"]
@@ -106,9 +108,8 @@ def _doGetReqs(
 			project = pyproject["project"]
 			reqLists = [project["dependencies"]]
 		except KeyError as error:
-			raise RuntimeError(
-				"Could not find specification of requirements (pyproject.toml)."
-			) from error
+			msg = "Could not find specification of requirements (pyproject.toml)."
+			raise RuntimeError(msg) from error
 		if extras:
 			reqLists.extend(project["optional-dependencies"][x] for x in extras.split(";"))
 		for reqList in reqLists:
@@ -119,7 +120,8 @@ def _doGetReqs(
 	if using == "requirements":
 		for reqPath in requirementsPaths:
 			if not reqPath.exists():
-				raise RuntimeError(f"Could not find specification of requirements ({reqPath}).")
+				msg = f"Could not find specification of requirements ({reqPath})."
+				raise RuntimeError(msg)
 
 			for line in reqPath.read_text(encoding="utf-8").splitlines():
 				line = line.strip()
@@ -128,23 +130,19 @@ def _doGetReqs(
 				reqs.add(resolveReq(line))
 
 	# Remove PYTHON if define as requirement
-	try:
+	with contextlib.suppress(KeyError):
 		reqs.remove("PYTHON")
-	except KeyError:
-		pass
 	# Remove skip dependencies
 	for skipDependency in skipDependencies:
-		try:
+		with contextlib.suppress(KeyError):
 			reqs.remove(skipDependency)
-		except KeyError:
-			pass
 
 	# Get Dependencies (1 deep)
 	requirementsWithDeps = reqs.copy()
 
 	def update_dependencies(dependency: str) -> None:
-		dep = resolveReq(dependency, False)
-		req = resolveReq(requirement, False)
+		dep = resolveReq(dependency, extra=False)
+		req = resolveReq(requirement, extra=False)
 		extra = resolveExtraReq(dependency)
 		if extra is not None:
 			if req in extrasReqs and extra in extrasReqs.get(req, []):
@@ -182,14 +180,17 @@ def getDepsWithLicenses(
 	"""Get a set of dependencies with licenses and determine license compatibility.
 
 	Args:
+	----
 		using (str): use requirements or poetry
 		ignorePackages (list[ucstr]): a list of packages to ignore (compat=True)
 		failPackages (list[ucstr]): a list of packages to fail (compat=False)
-		ignoreLicenses (list[ucstr]): a list of licenses to ignore (skipped, compat may still be False)
+		ignoreLicenses (list[ucstr]): a list of licenses to ignore (skipped, compat may still be
+		False)
 		failLicenses (list[ucstr]): a list of licenses to fail (compat=False)
 		skipDependencies (list[ucstr]): a list of dependencies to skip (compat=False)
 
 	Returns:
+	-------
 		tuple[License, set[PackageInfo]]: tuple of
 			my package license
 			set of updated dependencies with licenseCompat set

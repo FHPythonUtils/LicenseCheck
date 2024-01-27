@@ -5,8 +5,7 @@ from licensecheck import packageinfo, types
 THISDIR = str(Path(__file__).resolve().parent)
 
 
-def test_getPackageInfoLocal():
-
+def test_getPackageInfoLocal() -> None:
 	try:
 		package = packageinfo.getPackageInfoLocal(types.ucstr("requests"))
 		assert package.name == "requests"
@@ -14,34 +13,32 @@ def test_getPackageInfoLocal():
 		assert True
 
 
-def test_getPackageInfoPypi():
+def test_getPackageInfoPypi() -> None:
 	package = packageinfo.getPackageInfoPypi(types.ucstr("requests"))
 
-	assert (
-		package.name == "requests"
-		and package.homePage == "https://requests.readthedocs.io"
-		and package.author == "Kenneth Reitz"
-		and package.license == "APACHE SOFTWARE LICENSE"
-	)
+	assert package.name == "requests"
+	assert package.homePage == "https://requests.readthedocs.io"
+	assert package.author == "Kenneth Reitz"
+	assert package.license == "APACHE SOFTWARE LICENSE"
 
 
-def test_getPackageInfoLocalNotFound():
+def test_getPackageInfoLocalNotFound() -> None:
 	try:
-		package = packageinfo.getPackageInfoLocal(types.ucstr("this_package_does_not_exist"))
-		assert False
+		packageinfo.getPackageInfoLocal(types.ucstr("this_package_does_not_exist"))
+		raise AssertionError
 	except ModuleNotFoundError:
 		assert True
 
 
-def test_getPackagePypiLocalNotFound():
+def test_getPackagePypiLocalNotFound() -> None:
 	try:
-		package = packageinfo.getPackageInfoPypi(types.ucstr("this_package_does_not_exist"))
-		assert False
+		packageinfo.getPackageInfoPypi(types.ucstr("this_package_does_not_exist"))
+		raise AssertionError
 	except ModuleNotFoundError:
 		assert True
 
 
-def test_getPackages():
+def test_getPackages() -> None:
 	packages = packageinfo.getPackages({types.ucstr("requests")})
 
 	assert all(
@@ -55,7 +52,7 @@ def test_getPackages():
 	)
 
 
-def test_getPackagesNotFound():
+def test_getPackagesNotFound() -> None:
 	packages = packageinfo.getPackages({types.ucstr("this_package_does_not_exist")})
 
 	assert all(
@@ -64,7 +61,7 @@ def test_getPackagesNotFound():
 	)
 
 
-def test_licenseFromClassifierlist():
+def test_licenseFromClassifierlist() -> None:
 	licenses = []
 	for rawLicense in Path(f"{THISDIR}/data/pypiClassifiers.txt").read_text("utf-8").splitlines():
 		licenses.append(packageinfo.licenseFromClassifierlist([rawLicense]))
@@ -72,13 +69,13 @@ def test_licenseFromClassifierlist():
 	assert "\n".join(licenses) == Path(f"{THISDIR}/data/licenses.txt").read_text("utf-8")
 
 
-def test_licenseFromEmptyClassifierlist():
+def test_licenseFromEmptyClassifierlist() -> None:
 	licenses = []
 	licenses.append(packageinfo.licenseFromClassifierlist([]))
 	assert licenses == [types.UNKNOWN]
 
 
-def test_getModuleSize():
+def test_getModuleSize() -> None:
 	size = packageinfo.getModuleSize(
 		Path("this_package_does_not_exist"), types.ucstr("this_package_does_not_exist")
 	)

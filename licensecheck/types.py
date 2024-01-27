@@ -15,9 +15,16 @@ session = requests_cache.CachedSession(f"{THISDIR}/licensecheck")
 
 
 class ucstr(str):
-	"""Uppercase string"""
+	"""Uppercase string."""
+
+	__slots__ = ()
 
 	def __new__(cls, v: str) -> ucstr:
+		"""Create a new ucstr from a str.
+
+		:param str v: string to cast
+		:return ucstr: uppercase string.
+		"""
 		return super().__new__(cls, v.upper())
 
 
@@ -39,7 +46,8 @@ class PackageInfo:
 	licenseCompat: bool = False
 	errorCode: int = 0
 
-	def __post_init__(self):
+	def __post_init__(self) -> None:
+		"""Set the namever once the object is initialised."""
 		self.namever = f"{self.name}-{self.version}"
 
 
@@ -87,7 +95,7 @@ L = License
 
 
 def printLicense(licenseEnum: L) -> str:
-	"""Output a license as plain text
+	"""Output a license as plain text.
 
 	:param L licenseEnum: License
 	:return str: license of plain text

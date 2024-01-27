@@ -4,7 +4,7 @@
 │ Item            │ Value        │
 ├─────────────────┼──────────────┤
 │ program         │ licensecheck │
-│ version         │ dev          │
+│ version         │ 2024         │
 │ license         │ MIT LICENSE  │
 │ project_license │ MIT LICENSE  │
 └─────────────────┴──────────────┘
@@ -21,6 +21,6 @@
 ┌────────────┬──────────┬────────────┐
 │ Compatible │ Package  │ License(s) │
 ├────────────┼──────────┼────────────┤
-│ ✔          │ example0 │ mit        │
-│ ✖          │ example1 │ gpl3       │
+│ ✔          │ example0 │ MIT        │
+│ ✖          │ example1 │ GPL3       │
 └────────────┴──────────┴────────────┘
