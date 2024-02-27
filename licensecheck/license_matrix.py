@@ -62,6 +62,7 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 	Returns:
 	-------
 		L: License represented by licenseStr
+
 	"""
 	termToLicense = {
 		"PUBLIC DOMAIN": L.PUBLIC,
@@ -124,6 +125,7 @@ def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[
 	Returns:
 	-------
 		list[L]: the license
+
 	"""
 	if len(lice or "") < 1:
 		return [L.NO_LICENSE]
@@ -148,6 +150,7 @@ def depCompatWMyLice(
 	Returns:
 	-------
 		bool: True if compatible, otherwise False
+
 	"""
 
 	# Protect against None

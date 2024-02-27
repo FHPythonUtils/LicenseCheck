@@ -93,6 +93,7 @@ def licenseFromClassifierlist(classifiers: list[str] | None | list[Any]) -> ucst
 	Returns:
 	-------
 		str: the license name
+
 	"""
 	if not classifiers:
 		return UNKNOWN
@@ -116,6 +117,7 @@ def getPackages(reqs: set[ucstr]) -> set[PackageInfo]:
 	Returns:
 	-------
 		set[PackageInfo]: set of dependencies
+
 	"""
 	packageinfo = set()
 	for requirement in reqs:
@@ -136,6 +138,7 @@ def getMyPackageMetadata() -> dict[str, Any]:
 	Returns
 	-------
 		dict[str, Any]: {"classifiers": list[str], "license": ucstr}
+
 	"""
 	if Path("setup.cfg").exists():
 		config = configparser.ConfigParser()
@@ -161,6 +164,7 @@ def getMyPackageLicense() -> ucstr:
 	Returns
 	-------
 		str: license name
+
 	"""
 	metaData = getMyPackageMetadata()
 	licenseClassifier = licenseFromClassifierlist(metaData.get("classifiers", []))
@@ -184,6 +188,7 @@ def getModuleSize(path: Path, name: ucstr) -> int:
 	Returns:
 	-------
 		int: size in bytes
+
 	"""
 	size = 0
 	with contextlib.suppress(AttributeError):

@@ -36,6 +36,7 @@ def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]:
 	Returns:
 	-------
 		set[str]: set of requirement packages
+
 	"""
 
 	_ = using.split(":", 1)
@@ -194,6 +195,7 @@ def getDepsWithLicenses(
 		tuple[License, set[PackageInfo]]: tuple of
 			my package license
 			set of updated dependencies with licenseCompat set
+
 	"""
 	reqs = getReqs(using, skipDependencies)
 

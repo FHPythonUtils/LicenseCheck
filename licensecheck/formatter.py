@@ -51,6 +51,7 @@ def stripAnsi(string: str) -> str:
 	Returns:
 	-------
 		str: plaintext, utf-8 string (safe for writing to files)
+
 	"""
 	return re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", string)
 
@@ -66,6 +67,7 @@ def ansi(myLice: License, packages: list[PackageInfo]) -> str:
 	Returns:
 	-------
 		str: string to send to specified output in ansi format
+
 	"""
 	string = StringIO()
 
@@ -113,6 +115,7 @@ def plainText(myLice: License, packages: list[PackageInfo]) -> str:
 	Returns:
 	-------
 		str: string to send to specified output in plain text format
+
 	"""
 	return stripAnsi(ansi(myLice, packages))
 
@@ -128,6 +131,7 @@ def markdown(myLice: License, packages: list[PackageInfo]) -> str:
 	Returns:
 	-------
 		str: string to send to specified output in markdown format
+
 	"""
 	info = "\n".join(f"- **{k}**: {v}" for k, v in INFO.items())
 	strBuf = [f"## Info\n\n{info}\n\n## Project License\n\n{printLicense(myLice)}\n"]
@@ -169,6 +173,7 @@ def raw(myLice: License, packages: list[PackageInfo]) -> str:
 	Returns:
 	-------
 		str: string to send to specified output in raw json format
+
 	"""
 	return json.dumps(
 		{
@@ -191,6 +196,7 @@ def rawCsv(myLice: License, packages: list[PackageInfo]) -> str:
 	Returns:
 	-------
 		str: string to send to specified output in raw csv format
+
 	"""
 	_ = myLice
 	string = StringIO()

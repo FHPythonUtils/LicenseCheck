@@ -29,20 +29,19 @@ licensecheck = 'licensecheck:cli'
 [tool.poetry.dependencies]
 python = "^3.8"
 requests = "<3,>=2.31.0"
-fhconfparser = "<2025,>=2023"
+fhconfparser = "<2026,>=2024.1"
 tomli = "<3,>=2.0.1"
 rich = "<14,>=13.7.0"
-requests-cache = "<2,>=1.1.1"
+requests-cache = "<2,>=1.2.0"
 packaging = "<24,>=23.2"
 loguru = "<2,>=0.7.2"
 
 [tool.poetry.group.dev.dependencies]
-pytest = "^7.4.4"
+pytest = "^8.0.2"
 handsdown = "^2.1.0"
-coverage = "^7.4.0"
+coverage = "^7.4.3"
 ruff = "^0.1.13"
-blackt = "^2024.0.1"
-pyright = "^1.1.347"
+pyright = "^1.1.351"
 pytest-loguru = "^0.3.0"
 
 [build-system]
@@ -73,9 +72,11 @@ fixable = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
 "**/{tests,docs,tools}/*" = ["D", "S101", "E402"]
 
-[tool.black]
-line-length = 100
-target-version = ["py38"]
+[tool.ruff.format]
+indent-style = "tab"
+docstring-code-format = true
+line-ending = "lf"
+
 
 [tool.pyright]
 venvPath = "."
