@@ -15,7 +15,7 @@
 
 ## getModuleSize
 
-[Show source in packageinfo.py:176](../../../licensecheck/packageinfo.py#L176)
+[Show source in packageinfo.py:180](../../../licensecheck/packageinfo.py#L180)
 
 Get the size of a given module as an int.
 
@@ -44,7 +44,7 @@ def getModuleSize(path: Path, name: ucstr) -> int: ...
 
 ## getMyPackageLicense
 
-[Show source in packageinfo.py:158](../../../licensecheck/packageinfo.py#L158)
+[Show source in packageinfo.py:161](../../../licensecheck/packageinfo.py#L161)
 
 Get the package license from "setup.cfg", "pyproject.toml" or user input.
 
@@ -66,7 +66,7 @@ def getMyPackageLicense() -> ucstr: ...
 
 ## getMyPackageMetadata
 
-[Show source in packageinfo.py:133](../../../licensecheck/packageinfo.py#L133)
+[Show source in packageinfo.py:135](../../../licensecheck/packageinfo.py#L135)
 
 Get the package classifiers and license from "setup.cfg", "pyproject.toml".
 
@@ -150,7 +150,7 @@ def getPackageInfoPypi(requirement: ucstr) -> PackageInfo: ...
 
 ## getPackages
 
-[Show source in packageinfo.py:109](../../../licensecheck/packageinfo.py#L109)
+[Show source in packageinfo.py:110](../../../licensecheck/packageinfo.py#L110)
 
 Get dependency info.
 
