@@ -139,6 +139,32 @@ See below for the output if you run `licensecheck` in this directory
 └────────────┴─────────────────────┴──────────────────────────────────────┘
 ```
 
+### Only allow a predefined set of licenses
+
+```txt
+
+>> licensecheck --only-licenses mit
+
+                             list of packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                           ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✖          │ idna                │ BSD License                          │
+│ ✖          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0) │
+│ ✖          │ Pygments            │ BSD License                          │
+│ ✖          │ commonmark          │ BSD License                          │
+│ ✖          │ requirements-parser │ Apache Software License              │
+│ ✔          │ fhconfparser        │ MIT License                          │
+│ ✔          │ tomli               │ MIT License                          │
+│ ✖          │ types-setuptools    │ Apache Software License              │
+│ ✔          │ attrs               │ MIT License                          │
+│ ✔          │ charset-normalizer  │ MIT License                          │
+│ ✔          │ rich                │ MIT License                          │
+│ ✔          │ urllib3             │ MIT License                          │
+│ ✖          │ requests            │ Apache Software License              │
+└────────────┴─────────────────────┴──────────────────────────────────────┘
+```
+
 ### Custom requirements.txt in json format
 
 Add optional path to requirements.txt as outlined in https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228. Eg. `licensecheck --using requirements:c:/path/to/reqs.txt;path/to/other/reqs.txt`
