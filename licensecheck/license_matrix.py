@@ -137,6 +137,7 @@ def depCompatWMyLice(
 	depLice: list[L],
 	ignoreLicenses: list[L] | None = None,
 	failLicenses: list[L] | None = None,
+	onlyLicenses: list[L] | None = None,
 ) -> bool:
 	"""Identify if the end user license is compatible with the dependency license(s).
 
@@ -146,6 +147,7 @@ def depCompatWMyLice(
 		depLice (list[L]): dependency license
 		ignoreLicenses (list[L], optional): list of licenses to ignore. Defaults to None.
 		failLicenses (list[L], optional): list of licenses to fail on. Defaults to None.
+		onlyLicenses (list[L], optional): list of allowed licenses. Defaults to None.
 
 	Returns:
 	-------
@@ -156,6 +158,7 @@ def depCompatWMyLice(
 	# Protect against None
 	failLicenses = failLicenses or []
 	ignoreLicenses = ignoreLicenses or []
+	onlyLicenses = onlyLicenses or []
 
 	return any(
 		liceCompat(
@@ -163,6 +166,7 @@ def depCompatWMyLice(
 			lice,
 			ignoreLicenses,
 			failLicenses,
+			onlyLicenses,
 		)
 		for lice in depLice
 	)
@@ -173,6 +177,7 @@ def liceCompat(
 	lice: L,
 	ignoreLicenses: list[L],
 	failLicenses: list[L],
+	onlyLicenses: list[L],
 ) -> bool:
 	"""Identify if the end user license is compatible with the dependency license.
 
@@ -180,12 +185,15 @@ def liceCompat(
 	:param L lice: dependency license
 	:param list[L] ignoreLicenses: list of licenses to ignore. Defaults to None.
 	:param list[L] failLicenses: list of licenses to fail on. Defaults to None.
+	:param list[L] onlyLicenses: list of allowed licenses. Defaults to None.
 	:return bool: True if compatible, otherwise False
 	"""
 	if lice in failLicenses:
 		return False
 	if lice in ignoreLicenses:
 		return True
+	if onlyLicenses and (lice not in onlyLicenses):
+		return False
 	licenses = list(L)
 	row, col = licenses.index(myLicense) + 1, licenses.index(lice) + 1
 

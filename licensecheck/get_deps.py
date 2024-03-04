@@ -176,6 +176,7 @@ def getDepsWithLicenses(
 	failPackages: list[ucstr],
 	ignoreLicenses: list[ucstr],
 	failLicenses: list[ucstr],
+	onlyLicenses: list[ucstr],
 	skipDependencies: list[ucstr],
 ) -> tuple[License, set[PackageInfo]]:
 	"""Get a set of dependencies with licenses and determine license compatibility.
@@ -188,6 +189,7 @@ def getDepsWithLicenses(
 		ignoreLicenses (list[ucstr]): a list of licenses to ignore (skipped, compat may still be
 		False)
 		failLicenses (list[ucstr]): a list of licenses to fail (compat=False)
+		onlyLicenses (list[ucstr]): a list of allowed licenses (any other license will fail)
 		skipDependencies (list[ucstr]): a list of dependencies to skip (compat=False)
 
 	Returns:
@@ -206,6 +208,7 @@ def getDepsWithLicenses(
 		ucstr(JOINS.join(ignoreLicenses)), ignoreLicenses
 	)
 	failLicensesType = license_matrix.licenseType(ucstr(JOINS.join(failLicenses)), ignoreLicenses)
+	onlyLicensesType = license_matrix.licenseType(ucstr(JOINS.join(onlyLicenses)), ignoreLicenses)
 
 	# Check it is compatible with packages and add a note
 	packages = packageinfo.getPackages(reqs)
@@ -224,5 +227,6 @@ def getDepsWithLicenses(
 				license_matrix.licenseType(package.license, ignoreLicenses),
 				ignoreLicensesType,
 				failLicensesType,
+				onlyLicensesType,
 			)
 	return myLice, packages
