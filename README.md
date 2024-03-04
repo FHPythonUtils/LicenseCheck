@@ -311,7 +311,8 @@ usage: __main__.py [-h] [--format FORMAT] [--file FILE] [--using USING]
                    [--ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]]
                    [--fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]]
                    [--ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]]
-                   [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]] [--zero]
+                   [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]]
+                   [--only_licenses ONLY_LICENSES [ONLY_LICENSES ...]] [--zero]
 
 Output the licenses used by dependencies and check if these are compatible with the project license.
 
@@ -330,6 +331,8 @@ options:
                         a list of licenses to ignore (skipped, compat may still be False)
   --fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]
                         a list of licenses to fail (compat=False)
+  --only-licenses ONLY_LICENSES [ONLY_LICENSES ...]
+                        a list of allowed licenses (any other license will fail)
   --skip-dependencies SKIP_DEPENDENCIES [SKIP_DEPENDENCIES ...]
 						a list of dependencies to skip (compat=False)
   --zero, -0            Return non zero exit code if an incompatible license is found
