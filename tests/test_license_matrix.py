@@ -50,6 +50,13 @@ def test_dualLicenseCompat() -> None:
 	assert license_matrix.depCompatWMyLice(types.L.MIT, [types.L.GPL_2, types.L.MIT])
 
 
+def test_whitelistedLicenseCompat() -> None:
+	assert license_matrix.depCompatWMyLice(types.L.MIT, [types.L.MIT], onlyLicenses=[types.L.MIT])
+	assert license_matrix.depCompatWMyLice(types.L.MPL, [types.L.MIT], onlyLicenses=[types.L.MIT])
+	assert not license_matrix.depCompatWMyLice(types.L.MIT, [types.L.MIT], onlyLicenses=[types.L.MPL])
+	assert not license_matrix.depCompatWMyLice(types.L.MPL, [types.L.MIT], onlyLicenses=[types.L.MPL])
+
+
 def test_warningsForIgnoredLicense(caplog: LogCaptureFixture) -> None:
 	zope = types.ucstr("ZOPE PUBLIC LICENSE")
 	license_matrix.licenseLookup(zope, [])

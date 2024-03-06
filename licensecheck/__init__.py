@@ -61,6 +61,11 @@ def cli() -> None:
 		nargs="+",
 	)
 	parser.add_argument(
+		"--only-licenses",
+		help="a list of allowed licenses (any other license will fail)",
+		nargs="+",
+	)
+	parser.add_argument(
 		"--skip-dependencies",
 		help="a list of packages to skip (compat=True)",
 		nargs="+",
@@ -104,6 +109,7 @@ def cli() -> None:
 		list(map(types.ucstr, simpleConf.get("fail_packages", []))),
 		list(map(types.ucstr, simpleConf.get("ignore_licenses", []))),
 		list(map(types.ucstr, simpleConf.get("fail_licenses", []))),
+		list(map(types.ucstr, simpleConf.get("only_licenses", []))),
 		list(map(types.ucstr, simpleConf.get("skip_dependencies", []))),
 	)
 

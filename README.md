@@ -139,6 +139,32 @@ See below for the output if you run `licensecheck` in this directory
 └────────────┴─────────────────────┴──────────────────────────────────────┘
 ```
 
+### Only allow a predefined set of licenses
+
+```txt
+
+>> licensecheck --only-licenses mit
+
+                             list of packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                           ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✖          │ idna                │ BSD License                          │
+│ ✖          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0) │
+│ ✖          │ Pygments            │ BSD License                          │
+│ ✖          │ commonmark          │ BSD License                          │
+│ ✖          │ requirements-parser │ Apache Software License              │
+│ ✔          │ fhconfparser        │ MIT License                          │
+│ ✔          │ tomli               │ MIT License                          │
+│ ✖          │ types-setuptools    │ Apache Software License              │
+│ ✔          │ attrs               │ MIT License                          │
+│ ✔          │ charset-normalizer  │ MIT License                          │
+│ ✔          │ rich                │ MIT License                          │
+│ ✔          │ urllib3             │ MIT License                          │
+│ ✖          │ requests            │ Apache Software License              │
+└────────────┴─────────────────────┴──────────────────────────────────────┘
+```
+
 ### Custom requirements.txt in json format
 
 Add optional path to requirements.txt as outlined in https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228. Eg. `licensecheck --using requirements:c:/path/to/reqs.txt;path/to/other/reqs.txt`
@@ -285,7 +311,8 @@ usage: __main__.py [-h] [--format FORMAT] [--file FILE] [--using USING]
                    [--ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]]
                    [--fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]]
                    [--ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]]
-                   [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]] [--zero]
+                   [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]]
+                   [--only_licenses ONLY_LICENSES [ONLY_LICENSES ...]] [--zero]
 
 Output the licenses used by dependencies and check if these are compatible with the project license.
 
@@ -304,6 +331,8 @@ options:
                         a list of licenses to ignore (skipped, compat may still be False)
   --fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]
                         a list of licenses to fail (compat=False)
+  --only-licenses ONLY_LICENSES [ONLY_LICENSES ...]
+                        a list of allowed licenses (any other license will fail)
   --skip-dependencies SKIP_DEPENDENCIES [SKIP_DEPENDENCIES ...]
 						a list of dependencies to skip (compat=False)
   --zero, -0            Return non zero exit code if an incompatible license is found
