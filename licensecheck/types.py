@@ -50,6 +50,18 @@ class PackageInfo:
 		"""Set the namever once the object is initialised."""
 		self.namever = f"{self.name}-{self.version}"
 
+	def get_filtered_dict(self, hide_output_parameters: list[str]) -> dict:
+		"""Return a filtered dictionary of the object.
+
+		:param list[str] hide_output_parameters: list of parameters to ignore
+		:return dict: filtered dictionary
+		"""
+		return {
+			k: v
+			for k, v in self.__dict__.items()
+			if k.upper() not in hide_output_parameters
+		}
+		
 
 class License(Enum):
 	"""License Enum to hold a set of potential licenses."""

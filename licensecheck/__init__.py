@@ -4,6 +4,7 @@ license.
 from __future__ import annotations
 
 import argparse
+from dataclasses import fields
 from pathlib import Path
 from sys import exit as sysexit
 from sys import stdout
@@ -71,6 +72,11 @@ def cli() -> None:
 		nargs="+",
 	)
 	parser.add_argument(
+		"--hide-output-parameters",
+		help="a list of parameters to hide from the produced output",
+		nargs="+"
+	)
+	parser.add_argument(
 		"--zero",
 		"-0",
 		help="Return non zero exit code if an incompatible license is found",
@@ -119,10 +125,19 @@ def cli() -> None:
 	incompatible = any(not lice.licenseCompat for lice in depsWithLicenses)
 
 	# Format the results
+	hide_output_parameters = list(map(types.ucstr, simpleConf.get("hide_output_parameters", [])))
+	available_params = [param.name.upper() for param in fields(types.PackageInfo)]
+	if not all(hop in available_params for hop in hide_output_parameters):
+		raise ValueError(
+			f"Invalid parameter(s) in `hide_output_parameters`. "
+			f"Valid parameters are: {', '.join(available_params)}"
+		)
 	if simpleConf.get("format", "simple") in formatter.formatMap:
 		print(
 			formatter.formatMap[simpleConf.get("format", "simple")](
-				myLice, sorted(depsWithLicenses)
+				myLice,
+				sorted(depsWithLicenses),
+				hide_output_parameters,
 			),
 			file=textIO,
 		)
