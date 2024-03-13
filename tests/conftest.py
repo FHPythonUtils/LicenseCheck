@@ -8,6 +8,10 @@ from loguru import logger
 def caplog(_caplog):
 	"""Wrapper over caplog fixture to fix loguru logs.
 
+	Parameters
+	----------
+	_caplog: Pytest fixture
+
 	Yields
 	------
 	_caplog: Pytest fixture
