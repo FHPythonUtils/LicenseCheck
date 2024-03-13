@@ -2,15 +2,12 @@ import logging
 
 import pytest  # pyright: ignore [reportMissingImports]
 from loguru import logger
+from _pytest.logging import caplog as _caplog
 
 
 @pytest.fixture()
 def caplog(_caplog):
 	"""Wrapper over caplog fixture to fix loguru logs.
-
-	Parameters
-	----------
-	_caplog: Pytest fixture
 
 	Yields
 	------
