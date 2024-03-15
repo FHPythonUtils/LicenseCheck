@@ -22,6 +22,7 @@ To one of the following formats:
 - csv
 """
 from __future__ import annotations
+from collections import OrderedDict
 
 import csv
 import json
@@ -56,13 +57,14 @@ def stripAnsi(string: str) -> str:
 	return re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", string)
 
 
-def ansi(myLice: License, packages: list[PackageInfo]) -> str:
+def ansi(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
 	"""Format to ansi.
 
 	Args:
 	----
 		myLice (License): project license
 		packages (list[PackageInfo]): list of PackageCompats to format.
+		hide_parameters (list[str]): list of parameters to ignore in the output.
 
 	Returns:
 	-------
@@ -92,41 +94,55 @@ def ansi(myLice: License, packages: list[PackageInfo]) -> str:
 		console.print(table)
 
 	table = Table(title="\nList Of Packages")
-	table.add_column("Compatible", style="cyan")
-	table.add_column("Package", style="magenta")
-	table.add_column("License(s)", style="magenta")
+	if licensecompat_bool := not "LICENSECOMPAT" in hide_parameters:
+		table.add_column("Compatible", style="cyan")
+	if name_bool := not "NAME" in hide_parameters:
+		table.add_column("Package", style="magenta")
+	if license_bool := not "LICENSE" in hide_parameters:
+		table.add_column("License(s)", style="magenta")
 	licenseCompat = (
 		"[red]✖[/]",
 		"[green]✔[/]",
 	)
-	_ = [table.add_row(licenseCompat[x.licenseCompat], x.name, x.license) for x in packages]
+	_ = [
+		table.add_row(
+			*(
+				([licenseCompat[x.licenseCompat]] if licensecompat_bool else []) +
+				([x.name] if name_bool else []) +
+				([x.license] if license_bool else [])
+			)
+		)
+		for x in packages
+	]
 	console.print(table)
 	return string.getvalue()
 
 
-def plainText(myLice: License, packages: list[PackageInfo]) -> str:
+def plainText(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
 	"""Format to ansi.
 
 	Args:
 	----
 		myLice (License): project license
 		packages (list[PackageInfo]): list of PackageCompats to format.
+		hide_parameters (list[str]): list of parameters to ignore in the output.
 
 	Returns:
 	-------
 		str: string to send to specified output in plain text format
 
 	"""
-	return stripAnsi(ansi(myLice, packages))
+	return stripAnsi(ansi(myLice, packages, hide_parameters))
 
 
-def markdown(myLice: License, packages: list[PackageInfo]) -> str:
+def markdown(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
 	"""Format to markdown.
 
 	Args:
 	----
 		myLice (License): project license
 		packages (list[PackageInfo]): list of PackageCompats to format.
+		hide_parameters (list[str]): list of parameters to ignore in the output.
 
 	Returns:
 	-------
@@ -148,27 +164,36 @@ def markdown(myLice: License, packages: list[PackageInfo]) -> str:
 		strBuf.append(f"|{'✔' if pkg.licenseCompat else '✖'}|{pkg.name}|")
 
 	# Details
+	params_use_in_markdown = {
+		"homePage": "HomePage",
+		"author": "Author",
+		"license": "License",
+		"licenseCompat": "Compatible",
+		"size": "Size",
+	}
 	for pkg in packages:
+		pkg_dict = pkg.get_filtered_dict(hide_parameters)
+		pkg_dict_ordered_dict = OrderedDict((param, pkg_dict[param]) for param in params_use_in_markdown.keys() if param in pkg_dict)
 		strBuf.extend(
 			[
-				f"\n### {pkg.namever}",
-				f"\n- HomePage: {pkg.homePage}",
-				f"- Author: {pkg.author}",
-				f"- License: {pkg.license}",
-				f"- Compatible: {pkg.licenseCompat}",
-				f"- Size: {pkg.size}",
+				f"\n### {pkg.namever}\n",
+				*(
+					f"- {params_use_in_markdown[k]}: {v}"
+					for k, v in pkg_dict_ordered_dict.items()
+				),
 			]
 		)
 	return "\n".join(strBuf) + "\n"
 
 
-def raw(myLice: License, packages: list[PackageInfo]) -> str:
+def raw(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
 	"""Format to json.
 
 	Args:
 	----
 		myLice (License): project license
 		packages (list[PackageInfo]): list of PackageCompats to format.
+		hide_parameters (list[str]): list of parameters to ignore in the output.
 
 	Returns:
 	-------
@@ -179,19 +204,23 @@ def raw(myLice: License, packages: list[PackageInfo]) -> str:
 		{
 			"info": INFO,
 			"project_license": printLicense(myLice),
-			"packages": [x.__dict__ for x in packages],
+			"packages": [
+                x.get_filtered_dict(hide_parameters)
+                for x in packages
+            ],
 		},
 		indent="\t",
 	)
 
 
-def rawCsv(myLice: License, packages: list[PackageInfo]) -> str:
+def rawCsv(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
 	"""Format to csv.
 
 	Args:
 	----
 		myLice (License): project license
 		packages (list[PackageInfo]): list of PackageCompats to format.
+		hide_parameters (list[str]): list of parameters to ignore in the output.
 
 	Returns:
 	-------
@@ -202,7 +231,10 @@ def rawCsv(myLice: License, packages: list[PackageInfo]) -> str:
 	string = StringIO()
 	writer = csv.DictWriter(string, fieldnames=list(packages[0].__dict__), lineterminator="\n")
 	writer.writeheader()
-	writer.writerows([x.__dict__ for x in packages])
+	writer.writerows([
+		x.get_filtered_dict(hide_parameters)
+		for x in packages
+	])
 	return string.getvalue()
 
 

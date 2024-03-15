@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from licensecheck import formatter, types
 
 THISDIR = str(Path(__file__).resolve().parent)
@@ -43,6 +44,12 @@ def test_advancedMarkdown() -> None:
 	assert fmt == Path(f"{THISDIR}/data/advanced.md").read_text("utf-8")
 
 
+def test_advancedMarkdownIgnoreParams() -> None:
+	fmt = formatter.markdown(myLice, complexPackages, hide_parameters=["SIZE"])
+	# Path(f"{THISDIR}/data/advanced_ignore_params.md").write_text(fmt, "utf-8")
+	assert fmt == Path(f"{THISDIR}/data/advanced_ignore_params.md").read_text("utf-8")
+
+
 def test_simpleRaw() -> None:
 	fmt = formatter.raw(myLice, simplePackages)
 	# Path(f"{THISDIR}/data/simple.json").write_text(fmt, "utf-8")
@@ -53,6 +60,12 @@ def test_advancedRaw() -> None:
 	fmt = formatter.raw(myLice, complexPackages)
 	# Path(f"{THISDIR}/data/advanced.json").write_text(fmt, "utf-8")
 	assert fmt == Path(f"{THISDIR}/data/advanced.json").read_text("utf-8")
+
+
+def test_advancedRawIgnoreParams() -> None:
+	fmt = formatter.raw(myLice, complexPackages, hide_parameters=["HOMEPAGE", "AUTHOR"])
+	# Path(f"{THISDIR}/data/advanced_ignore_params.json").write_text(fmt, "utf-8")
+	assert fmt == Path(f"{THISDIR}/data/advanced_ignore_params.json").read_text("utf-8")
 
 
 def test_simpleRawCsv() -> None:
@@ -79,6 +92,11 @@ def test_advancedAnsi() -> None:
 	assert fmt == Path(f"{THISDIR}/data/advanced.ansi").read_text("utf-8")
 
 
+def test_advancedAnsiIgnoreParams() -> None:
+	fmt = formatter.ansi(myLice, complexPackages, hide_parameters=[])
+	assert fmt == Path(f"{THISDIR}/data/advanced.ansi").read_text("utf-8")
+
+
 def test_simplePlainText() -> None:
 	fmt = formatter.plainText(myLice, simplePackages)
 	# Path(f"{THISDIR}/data/simple.txt").write_text(fmt, "utf-8")
@@ -88,4 +106,9 @@ def test_simplePlainText() -> None:
 def test_advancedPlainText() -> None:
 	fmt = formatter.plainText(myLice, complexPackages)
 	# Path(f"{THISDIR}/data/advanced.txt").write_text(fmt, "utf-8")
+	assert fmt == Path(f"{THISDIR}/data/advanced.txt").read_text("utf-8")
+
+
+def test_advancedPlainTextIgnoreParams() -> None:
+	fmt = formatter.plainText(myLice, complexPackages, hide_parameters=["wrong_parameter"])
 	assert fmt == Path(f"{THISDIR}/data/advanced.txt").read_text("utf-8")
