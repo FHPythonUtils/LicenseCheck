@@ -23,6 +23,7 @@ Find a list of packages below
 - Author: example_author
 - License: MIT
 - Compatible: True
+- Size: 10
 
 ### example1-UNKNOWN
 
@@ -30,3 +31,4 @@ Find a list of packages below
 - Author: example_author
 - License: GPL3
 - Compatible: False
+- Size: 10

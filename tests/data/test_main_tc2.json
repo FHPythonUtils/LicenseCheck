@@ -129,14 +129,14 @@
 		},
 		{
 			"name": "packaging",
-			"version": "23.2",
-			"size": 171055,
+			"version": "24.0",
+			"size": 172524,
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",
 			"license": "APACHE SOFTWARE LICENSE;; BSD LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0,
-			"namever": "packaging-23.2"
+			"namever": "packaging-24.0"
 		},
 		{
 			"name": "platformdirs",
@@ -173,14 +173,14 @@
 		},
 		{
 			"name": "rich",
-			"version": "13.7.0",
-			"size": 941546,
+			"version": "13.7.1",
+			"size": 941650,
 			"homePage": "https://github.com/Textualize/rich",
 			"author": "Will McGugan",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0,
-			"namever": "rich-13.7.0"
+			"namever": "rich-13.7.1"
 		},
 		{
 			"name": "tomli",

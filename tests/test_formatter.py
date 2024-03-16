@@ -46,7 +46,7 @@ def test_advancedMarkdown() -> None:
 
 
 def test_advancedMarkdownIgnoreParams() -> None:
-	fmt = formatter.markdown(myLice, complexPackages, hide_parameters=["SIZE"])
+	fmt = formatter.markdown(myLice, complexPackages)
 	# Path(f"{THISDIR}/data/advanced_ignore_params.md").write_text(fmt, "utf-8")
 	assert fmt == Path(f"{THISDIR}/data/advanced_ignore_params.md").read_text("utf-8")
 

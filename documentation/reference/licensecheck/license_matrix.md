@@ -12,7 +12,7 @@
 
 ## depCompatWMyLice
 
-[Show source in license_matrix.py:135](../../../licensecheck/license_matrix.py#L135)
+[Show source in license_matrix.py:136](../../../licensecheck/license_matrix.py#L136)
 
 Identify if the end user license is compatible with the dependency license(s).
 
@@ -23,6 +23,7 @@ Identify if the end user license is compatible with the dependency license(s).
  - `depLice` *list[L]* - dependency license
  - `ignoreLicenses` *list[L], optional* - list of licenses to ignore. Defaults to None.
  - `failLicenses` *list[L], optional* - list of licenses to fail on. Defaults to None.
+ - `onlyLicenses` *list[L], optional* - list of allowed licenses. Defaults to None.
 
 #### Returns
 
@@ -37,6 +38,7 @@ def depCompatWMyLice(
     depLice: list[L],
     ignoreLicenses: list[L] | None = None,
     failLicenses: list[L] | None = None,
+    onlyLicenses: list[L] | None = None,
 ) -> bool: ...
 ```
 
@@ -48,7 +50,7 @@ def depCompatWMyLice(
 
 ## liceCompat
 
-[Show source in license_matrix.py:171](../../../licensecheck/license_matrix.py#L171)
+[Show source in license_matrix.py:176](../../../licensecheck/license_matrix.py#L176)
 
 Identify if the end user license is compatible with the dependency license.
 
@@ -58,6 +60,7 @@ Identify if the end user license is compatible with the dependency license.
 - `lice` *L* - dependency license
 :param list[L] ignoreLicenses: list of licenses to ignore. Defaults to None.
 :param list[L] failLicenses: list of licenses to fail on. Defaults to None.
+:param list[L] onlyLicenses: list of allowed licenses. Defaults to None.
 
 #### Returns
 
@@ -68,7 +71,11 @@ True if compatible, otherwise False
 
 ```python
 def liceCompat(
-    myLicense: L, lice: L, ignoreLicenses: list[L], failLicenses: list[L]
+    myLicense: L,
+    lice: L,
+    ignoreLicenses: list[L],
+    failLicenses: list[L],
+    onlyLicenses: list[L],
 ) -> bool: ...
 ```
 
@@ -80,7 +87,7 @@ def liceCompat(
 
 ## licenseLookup
 
-[Show source in license_matrix.py:54](../../../licensecheck/license_matrix.py#L54)
+[Show source in license_matrix.py:55](../../../licensecheck/license_matrix.py#L55)
 
 Identify a license from an uppercase string representation of a license.
 
@@ -110,7 +117,7 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 
 ## licenseType
 
-[Show source in license_matrix.py:116](../../../licensecheck/license_matrix.py#L116)
+[Show source in license_matrix.py:117](../../../licensecheck/license_matrix.py#L117)
 
 Return a list of license types from a license string.
 

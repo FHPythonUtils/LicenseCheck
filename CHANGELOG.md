@@ -9,6 +9,7 @@ patch-level version changes can be found in [commit messages](../../commits/mast
 - fix issue where onlyLicenses logic caused licensecompat to be `false` when unspecified from the command line
 - move `cli()` to `cli.py`
 - add tests for the main entry point
+- update deps
 
 ## 2024 - 2024/01/27
 

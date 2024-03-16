@@ -35,7 +35,7 @@ test_data = [
 			"license": "GPL",
 			"file": aux_file("test_main_tc4.json"),
 			"format": "json",
-			"hide_output_parameters": ["size"],
+			"hide_output_parameters": ["size", "version", "namever"],
 		},
 		0,
 	),

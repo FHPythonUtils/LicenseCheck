@@ -8,13 +8,14 @@
   - [License](#license)
   - [PackageInfo](#packageinfo)
     - [PackageInfo().__post_init__](#packageinfo()__post_init__)
+    - [PackageInfo().get_filtered_dict](#packageinfo()get_filtered_dict)
   - [ucstr](#ucstr)
     - [ucstr().__new__](#ucstr()__new__)
   - [printLicense](#printlicense)
 
 ## License
 
-[Show source in types.py:54](../../../licensecheck/types.py#L54)
+[Show source in types.py:62](../../../licensecheck/types.py#L62)
 
 #### Attributes
 
@@ -71,6 +72,25 @@ Set the namever once the object is initialised.
 def __post_init__(self) -> None: ...
 ```
 
+### PackageInfo().get_filtered_dict
+
+[Show source in types.py:53](../../../licensecheck/types.py#L53)
+
+Return a filtered dictionary of the object.
+
+:param list[str] hide_output_parameters: list of parameters to ignore
+
+#### Returns
+
+Type: *dict*
+filtered dictionary
+
+#### Signature
+
+```python
+def get_filtered_dict(self, hide_output_parameters: list[str]) -> dict: ...
+```
+
 
 
 ## ucstr
@@ -110,7 +130,7 @@ def __new__(cls, v: str) -> ucstr: ...
 
 ## printLicense
 
-[Show source in types.py:97](../../../licensecheck/types.py#L97)
+[Show source in types.py:105](../../../licensecheck/types.py#L105)
 
 Output a license as plain text.
 

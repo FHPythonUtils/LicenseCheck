@@ -14,7 +14,7 @@
 
 ## ansi
 
-[Show source in formatter.py:59](../../../licensecheck/formatter.py#L59)
+[Show source in formatter.py:61](../../../licensecheck/formatter.py#L61)
 
 Format to ansi.
 
@@ -23,6 +23,7 @@ Format to ansi.
 ----
  - `myLice` *License* - project license
  - `packages` *list[PackageInfo]* - list of PackageCompats to format.
+ - `hide_parameters` *list[str]* - list of parameters to ignore in the output.
 
 #### Returns
 
@@ -32,7 +33,11 @@ Format to ansi.
 #### Signature
 
 ```python
-def ansi(myLice: License, packages: list[PackageInfo]) -> str: ...
+def ansi(
+    myLice: License,
+    packages: list[PackageInfo],
+    hide_parameters: list[ucstr] | None = None,
+) -> str: ...
 ```
 
 #### See also
@@ -44,7 +49,7 @@ def ansi(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## markdown
 
-[Show source in formatter.py:123](../../../licensecheck/formatter.py#L123)
+[Show source in formatter.py:151](../../../licensecheck/formatter.py#L151)
 
 Format to markdown.
 
@@ -53,6 +58,7 @@ Format to markdown.
 ----
  - `myLice` *License* - project license
  - `packages` *list[PackageInfo]* - list of PackageCompats to format.
+ - `hide_parameters` *list[str]* - list of parameters to ignore in the output.
 
 #### Returns
 
@@ -62,7 +68,11 @@ Format to markdown.
 #### Signature
 
 ```python
-def markdown(myLice: License, packages: list[PackageInfo]) -> str: ...
+def markdown(
+    myLice: License,
+    packages: list[PackageInfo],
+    hide_parameters: list[ucstr] | None = None,
+) -> str: ...
 ```
 
 #### See also
@@ -74,7 +84,7 @@ def markdown(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## plainText
 
-[Show source in formatter.py:107](../../../licensecheck/formatter.py#L107)
+[Show source in formatter.py:128](../../../licensecheck/formatter.py#L128)
 
 Format to ansi.
 
@@ -83,6 +93,7 @@ Format to ansi.
 ----
  - `myLice` *License* - project license
  - `packages` *list[PackageInfo]* - list of PackageCompats to format.
+ - `hide_parameters` *list[str]* - list of parameters to ignore in the output.
 
 #### Returns
 
@@ -92,7 +103,11 @@ Format to ansi.
 #### Signature
 
 ```python
-def plainText(myLice: License, packages: list[PackageInfo]) -> str: ...
+def plainText(
+    myLice: License,
+    packages: list[PackageInfo],
+    hide_parameters: list[ucstr] | None = None,
+) -> str: ...
 ```
 
 #### See also
@@ -104,7 +119,7 @@ def plainText(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## raw
 
-[Show source in formatter.py:165](../../../licensecheck/formatter.py#L165)
+[Show source in formatter.py:206](../../../licensecheck/formatter.py#L206)
 
 Format to json.
 
@@ -113,6 +128,7 @@ Format to json.
 ----
  - `myLice` *License* - project license
  - `packages` *list[PackageInfo]* - list of PackageCompats to format.
+ - `hide_parameters` *list[str]* - list of parameters to ignore in the output.
 
 #### Returns
 
@@ -122,7 +138,11 @@ Format to json.
 #### Signature
 
 ```python
-def raw(myLice: License, packages: list[PackageInfo]) -> str: ...
+def raw(
+    myLice: License,
+    packages: list[PackageInfo],
+    hide_parameters: list[ucstr] | None = None,
+) -> str: ...
 ```
 
 #### See also
@@ -134,7 +154,7 @@ def raw(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## rawCsv
 
-[Show source in formatter.py:188](../../../licensecheck/formatter.py#L188)
+[Show source in formatter.py:236](../../../licensecheck/formatter.py#L236)
 
 Format to csv.
 
@@ -143,6 +163,7 @@ Format to csv.
 ----
  - `myLice` *License* - project license
  - `packages` *list[PackageInfo]* - list of PackageCompats to format.
+ - `hide_parameters` *list[str]* - list of parameters to ignore in the output.
 
 #### Returns
 
@@ -152,7 +173,11 @@ Format to csv.
 #### Signature
 
 ```python
-def rawCsv(myLice: License, packages: list[PackageInfo]) -> str: ...
+def rawCsv(
+    myLice: License,
+    packages: list[PackageInfo],
+    hide_parameters: list[ucstr] | None = None,
+) -> str: ...
 ```
 
 #### See also
@@ -164,7 +189,7 @@ def rawCsv(myLice: License, packages: list[PackageInfo]) -> str: ...
 
 ## stripAnsi
 
-[Show source in formatter.py:44](../../../licensecheck/formatter.py#L44)
+[Show source in formatter.py:46](../../../licensecheck/formatter.py#L46)
 
 Strip ansi codes from a given string.
 
