@@ -1,5 +1,5 @@
-"""Get information for installed and online packages.
-"""
+"""Get information for installed and online packages."""
+
 from __future__ import annotations
 
 import configparser
@@ -190,6 +190,7 @@ def getModuleSize(path: Path, name: ucstr) -> int:
 		int: size in bytes
 
 	"""
+	HTTP_OK = 200
 	size = 0
 	with contextlib.suppress(AttributeError):
 		size = sum(
@@ -200,7 +201,7 @@ def getModuleSize(path: Path, name: ucstr) -> int:
 	if size > 0:
 		return size
 	request = session.get(f"https://pypi.org/pypi/{name}/json", timeout=60)
-	if request.status_code != 200:
+	if request.status_code != HTTP_OK:
 		return 0
 	response = request.json()
 	return int(response["urls"][-1]["size"])

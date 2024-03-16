@@ -1,7 +1,8 @@
 from pathlib import Path
 
-import pytest
 from licensecheck import formatter, types
+
+formatter.INFO = {"program": "licensecheck", "version": "dev", "license": "MIT LICENSE"}
 
 THISDIR = str(Path(__file__).resolve().parent)
 

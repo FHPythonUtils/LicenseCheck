@@ -35,6 +35,7 @@ permissive -> mpl -> gpl -> agpl (3 only)
 permissive (any) -> EU
 EU -> gpl -> agpl (3 only)
 """
+
 from __future__ import annotations
 
 import csv
@@ -192,7 +193,7 @@ def liceCompat(
 		return False
 	if lice in ignoreLicenses:
 		return True
-	if onlyLicenses and (lice not in onlyLicenses):
+	if len(onlyLicenses) > 0 and (lice not in onlyLicenses):
 		return False
 	licenses = list(L)
 	row, col = licenses.index(myLicense) + 1, licenses.index(lice) + 1

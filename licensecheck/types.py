@@ -1,5 +1,5 @@
-"""PackageCompat type.
-"""
+"""PackageCompat type."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -56,12 +56,8 @@ class PackageInfo:
 		:param list[str] hide_output_parameters: list of parameters to ignore
 		:return dict: filtered dictionary
 		"""
-		return {
-			k: v
-			for k, v in self.__dict__.items()
-			if k.upper() not in hide_output_parameters
-		}
-		
+		return {k: v for k, v in self.__dict__.items() if k.upper() not in hide_output_parameters}
+
 
 class License(Enum):
 	"""License Enum to hold a set of potential licenses."""

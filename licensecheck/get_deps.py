@@ -1,5 +1,5 @@
-"""Get a list of packages with package compatibility.
-"""
+"""Get a list of packages with package compatibility."""
+
 from __future__ import annotations
 
 import contextlib
@@ -40,7 +40,8 @@ def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]:
 	"""
 
 	_ = using.split(":", 1)
-	using, extras = _[0], _[1] if len(_) > 1 else None
+	using = _[0]
+	extras = _[1].split(";") if len(_) > 1 else []
 	if using not in USINGS:
 		using = "poetry"
 
@@ -53,7 +54,9 @@ def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]:
 
 	# Requirements
 	if using == "requirements":
-		requirementsPaths = [Path(x) for x in (extras or "requirements.txt").split(";")]
+		requirementsPaths = [Path("requirements.txt")]
+		if len(extras) > 0:
+			requirementsPaths = [Path(x) for x in (extras)]
 
 	return do_get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
 
@@ -61,10 +64,25 @@ def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]:
 def do_get_reqs(
 	using: str,
 	skipDependencies: list[ucstr],
-	extras: str | None,
+	extras: list[str],
 	pyproject: dict[str, Any],
 	requirementsPaths: list[Path],
 ) -> set[ucstr]:
+	"""Underlying machineary to get requirements.
+
+	Args:
+	----
+		using (str): use requirements, poetry or PEP631.
+		skipDependencies (list[str]): list of dependencies to skip.
+		extras (str | None): to-do
+		pyproject (dict[str, Any]): to-do
+		requirementsPaths (list[Path]): to-do
+
+	Returns:
+	-------
+		set[str]: set of requirement packages
+
+	"""
 	reqs = set()
 	extrasReqs = {}
 
@@ -94,10 +112,9 @@ def do_get_reqs(
 		except KeyError as error:
 			msg = "Could not find specification of requirements (pyproject.toml)."
 			raise RuntimeError(msg) from error
-		if extras is not None:
-			reqLists.extend(
-				project.get("group", {x: {"dependencies": {}}})[x]["dependencies"]
-				for x in extras.split(";")
+		for extra in extras:
+			reqLists.append(
+				project.get("group", {extra: {"dependencies": {}}})[extra]["dependencies"]
 			)
 			reqLists.append(project.get("dev-dependencies", {}))
 		for reqList in reqLists:
@@ -111,8 +128,8 @@ def do_get_reqs(
 		except KeyError as error:
 			msg = "Could not find specification of requirements (pyproject.toml)."
 			raise RuntimeError(msg) from error
-		if extras:
-			reqLists.extend(project["optional-dependencies"][x] for x in extras.split(";"))
+		for extra in extras:
+			reqLists.append(project["optional-dependencies"][extra])
 		for reqList in reqLists:
 			for req in reqList:
 				reqs.add(resolveReq(req))
@@ -124,8 +141,8 @@ def do_get_reqs(
 				msg = f"Could not find specification of requirements ({reqPath})."
 				raise RuntimeError(msg)
 
-			for line in reqPath.read_text(encoding="utf-8").splitlines():
-				line = line.strip()
+			for _line in reqPath.read_text(encoding="utf-8").splitlines():
+				line = _line.strip()
 				if not line or line[0] in {"#", "-"}:
 					continue
 				reqs.add(resolveReq(line))
@@ -156,16 +173,14 @@ def do_get_reqs(
 			pkgMetadata = metadata.metadata(requirement)
 			for dependency in pkgMetadata.get_all("Requires-Dist") or []:
 				update_dependencies(dependency)
-		except metadata.PackageNotFoundError:
+		except metadata.PackageNotFoundError:  # noqa: PERF203
 			request = session.get(
 				f"https://pypi.org/pypi/{requirement.split('[')[0]}/json", timeout=60
 			)
-			response = request.json()
-			try:
-				for dependency in response["info"]["requires_dist"] or []:
-					update_dependencies(dependency)
-			except (KeyError, TypeError):
-				pass
+			response: dict = request.json()
+			requires_dist: list = response.get("info", {}).get("requires_dist", []) or []
+			for dependency in requires_dist:
+				update_dependencies(dependency)
 
 	return {r.split("[")[0] for r in requirementsWithDeps}
 
@@ -209,6 +224,9 @@ def getDepsWithLicenses(
 	)
 	failLicensesType = license_matrix.licenseType(ucstr(JOINS.join(failLicenses)), ignoreLicenses)
 	onlyLicensesType = license_matrix.licenseType(ucstr(JOINS.join(onlyLicenses)), ignoreLicenses)
+	# licenseType will always return NO_LICENSE for None
+	if License.NO_LICENSE in onlyLicensesType:
+		onlyLicensesType.remove(License.NO_LICENSE)
 
 	# Check it is compatible with packages and add a note
 	packages = packageinfo.getPackages(reqs)

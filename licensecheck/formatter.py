@@ -21,19 +21,20 @@ To one of the following formats:
 - json
 - csv
 """
+
 from __future__ import annotations
-from collections import OrderedDict
 
 import csv
 import json
 import re
+from collections import OrderedDict
 from importlib.metadata import PackageNotFoundError, version
 from io import StringIO
 
 from rich.console import Console
 from rich.table import Table
 
-from licensecheck.types import License, PackageInfo, printLicense
+from licensecheck.types import License, PackageInfo, printLicense, ucstr
 
 try:
 	VERSION = version("licensecheck")
@@ -57,7 +58,11 @@ def stripAnsi(string: str) -> str:
 	return re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])").sub("", string)
 
 
-def ansi(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
+def ansi(
+	myLice: License,
+	packages: list[PackageInfo],
+	hide_parameters: list[ucstr] | None = None,
+) -> str:
 	"""Format to ansi.
 
 	Args:
@@ -71,9 +76,11 @@ def ansi(myLice: License, packages: list[PackageInfo], hide_parameters: list[str
 		str: string to send to specified output in ansi format
 
 	"""
+	if hide_parameters is None:
+		hide_parameters = []
 	string = StringIO()
 
-	console = Console(file=string, color_system="truecolor")
+	console = Console(file=string, color_system="truecolor", safe_box=False)
 
 	table = Table(title="\nInfo")
 	table.add_column("Item", style="cyan")
@@ -94,11 +101,11 @@ def ansi(myLice: License, packages: list[PackageInfo], hide_parameters: list[str
 		console.print(table)
 
 	table = Table(title="\nList Of Packages")
-	if licensecompat_bool := not "LICENSECOMPAT" in hide_parameters:
+	if licensecompat_bool := "LICENSECOMPAT" not in hide_parameters:
 		table.add_column("Compatible", style="cyan")
-	if name_bool := not "NAME" in hide_parameters:
+	if name_bool := "NAME" not in hide_parameters:
 		table.add_column("Package", style="magenta")
-	if license_bool := not "LICENSE" in hide_parameters:
+	if license_bool := "LICENSE" not in hide_parameters:
 		table.add_column("License(s)", style="magenta")
 	licenseCompat = (
 		"[red]✖[/]",
@@ -107,9 +114,9 @@ def ansi(myLice: License, packages: list[PackageInfo], hide_parameters: list[str
 	_ = [
 		table.add_row(
 			*(
-				([licenseCompat[x.licenseCompat]] if licensecompat_bool else []) +
-				([x.name] if name_bool else []) +
-				([x.license] if license_bool else [])
+				([licenseCompat[x.licenseCompat]] if licensecompat_bool else [])
+				+ ([x.name] if name_bool else [])
+				+ ([x.license] if license_bool else [])
 			)
 		)
 		for x in packages
@@ -118,7 +125,11 @@ def ansi(myLice: License, packages: list[PackageInfo], hide_parameters: list[str
 	return string.getvalue()
 
 
-def plainText(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
+def plainText(
+	myLice: License,
+	packages: list[PackageInfo],
+	hide_parameters: list[ucstr] | None = None,
+) -> str:
 	"""Format to ansi.
 
 	Args:
@@ -132,10 +143,16 @@ def plainText(myLice: License, packages: list[PackageInfo], hide_parameters: lis
 		str: string to send to specified output in plain text format
 
 	"""
+	if hide_parameters is None:
+		hide_parameters = []
 	return stripAnsi(ansi(myLice, packages, hide_parameters))
 
 
-def markdown(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
+def markdown(
+	myLice: License,
+	packages: list[PackageInfo],
+	hide_parameters: list[ucstr] | None = None,
+) -> str:
 	"""Format to markdown.
 
 	Args:
@@ -149,6 +166,8 @@ def markdown(myLice: License, packages: list[PackageInfo], hide_parameters: list
 		str: string to send to specified output in markdown format
 
 	"""
+	if hide_parameters is None:
+		hide_parameters = []
 	info = "\n".join(f"- **{k}**: {v}" for k, v in INFO.items())
 	strBuf = [f"## Info\n\n{info}\n\n## Project License\n\n{printLicense(myLice)}\n"]
 
@@ -160,8 +179,7 @@ def markdown(myLice: License, packages: list[PackageInfo], hide_parameters: list
 
 	# Summary Table
 	strBuf.append("|Compatible|Package|\n|:--|:--|")
-	for pkg in packages:
-		strBuf.append(f"|{'✔' if pkg.licenseCompat else '✖'}|{pkg.name}|")
+	strBuf.extend([f"|{'✔' if pkg.licenseCompat else '✖'}|{pkg.name}|" for pkg in packages])
 
 	# Details
 	params_use_in_markdown = {
@@ -173,20 +191,23 @@ def markdown(myLice: License, packages: list[PackageInfo], hide_parameters: list
 	}
 	for pkg in packages:
 		pkg_dict = pkg.get_filtered_dict(hide_parameters)
-		pkg_dict_ordered_dict = OrderedDict((param, pkg_dict[param]) for param in params_use_in_markdown.keys() if param in pkg_dict)
+		pkg_dict_ordered_dict = OrderedDict(
+			(param, pkg_dict[param]) for param in params_use_in_markdown if param in pkg_dict
+		)
 		strBuf.extend(
 			[
 				f"\n### {pkg.namever}\n",
-				*(
-					f"- {params_use_in_markdown[k]}: {v}"
-					for k, v in pkg_dict_ordered_dict.items()
-				),
+				*(f"- {params_use_in_markdown[k]}: {v}" for k, v in pkg_dict_ordered_dict.items()),
 			]
 		)
 	return "\n".join(strBuf) + "\n"
 
 
-def raw(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
+def raw(
+	myLice: License,
+	packages: list[PackageInfo],
+	hide_parameters: list[ucstr] | None = None,
+) -> str:
 	"""Format to json.
 
 	Args:
@@ -200,20 +221,23 @@ def raw(myLice: License, packages: list[PackageInfo], hide_parameters: list[str]
 		str: string to send to specified output in raw json format
 
 	"""
+	if hide_parameters is None:
+		hide_parameters = []
 	return json.dumps(
 		{
 			"info": INFO,
 			"project_license": printLicense(myLice),
-			"packages": [
-                x.get_filtered_dict(hide_parameters)
-                for x in packages
-            ],
+			"packages": [x.get_filtered_dict(hide_parameters) for x in packages],
 		},
 		indent="\t",
 	)
 
 
-def rawCsv(myLice: License, packages: list[PackageInfo], hide_parameters: list[str] = []) -> str:
+def rawCsv(
+	myLice: License,
+	packages: list[PackageInfo],
+	hide_parameters: list[ucstr] | None = None,
+) -> str:
 	"""Format to csv.
 
 	Args:
@@ -227,14 +251,13 @@ def rawCsv(myLice: License, packages: list[PackageInfo], hide_parameters: list[s
 		str: string to send to specified output in raw csv format
 
 	"""
+	if hide_parameters is None:
+		hide_parameters = []
 	_ = myLice
 	string = StringIO()
 	writer = csv.DictWriter(string, fieldnames=list(packages[0].__dict__), lineterminator="\n")
 	writer.writeheader()
-	writer.writerows([
-		x.get_filtered_dict(hide_parameters)
-		for x in packages
-	])
+	writer.writerows([x.get_filtered_dict(hide_parameters) for x in packages])
 	return string.getvalue()
 
 

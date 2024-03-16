@@ -1,12 +1,16 @@
 import logging
+from typing import Generator
 
-import pytest  # pyright: ignore [reportMissingImports]
-from loguru import logger
+import pytest
+from _pytest.logging import LogCaptureFixture
 from _pytest.logging import caplog as _caplog
+from loguru import logger
+
+_ = _caplog
 
 
 @pytest.fixture()
-def caplog(_caplog):
+def caplog(_caplog: LogCaptureFixture) -> Generator[LogCaptureFixture, None, None]:
 	"""Wrapper over caplog fixture to fix loguru logs.
 
 	Yields
@@ -15,7 +19,7 @@ def caplog(_caplog):
 	"""
 
 	class PropogateHandler(logging.Handler):
-		def emit(self, record):
+		def emit(self, record) -> None:
 			logging.getLogger(record.name).handle(record)
 
 	logger.add(PropogateHandler(), format="{message}")

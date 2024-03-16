@@ -1,0 +1,241 @@
+{
+	"info": {
+		"program": "licensecheck",
+		"version": "dev",
+		"license": "MIT LICENSE"
+	},
+	"project_license": "GPL LICENSE",
+	"packages": [
+		{
+			"name": "Pygments",
+			"version": "2.17.2",
+			"size": 4401458,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "Pygments-2.17.2"
+		},
+		{
+			"name": "aiocontextvars",
+			"version": "0.2.2",
+			"size": 13565,
+			"homePage": "https://github.com/fantix/aiocontextvars",
+			"author": "Fantix King",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "aiocontextvars-0.2.2"
+		},
+		{
+			"name": "attrs",
+			"version": "23.2.0",
+			"size": 202970,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "attrs-23.2.0"
+		},
+		{
+			"name": "cattrs",
+			"version": "23.2.3",
+			"size": 193723,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "cattrs-23.2.3"
+		},
+		{
+			"name": "certifi",
+			"version": "2024.2.2",
+			"size": 300575,
+			"homePage": "https://github.com/certifi/python-certifi",
+			"author": "Kenneth Reitz",
+			"license": "MOZILLA PUBLIC LICENSE 2.0 (MPL 2.0)",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "certifi-2024.2.2"
+		},
+		{
+			"name": "charset-normalizer",
+			"version": "3.3.2",
+			"size": 404614,
+			"homePage": "https://github.com/Ousret/charset_normalizer",
+			"author": "Ahmed TAHRI",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "charset-normalizer-3.3.2"
+		},
+		{
+			"name": "colorama",
+			"version": "0.4.6",
+			"size": 76309,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "colorama-0.4.6"
+		},
+		{
+			"name": "fhconfparser",
+			"version": "2024.1",
+			"size": 25385,
+			"homePage": "https://github.com/FHPythonUtils/FHConfParser",
+			"author": "FredHappyface",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "fhconfparser-2024.1"
+		},
+		{
+			"name": "idna",
+			"version": "3.6",
+			"size": 281782,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "idna-3.6"
+		},
+		{
+			"name": "loguru",
+			"version": "0.7.2",
+			"size": 222710,
+			"homePage": "https://github.com/Delgan/loguru",
+			"author": "Delgan",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "loguru-0.7.2"
+		},
+		{
+			"name": "markdown-it-py",
+			"version": "3.0.0",
+			"size": 326383,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "markdown-it-py-3.0.0"
+		},
+		{
+			"name": "packaging",
+			"version": "23.2",
+			"size": 171055,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "APACHE SOFTWARE LICENSE;; BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "packaging-23.2"
+		},
+		{
+			"name": "platformdirs",
+			"version": "4.2.0",
+			"size": 79281,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "platformdirs-4.2.0"
+		},
+		{
+			"name": "requests",
+			"version": "2.31.0",
+			"size": 193978,
+			"homePage": "https://requests.readthedocs.io",
+			"author": "Kenneth Reitz",
+			"license": "APACHE SOFTWARE LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "requests-2.31.0"
+		},
+		{
+			"name": "requests-cache",
+			"version": "1.2.0",
+			"size": 173985,
+			"homePage": "https://github.com/requests-cache/requests-cache",
+			"author": "Roman Haritonov",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "requests-cache-1.2.0"
+		},
+		{
+			"name": "rich",
+			"version": "13.7.0",
+			"size": 941546,
+			"homePage": "https://github.com/Textualize/rich",
+			"author": "Will McGugan",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "rich-13.7.0"
+		},
+		{
+			"name": "tomli",
+			"version": "2.0.1",
+			"size": 36292,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "tomli-2.0.1"
+		},
+		{
+			"name": "typing-extensions",
+			"version": "4.9.0",
+			"size": 74918,
+			"homePage": "",
+			"author": "",
+			"license": "PYTHON SOFTWARE FOUNDATION LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "typing-extensions-4.9.0"
+		},
+		{
+			"name": "url-normalize",
+			"version": "1.4.3",
+			"size": 14139,
+			"homePage": "https://github.com/niksite/url-normalize",
+			"author": "Nikolay Panov",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "url-normalize-1.4.3"
+		},
+		{
+			"name": "urllib3",
+			"version": "2.2.1",
+			"size": 388673,
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "urllib3-2.2.1"
+		},
+		{
+			"name": "win32-setctime",
+			"version": "1.1.0",
+			"size": 5738,
+			"homePage": "https://github.com/Delgan/win32-setctime",
+			"author": "Delgan",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "win32-setctime-1.1.0"
+		}
+	]
+}

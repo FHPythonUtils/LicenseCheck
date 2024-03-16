@@ -1,7 +1,7 @@
 {
 	"info": {
 		"program": "licensecheck",
-		"version": "2024",
+		"version": "dev",
 		"license": "MIT LICENSE"
 	},
 	"project_license": "MIT LICENSE",

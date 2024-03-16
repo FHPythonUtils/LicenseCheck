@@ -9,7 +9,7 @@ THISDIR = Path(__file__).resolve().parent
 
 def test_doGetReqs_PEP631() -> None:
 	using = "PEP631"
-	extras = "socks"
+	extras = ["socks"]
 	pyproject = tomli.loads((THISDIR / "data/pep631_socks.toml").read_text(encoding="utf-8"))
 	requirementsPaths = []
 	skipDependencies = [types.ucstr("TOSKIP")]
@@ -51,7 +51,7 @@ def test_doGetReqs_PEP631() -> None:
 
 def test_doGetReqs_requirements() -> None:
 	using = "requirements"
-	extras = f"{THISDIR}/data/test_requirements.txt"
+	extras = [f"{THISDIR}/data/test_requirements.txt"]
 	pyproject = {}
 	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements.txt")]
 	skipDependencies = [types.ucstr("TOSKIP")]
@@ -63,7 +63,6 @@ def test_doGetReqs_requirements() -> None:
 		"OPENPYXL",
 		"PANDAS",
 		"PYTHON-DATEUTIL",
-		"PYTHON-CALAMINE",
 		"PYTZ",
 		"PYXLSB",
 		"TZDATA",
