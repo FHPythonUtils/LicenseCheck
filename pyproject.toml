@@ -40,7 +40,7 @@ loguru = "<2,>=0.7.2"
 pytest = "^8.1.1"
 handsdown = "^2.1.0"
 coverage = "^7.4.4"
-ruff = "^0.2.2"
+ruff = "^0.3.3"
 pyright = "^1.1.354"
 pytest-loguru = "^0.3.0"
 
