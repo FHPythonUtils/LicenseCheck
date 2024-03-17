@@ -3,6 +3,10 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2024.1.1 - 2024/03/17
+
+- Update Matrix for AGPL_3_PLUS
+
 ## 2024.1 - 2024/03/16
 
 - code improvements
