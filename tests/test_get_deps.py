@@ -62,6 +62,7 @@ def test_doGetReqs_requirements() -> None:
 		"ODFPY",
 		"OPENPYXL",
 		"PANDAS",
+		"PYTHON-CALAMINE",
 		"PYTHON-DATEUTIL",
 		"PYTZ",
 		"PYXLSB",

@@ -28,6 +28,10 @@ def cli() -> None: ...
 
 Test entry point.
 
+Note: FHConfParser (Parses in the following order: `pyproject.toml`,
+`setup.cfg`, `licensecheck.toml`, `licensecheck.json`,
+`licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`)
+
 #### Signature
 
 ```python

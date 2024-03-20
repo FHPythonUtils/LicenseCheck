@@ -77,7 +77,7 @@ def __post_init__(self) -> None: ...
 
 Return a filtered dictionary of the object.
 
-:param list[str] hide_output_parameters: list of parameters to ignore
+:param list[ucstr] hide_output_parameters: list of parameters to ignore
 
 #### Returns
 
@@ -87,8 +87,12 @@ filtered dictionary
 #### Signature
 
 ```python
-def get_filtered_dict(self, hide_output_parameters: list[str]) -> dict: ...
+def get_filtered_dict(self, hide_output_parameters: list[ucstr]) -> dict: ...
 ```
+
+#### See also
+
+- [ucstr](#ucstr)
 
 
 

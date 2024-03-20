@@ -23,6 +23,14 @@
 			"errorCode": 0
 		},
 		{
+			"name": "appdirs",
+			"homePage": "http://github.com/ActiveState/appdirs",
+			"author": "Trent Mick",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
 			"name": "attrs",
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",

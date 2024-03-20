@@ -94,8 +94,7 @@ def do_get_reqs(
 		canonicalName = name
 		if len(extras) > 0:
 			canonicalName = ucstr(f"{name}[{next(iter(extras))}]")
-			# To avoid overwriting the initial mapping in extrasReqs
-			# only overwrite when extra = True
+			# Avoid overwriting the initial mapping in extrasReqs, only overwrite when extra is True
 			if extra:
 				extrasReqs[name] = extras
 		return canonicalName if extra else name
@@ -121,7 +120,7 @@ def do_get_reqs(
 		for reqList in reqLists:
 			for req in reqList:
 				reqs.add(resolveReq(req))
-	# PEP631 (hatch)
+	# PEP631
 	if using == "PEP631":
 		try:
 			project = pyproject["project"]
@@ -156,7 +155,7 @@ def do_get_reqs(
 		with contextlib.suppress(KeyError):
 			reqs.remove(skipDependency)
 
-	# Get Dependencies (1 deep)
+	# Get Dependencies, 1 deep
 	requirementsWithDeps = reqs.copy()
 
 	def update_dependencies(dependency: str) -> None:
@@ -225,7 +224,7 @@ def getDepsWithLicenses(
 	)
 	failLicensesType = license_matrix.licenseType(ucstr(JOINS.join(failLicenses)), ignoreLicenses)
 	onlyLicensesType = license_matrix.licenseType(ucstr(JOINS.join(onlyLicenses)), ignoreLicenses)
-	# licenseType will always return NO_LICENSE for None
+	# licenseType will always return NO_LICENSE when onlyLicenses is empty          # noqa: ERA001
 	if License.NO_LICENSE in onlyLicensesType:
 		onlyLicensesType.remove(License.NO_LICENSE)
 
@@ -241,7 +240,7 @@ def getDepsWithLicenses(
 			pass  # package.licenseCompat = False
 		# Old behaviour
 		else:
-			package.licenseCompat = license_matrix.depCompatWMyLice(  # type: ignore
+			package.licenseCompat = license_matrix.depCompatWMyLice(
 				myLice,
 				license_matrix.licenseType(package.license, ignoreLicenses),
 				ignoreLicensesType,

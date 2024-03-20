@@ -87,12 +87,14 @@ def cli() -> None:  # pragma: no cover
 
 
 def main(args: dict) -> int:
-	"""Test entry point."""
+	"""Test entry point.
+
+	Note: FHConfParser (Parses in the following order: `pyproject.toml`,
+	`setup.cfg`, `licensecheck.toml`, `licensecheck.json`,
+	`licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`)
+	"""
 	exitCode = 0
 
-	# ConfigParser (Parses in the following order: `pyproject.toml`,
-	# `setup.cfg`, `licensecheck.toml`, `licensecheck.json`,
-	# `licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`)
 	configparser = FHConfParser()
 	namespace = ["tool"]
 	configparser.parseConfigList(

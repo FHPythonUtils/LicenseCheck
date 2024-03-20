@@ -49,7 +49,7 @@ def do_get_reqs(
 
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:189](../../../licensecheck/get_deps.py#L189)
+[Show source in get_deps.py:188](../../../licensecheck/get_deps.py#L188)
 
 Get a set of dependencies with licenses and determine license compatibility.
 

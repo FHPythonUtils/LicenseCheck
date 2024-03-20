@@ -55,15 +55,9 @@ with Path(THISDIR / "matrix.csv").open(mode="r", newline="", encoding="utf-8") a
 def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) -> L:
 	"""Identify a license from an uppercase string representation of a license.
 
-	Args:
-	----
-		licenseStr (ucstr): uppercase string representation of a license
-		ignoreLicenses (list[ucstr] | None) licenses to ignore. Default=None
-
-	Returns:
-	-------
-		L: License represented by licenseStr
-
+	:param ucstr licenseStr: uppercase string representation of a license
+	:param list[ucstr] | None ignoreLicenses: licenses to ignore, defaults to None
+	:return L: License represented by licenseStr
 	"""
 	termToLicense = {
 		"PUBLIC DOMAIN": L.PUBLIC,

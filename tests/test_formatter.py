@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from licensecheck import formatter, types
+from licensecheck import formatter
+from licensecheck.types import License, PackageInfo, ucstr
 
 formatter.INFO = {"program": "licensecheck", "version": "dev", "license": "MIT LICENSE"}
 
@@ -8,29 +9,29 @@ THISDIR = str(Path(__file__).resolve().parent)
 
 # ruff: noqa: ERA001
 
-simplePackages = [types.PackageInfo(name="example")]
+simplePackages = [PackageInfo(name="example")]
 complexPackages = [
-	types.PackageInfo(
+	PackageInfo(
 		name="example0",
 		version="1.0.0",
 		size=10,
 		homePage="https://example.com",
 		author="example_author",
-		license=types.ucstr("mit"),
+		license=ucstr("mit"),
 		licenseCompat=True,
 		errorCode=0,
 	),
-	types.PackageInfo(
+	PackageInfo(
 		name="example1",
 		size=10,
 		homePage="https://example.com",
 		author="example_author",
-		license=types.ucstr("gpl3"),
+		license=ucstr("gpl3"),
 		licenseCompat=False,
 		errorCode=1,
 	),
 ]
-myLice = types.License.MIT
+myLice = License.MIT
 
 
 def test_simpleMarkdown() -> None:
@@ -64,7 +65,9 @@ def test_advancedRaw() -> None:
 
 
 def test_advancedRawIgnoreParams() -> None:
-	fmt = formatter.raw(myLice, complexPackages, hide_parameters=["HOMEPAGE", "AUTHOR"])
+	fmt = formatter.raw(
+		myLice, complexPackages, hide_parameters=[ucstr("HOMEPAGE"), ucstr("AUTHOR")]
+	)
 	# Path(f"{THISDIR}/data/advanced_ignore_params.json").write_text(fmt, "utf-8")
 	assert fmt == Path(f"{THISDIR}/data/advanced_ignore_params.json").read_text("utf-8")
 
@@ -111,5 +114,5 @@ def test_advancedPlainText() -> None:
 
 
 def test_advancedPlainTextIgnoreParams() -> None:
-	fmt = formatter.plainText(myLice, complexPackages, hide_parameters=["wrong_parameter"])
+	fmt = formatter.plainText(myLice, complexPackages, hide_parameters=[ucstr("WRONG_PARAMETER")])
 	assert fmt == Path(f"{THISDIR}/data/advanced.txt").read_text("utf-8")

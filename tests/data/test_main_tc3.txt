@@ -15,6 +15,7 @@
 ┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
 │ ✔          │ Pygments           │ BSD LICENSE                           │
 │ ✔          │ aiocontextvars     │ BSD LICENSE                           │
+│ ✔          │ appdirs            │ MIT LICENSE                           │
 │ ✔          │ attrs              │ MIT LICENSE                           │
 │ ✔          │ cattrs             │ MIT LICENSE                           │
 │ ✔          │ certifi            │ MOZILLA PUBLIC LICENSE 2.0 (MPL 2.0)  │

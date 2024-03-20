@@ -14,6 +14,14 @@ from licensecheck.session import session
 from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
 
+def _pkgMetadataGet(pkgMetadata: metadata.PackageMetadata, key: str) -> str:
+	"""Get a string from a key from pkgMetadata."""
+	value = pkgMetadata.json.get(key, UNKNOWN)
+	if isinstance(value, str):
+		return value
+	return JOINS.join(value)
+
+
 def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:
 	"""Get package info from local files including version, author
 	and	the license.
@@ -23,15 +31,15 @@ def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:
 	:return PackageInfo: package information
 	"""
 	try:
-		# Get pkg metadata: license, homepage + author
+		# Get pkg metadata,, license, homepage, and author
 		pkgMetadata = metadata.metadata(requirement)
 		lice = licenseFromClassifierlist(pkgMetadata.get_all("Classifier"))
 		if lice == UNKNOWN:
-			lice = pkgMetadata.get("License", UNKNOWN)
+			lice = _pkgMetadataGet(pkgMetadata, "license")
 		homePage = pkgMetadata.get("Home-page", UNKNOWN)
-		author = pkgMetadata.get("Author", UNKNOWN)
-		name = pkgMetadata.get("Name", UNKNOWN)
-		version = pkgMetadata.get("Version", UNKNOWN)
+		author = _pkgMetadataGet(pkgMetadata, "author")
+		name = _pkgMetadataGet(pkgMetadata, "name")
+		version = _pkgMetadataGet(pkgMetadata, "version")
 		size = 0
 		packagePaths = metadata.Distribution.from_name(requirement).files
 		if packagePaths is not None:
@@ -145,7 +153,10 @@ def getMyPackageMetadata() -> dict[str, Any]:
 		config = configparser.ConfigParser()
 		config.read("setup.cfg")
 		if "metadata" in config.sections() and "license" in config["metadata"]:
-			return config["metadata"].__dict__
+			classifiers = config.get("metadata", "classifiers").strip().splitlines()
+			licenseStr = ucstr(config.get("metadata", "license"))
+			return {"classifiers": classifiers, "license": licenseStr}
+
 	if Path("pyproject.toml").exists():
 		pyproject = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
 		tool = pyproject["tool"]

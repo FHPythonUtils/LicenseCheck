@@ -29,6 +29,17 @@
 			"namever": "aiocontextvars-0.2.2"
 		},
 		{
+			"name": "appdirs",
+			"version": "1.4.4",
+			"size": 34928,
+			"homePage": "http://github.com/ActiveState/appdirs",
+			"author": "Trent Mick",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0,
+			"namever": "appdirs-1.4.4"
+		},
+		{
 			"name": "attrs",
 			"version": "23.2.0",
 			"size": 202970,
@@ -195,14 +206,14 @@
 		},
 		{
 			"name": "typing-extensions",
-			"version": "4.9.0",
-			"size": 74918,
+			"version": "4.10.0",
+			"size": 77558,
 			"homePage": "",
 			"author": "",
 			"license": "PYTHON SOFTWARE FOUNDATION LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0,
-			"namever": "typing-extensions-4.9.0"
+			"namever": "typing-extensions-4.10.0"
 		},
 		{
 			"name": "url-normalize",
