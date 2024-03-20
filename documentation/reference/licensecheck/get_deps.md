@@ -11,7 +11,7 @@
 
 ## do_get_reqs
 
-[Show source in get_deps.py:64](../../../licensecheck/get_deps.py#L64)
+[Show source in get_deps.py:65](../../../licensecheck/get_deps.py#L65)
 
 Underlying machineary to get requirements.
 
@@ -49,7 +49,7 @@ def do_get_reqs(
 
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:188](../../../licensecheck/get_deps.py#L188)
+[Show source in get_deps.py:189](../../../licensecheck/get_deps.py#L189)
 
 Get a set of dependencies with licenses and determine license compatibility.
 
@@ -96,7 +96,7 @@ def getDepsWithLicenses(
 
 ## getReqs
 
-[Show source in get_deps.py:21](../../../licensecheck/get_deps.py#L21)
+[Show source in get_deps.py:22](../../../licensecheck/get_deps.py#L22)
 
 Get requirements for the end user project/ lib.
 

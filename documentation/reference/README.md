@@ -11,4 +11,5 @@ A full list of `Licensecheck` project modules.
     - [Get Deps](licensecheck/get_deps.md#get-deps)
     - [License Matrix](licensecheck/license_matrix.md#license-matrix)
     - [Packageinfo](licensecheck/packageinfo.md#packageinfo)
+    - [Session](licensecheck/session.md#session)
     - [Types](licensecheck/types.md#types)

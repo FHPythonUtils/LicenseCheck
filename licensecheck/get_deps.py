@@ -13,7 +13,8 @@ from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
 from licensecheck import license_matrix, packageinfo
-from licensecheck.types import JOINS, License, PackageInfo, session, ucstr
+from licensecheck.session import session
+from licensecheck.types import JOINS, License, PackageInfo, ucstr
 
 USINGS = ["requirements", "poetry", "PEP631"]
 

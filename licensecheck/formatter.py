@@ -34,13 +34,55 @@ from io import StringIO
 from rich.console import Console
 from rich.table import Table
 
-from licensecheck.types import License, PackageInfo, printLicense, ucstr
+from licensecheck.types import License, PackageInfo, ucstr
 
 try:
 	VERSION = version("licensecheck")
 except PackageNotFoundError:
 	VERSION = "dev"
 INFO = {"program": "licensecheck", "version": VERSION, "license": "MIT LICENSE"}
+
+
+def _printLicense(licenseEnum: License) -> str:
+	"""Output a license as plain text.
+
+	:param License licenseEnum: License
+	:return str: license of plain text
+	"""
+
+	licenseMap = {
+		License.PUBLIC: "PUBLIC DOMAIN/ CC-PDDC/ CC0-1.0",
+		License.UNLICENSE: "UNLICENSE/ WTFPL",
+		License.BOOST: "BOOST/ BSL-1.0",
+		License.MIT: "MIT",
+		License.BSD: "BSD",
+		License.ISC: "ISC",
+		License.NCSA: "NCSA",
+		License.PSFL: "PYTHON/ PSF-2.0",
+		License.APACHE: "APACHE",
+		License.ECLIPSE: "ECLIPSE",
+		License.ACADEMIC_FREE: "AFL",
+		License.LGPL_2_PLUS: "LGPLV2+/ LGPL-2.0-OR-LATER",
+		License.LGPL_3_PLUS: "LGPLV3+/ LGPL-3.0-OR-LATER",
+		License.LGPL_2: "LGPL-2.0-ONLY/ LGPLV2",
+		License.LGPL_3: "LGPL-3.0-ONLY/ LGPLV3",
+		License.LGPL_X: "LGPL",
+		License.AGPL_3_PLUS: "AGPL",
+		License.GPL_2_PLUS: "GPL-2.0-OR-LATER/ GPLV2+",
+		License.GPL_3_PLUS: "GPL-3.0-OR-LATER/ GPLV3+",
+		License.GPL_2: "GPLV2/ GPL-2.0",
+		License.GPL_3: "GPLV3/ GPL-3.0",
+		License.GPL_X: "GPL",
+		License.MPL: "MPL",
+		License.EU: "EUPL",
+		License.PROPRIETARY: "PROPRIETARY",
+		License.NO_LICENSE: "NO LICENSE/ UNKNOWN",
+	}
+
+	if licenseEnum not in licenseMap:
+		return "NO LICENSE/ UNKNOWN LICENSE"
+
+	return f"{licenseMap[licenseEnum]} LICENSE"
 
 
 def stripAnsi(string: str) -> str:
@@ -86,7 +128,7 @@ def ansi(
 	table.add_column("Item", style="cyan")
 	table.add_column("Value", style="magenta")
 	_ = [table.add_row(k, v) for k, v in INFO.items()]
-	table.add_row("project_license", printLicense(myLice))
+	table.add_row("project_license", _printLicense(myLice))
 
 	console.print(table)
 
@@ -169,7 +211,7 @@ def markdown(
 	if hide_parameters is None:
 		hide_parameters = []
 	info = "\n".join(f"- **{k}**: {v}" for k, v in INFO.items())
-	strBuf = [f"## Info\n\n{info}\n\n## Project License\n\n{printLicense(myLice)}\n"]
+	strBuf = [f"## Info\n\n{info}\n\n## Project License\n\n{_printLicense(myLice)}\n"]
 
 	if len(packages) == 0:
 		return f"{strBuf[0]}\nNo packages"
@@ -226,7 +268,7 @@ def raw(
 	return json.dumps(
 		{
 			"info": INFO,
-			"project_license": printLicense(myLice),
+			"project_license": _printLicense(myLice),
 			"packages": [x.get_filtered_dict(hide_parameters) for x in packages],
 		},
 		indent="\t",

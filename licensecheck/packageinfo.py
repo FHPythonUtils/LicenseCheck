@@ -10,7 +10,8 @@ from typing import Any
 
 import tomli
 
-from licensecheck.types import JOINS, UNKNOWN, PackageInfo, session, ucstr
+from licensecheck.session import session
+from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
 
 def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:

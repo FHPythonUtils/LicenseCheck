@@ -15,4 +15,5 @@
 - [Get Deps](./get_deps.md)
 - [License Matrix](./license_matrix.md)
 - [Packageinfo](./packageinfo.md)
+- [Session](./session.md)
 - [Types](./types.md)

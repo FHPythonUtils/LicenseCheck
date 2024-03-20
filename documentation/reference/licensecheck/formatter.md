@@ -5,6 +5,7 @@
 > Auto-generated documentation for [licensecheck.formatter](../../../licensecheck/formatter.py) module.
 
 - [Formatter](#formatter)
+  - [_printLicense](#_printlicense)
   - [ansi](#ansi)
   - [markdown](#markdown)
   - [plainText](#plaintext)
@@ -12,9 +13,36 @@
   - [rawCsv](#rawcsv)
   - [stripAnsi](#stripansi)
 
+## _printLicense
+
+[Show source in formatter.py:46](../../../licensecheck/formatter.py#L46)
+
+Output a license as plain text.
+
+#### Arguments
+
+- `licenseEnum` *License* - License
+
+#### Returns
+
+Type: *str*
+license of plain text
+
+#### Signature
+
+```python
+def _printLicense(licenseEnum: License) -> str: ...
+```
+
+#### See also
+
+- [License](./types.md#license)
+
+
+
 ## ansi
 
-[Show source in formatter.py:61](../../../licensecheck/formatter.py#L61)
+[Show source in formatter.py:103](../../../licensecheck/formatter.py#L103)
 
 Format to ansi.
 
@@ -49,7 +77,7 @@ def ansi(
 
 ## markdown
 
-[Show source in formatter.py:151](../../../licensecheck/formatter.py#L151)
+[Show source in formatter.py:193](../../../licensecheck/formatter.py#L193)
 
 Format to markdown.
 
@@ -84,7 +112,7 @@ def markdown(
 
 ## plainText
 
-[Show source in formatter.py:128](../../../licensecheck/formatter.py#L128)
+[Show source in formatter.py:170](../../../licensecheck/formatter.py#L170)
 
 Format to ansi.
 
@@ -119,7 +147,7 @@ def plainText(
 
 ## raw
 
-[Show source in formatter.py:206](../../../licensecheck/formatter.py#L206)
+[Show source in formatter.py:248](../../../licensecheck/formatter.py#L248)
 
 Format to json.
 
@@ -154,7 +182,7 @@ def raw(
 
 ## rawCsv
 
-[Show source in formatter.py:236](../../../licensecheck/formatter.py#L236)
+[Show source in formatter.py:278](../../../licensecheck/formatter.py#L278)
 
 Format to csv.
 
@@ -189,7 +217,7 @@ def rawCsv(
 
 ## stripAnsi
 
-[Show source in formatter.py:46](../../../licensecheck/formatter.py#L46)
+[Show source in formatter.py:88](../../../licensecheck/formatter.py#L88)
 
 Strip ansi codes from a given string.
 

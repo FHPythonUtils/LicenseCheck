@@ -11,11 +11,10 @@
     - [PackageInfo().get_filtered_dict](#packageinfo()get_filtered_dict)
   - [ucstr](#ucstr)
     - [ucstr().__new__](#ucstr()__new__)
-  - [printLicense](#printlicense)
 
 ## License
 
-[Show source in types.py:62](../../../licensecheck/types.py#L62)
+[Show source in types.py:54](../../../licensecheck/types.py#L54)
 
 #### Attributes
 
@@ -50,7 +49,7 @@ class License(Enum): ...
 
 ## PackageInfo
 
-[Show source in types.py:36](../../../licensecheck/types.py#L36)
+[Show source in types.py:28](../../../licensecheck/types.py#L28)
 
 PackageInfo type.
 
@@ -62,7 +61,7 @@ class PackageInfo: ...
 
 ### PackageInfo().__post_init__
 
-[Show source in types.py:49](../../../licensecheck/types.py#L49)
+[Show source in types.py:41](../../../licensecheck/types.py#L41)
 
 Set the namever once the object is initialised.
 
@@ -74,7 +73,7 @@ def __post_init__(self) -> None: ...
 
 ### PackageInfo().get_filtered_dict
 
-[Show source in types.py:53](../../../licensecheck/types.py#L53)
+[Show source in types.py:45](../../../licensecheck/types.py#L45)
 
 Return a filtered dictionary of the object.
 
@@ -95,7 +94,7 @@ def get_filtered_dict(self, hide_output_parameters: list[str]) -> dict: ...
 
 ## ucstr
 
-[Show source in types.py:17](../../../licensecheck/types.py#L17)
+[Show source in types.py:9](../../../licensecheck/types.py#L9)
 
 Uppercase string.
 
@@ -107,7 +106,7 @@ class ucstr(str): ...
 
 ### ucstr().__new__
 
-[Show source in types.py:22](../../../licensecheck/types.py#L22)
+[Show source in types.py:14](../../../licensecheck/types.py#L14)
 
 Create a new ucstr from a str.
 
@@ -125,30 +124,3 @@ uppercase string.
 ```python
 def __new__(cls, v: str) -> ucstr: ...
 ```
-
-
-
-## printLicense
-
-[Show source in types.py:105](../../../licensecheck/types.py#L105)
-
-Output a license as plain text.
-
-#### Arguments
-
-- `licenseEnum` *L* - License
-
-#### Returns
-
-Type: *str*
-license of plain text
-
-#### Signature
-
-```python
-def printLicense(licenseEnum: L) -> str: ...
-```
-
-#### See also
-
-- [L](#l)
