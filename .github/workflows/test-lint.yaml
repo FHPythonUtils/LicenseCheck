@@ -38,8 +38,8 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      - name: Run Tox
-        run: poetry run tox
+      - name: Run pytest
+        run: poetry run pytest
 
-      - name: Run Ruff
+      - name: Run ruff
         run: poetry run ruff check --output-format=github
