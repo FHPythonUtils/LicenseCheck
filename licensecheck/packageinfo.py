@@ -14,12 +14,12 @@ from licensecheck.session import session
 from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
 
-def _pkgMetadataGet(pkgMetadata: metadata.PackageMetadata, key: str) -> str:
+def _pkgMetadataGet(pkgMetadata: metadata.PackageMetadata | dict[str, Any], key: str) -> str:
 	"""Get a string from a key from pkgMetadata."""
-	value = pkgMetadata.json.get(key, UNKNOWN)
-	if isinstance(value, str):
-		return value
-	return JOINS.join(value)
+	value = pkgMetadata.get(key, UNKNOWN)
+	if not isinstance(value, str):
+		value = JOINS.join(value)
+	return value or UNKNOWN
 
 
 def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:
@@ -35,11 +35,11 @@ def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:
 		pkgMetadata = metadata.metadata(requirement)
 		lice = licenseFromClassifierlist(pkgMetadata.get_all("Classifier"))
 		if lice == UNKNOWN:
-			lice = _pkgMetadataGet(pkgMetadata, "license")
-		homePage = pkgMetadata.get("Home-page", UNKNOWN)
-		author = _pkgMetadataGet(pkgMetadata, "author")
-		name = _pkgMetadataGet(pkgMetadata, "name")
-		version = _pkgMetadataGet(pkgMetadata, "version")
+			lice = _pkgMetadataGet(pkgMetadata, "License")
+		homePage = _pkgMetadataGet(pkgMetadata, "Home-page")
+		author = _pkgMetadataGet(pkgMetadata, "Author")
+		name = _pkgMetadataGet(pkgMetadata, "Name")
+		version = _pkgMetadataGet(pkgMetadata, "Version")
 		size = 0
 		packagePaths = metadata.Distribution.from_name(requirement).files
 		if packagePaths is not None:
@@ -70,7 +70,7 @@ def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
 	request = session.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
 	response = request.json()
 	try:
-		info = response["info"]
+		info = response.get("info", {})
 		licenseClassifier = licenseFromClassifierlist(info["classifiers"])
 
 		size = -1
@@ -79,10 +79,10 @@ def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
 			size = int(urls[-1]["size"])
 
 		return PackageInfo(
-			name=info["name"],
-			version=info["version"],
-			homePage=info["home_page"],
-			author=info["author"],
+			name=_pkgMetadataGet(info, "name"),
+			version=_pkgMetadataGet(info, "version"),
+			homePage=_pkgMetadataGet(info, "home_page"),
+			author=_pkgMetadataGet(info, "author"),
 			size=size,
 			license=ucstr(
 				licenseClassifier if licenseClassifier != UNKNOWN else info.get("license", UNKNOWN)

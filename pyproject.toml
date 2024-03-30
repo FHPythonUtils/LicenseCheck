@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2024.1.3"
+version = "2024.1.4"
 license = "mit"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]

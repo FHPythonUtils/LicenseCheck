@@ -23,7 +23,9 @@ Get a string from a key from pkgMetadata.
 #### Signature
 
 ```python
-def _pkgMetadataGet(pkgMetadata: metadata.PackageMetadata, key: str) -> str: ...
+def _pkgMetadataGet(
+    pkgMetadata: metadata.PackageMetadata | dict[str, Any], key: str
+) -> str: ...
 ```
 
 

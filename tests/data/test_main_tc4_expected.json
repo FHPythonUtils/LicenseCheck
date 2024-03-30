@@ -152,8 +152,8 @@
 		},
 		{
 			"name": "typing-extensions",
-			"homePage": "",
-			"author": "",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
 			"license": "PYTHON SOFTWARE FOUNDATION LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0

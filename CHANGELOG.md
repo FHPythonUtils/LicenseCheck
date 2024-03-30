@@ -3,6 +3,18 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2024.1.4 - 2024/03/30
+
+- fix critical https://github.com/FHPythonUtils/LicenseCheck/issues/75 where importlib.metadata.PackageMetadata.json does not exist in Python < 3.10
+
+  ```txt
+  py311: OK (7.55=setup[5.89]+cmd[1.66] seconds)
+  py310: SKIP (0.02 seconds)
+  py39: SKIP (0.02 seconds)
+  py38: OK (6.23=setup[4.30]+cmd[1.94] seconds)
+  congratulations :) (13.95 seconds)
+  ```
+
 ## 2024.1.3 - 2024/03/20
 
 - fix https://github.com/FHPythonUtils/LicenseCheck/issues/74
