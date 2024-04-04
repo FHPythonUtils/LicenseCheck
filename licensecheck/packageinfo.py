@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import configparser
 import contextlib
+from collections.abc import Iterable
 from importlib import metadata
 from pathlib import Path
 from typing import Any
@@ -17,9 +18,9 @@ from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 def _pkgMetadataGet(pkgMetadata: metadata.PackageMetadata | dict[str, Any], key: str) -> str:
 	"""Get a string from a key from pkgMetadata."""
 	value = pkgMetadata.get(key, UNKNOWN)
-	if not isinstance(value, str):
-		value = JOINS.join(value)
-	return value or UNKNOWN
+	if not isinstance(value, str) and isinstance(value, Iterable):
+		value = JOINS.join(str(x) for x in value)
+	return str(value) or UNKNOWN
 
 
 def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:
