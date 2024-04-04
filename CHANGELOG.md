@@ -3,6 +3,10 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2024.2 - 2024/04/04
+
+- Add html output using `markdown` lib https://github.com/FHPythonUtils/LicenseCheck/issues/77
+
 ## 2024.1.5 - 2024/04/04
 
 - fix critical TypeError: can only join an iterable

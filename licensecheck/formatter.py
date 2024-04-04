@@ -18,6 +18,7 @@ To one of the following formats:
 - ansi
 - plain
 - markdown
+- html
 - json
 - csv
 """
@@ -30,11 +31,15 @@ import re
 from collections import OrderedDict
 from importlib.metadata import PackageNotFoundError, version
 from io import StringIO
+from pathlib import Path
 
+import markdown as markdownlib
 from rich.console import Console
 from rich.table import Table
 
 from licensecheck.types import License, PackageInfo, ucstr
+
+THISDIR = Path(__file__).resolve().parent
 
 try:
 	VERSION = version("licensecheck")
@@ -245,6 +250,31 @@ def markdown(
 	return "\n".join(strBuf) + "\n"
 
 
+def html(
+	myLice: License,
+	packages: list[PackageInfo],
+	hide_parameters: list[ucstr] | None = None,
+) -> str:
+	"""Format to html.
+
+	Args:
+	----
+		myLice (License): project license
+		packages (list[PackageInfo]): list of PackageCompats to format.
+		hide_parameters (list[str]): list of parameters to ignore in the output.
+
+	Returns:
+	-------
+		str: string to send to specified output in html format
+
+	"""
+	html = markdownlib.markdown(
+		markdown(myLice=myLice, packages=packages, hide_parameters=hide_parameters),
+		extensions=["tables"],
+	)
+	return (THISDIR / "html.template").read_text("utf-8").replace("{html}", html)
+
+
 def raw(
 	myLice: License,
 	packages: list[PackageInfo],
@@ -306,6 +336,7 @@ def rawCsv(
 formatMap = {
 	"json": raw,
 	"markdown": markdown,
+	"html": html,
 	"csv": rawCsv,
 	"ansi": ansi,
 	"simple": plainText,

@@ -1,6 +1,7 @@
 appdirs<2,>=1.4.4
 fhconfparser<2026,>=2024.1
 loguru<2,>=0.7.2
+markdown<4,>=3.6
 packaging<25,>=24.0
 requests-cache<2,>=1.2.0
 requests<3,>=2.31.0

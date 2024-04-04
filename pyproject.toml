@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "licensecheck"
-version = "2024.1.5"
+version = "2024.2"
 license = "mit"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = ["FredHappyface"]
@@ -36,6 +36,7 @@ requests-cache = "<2,>=1.2.0"
 packaging = "<25,>=24.0"
 loguru = "<2,>=0.7.2"
 appdirs = "<2,>=1.4.4"
+markdown = "<4,>=3.6"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 from typing import Any
 
@@ -87,18 +89,17 @@ def test_getModuleSize() -> None:
 
 # Define test cases
 @pytest.mark.parametrize(
-	"pkg_metadata, key, expected",
+	("pkg_metadata", "key", "expected"),
 	[
 		({"name": "Package Name", "version": "1.0"}, "name", "Package Name"),
 		({"name": ["Package Name"], "version": "1.0"}, "name", "Package Name"),
 		({"name": [1], "version": "1.0"}, "name", "1"),
 		({"name": 1, "version": "1.0"}, "name", "1"),
 		({"name": None, "version": "1.0"}, "name", "None"),
-		({"name": ["Package Name"], "version": "1.0"}, "name", "Package Name"),
 		({"name": ["Package", "Name"], "version": "1.0"}, "name", "Package;; Name"),
 		({}, "name", types.UNKNOWN),
 		({"name": "Package Name", "version": "1.0"}, "description", types.UNKNOWN),
 	],
 )
-def test_pkgMetadataGet(pkg_metadata: dict[str, Any], key: str, expected: str):
-	assert packageinfo._pkgMetadataGet(pkg_metadata, key) == expected
+def test_pkgMetadataGet(pkg_metadata: dict[str, Any], key: str, expected: str) -> None:
+	assert packageinfo._pkgMetadataGet(pkg_metadata, key) == expected  # noqa: SLF001

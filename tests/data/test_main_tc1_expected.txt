@@ -13,6 +13,7 @@
 ┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Compatible ┃ Package            ┃ License(s)                            ┃
 ┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✔          │ Markdown           │ BSD LICENSE                           │
 │ ✔          │ Pygments           │ BSD LICENSE                           │
 │ ✔          │ aiocontextvars     │ BSD LICENSE                           │
 │ ✔          │ appdirs            │ MIT LICENSE                           │
@@ -23,6 +24,7 @@
 │ ✔          │ colorama           │ BSD LICENSE                           │
 │ ✔          │ fhconfparser       │ MIT LICENSE                           │
 │ ✔          │ idna               │ BSD LICENSE                           │
+│ ✔          │ importlib-metadata │ APACHE SOFTWARE LICENSE               │
 │ ✔          │ loguru             │ MIT LICENSE                           │
 │ ✔          │ markdown-it-py     │ MIT LICENSE                           │
 │ ✔          │ packaging          │ APACHE SOFTWARE LICENSE;; BSD LICENSE │

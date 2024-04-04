@@ -7,6 +7,7 @@
 - [Formatter](#formatter)
   - [_printLicense](#_printlicense)
   - [ansi](#ansi)
+  - [html](#html)
   - [markdown](#markdown)
   - [plainText](#plaintext)
   - [raw](#raw)
@@ -15,7 +16,7 @@
 
 ## _printLicense
 
-[Show source in formatter.py:46](../../../licensecheck/formatter.py#L46)
+[Show source in formatter.py:51](../../../licensecheck/formatter.py#L51)
 
 Output a license as plain text.
 
@@ -42,7 +43,7 @@ def _printLicense(licenseEnum: License) -> str: ...
 
 ## ansi
 
-[Show source in formatter.py:103](../../../licensecheck/formatter.py#L103)
+[Show source in formatter.py:108](../../../licensecheck/formatter.py#L108)
 
 Format to ansi.
 
@@ -75,9 +76,44 @@ def ansi(
 
 
 
+## html
+
+[Show source in formatter.py:253](../../../licensecheck/formatter.py#L253)
+
+Format to html.
+
+#### Arguments
+
+----
+ - `myLice` *License* - project license
+ - `packages` *list[PackageInfo]* - list of PackageCompats to format.
+ - `hide_parameters` *list[str]* - list of parameters to ignore in the output.
+
+#### Returns
+
+-------
+ - `str` - string to send to specified output in html format
+
+#### Signature
+
+```python
+def html(
+    myLice: License,
+    packages: list[PackageInfo],
+    hide_parameters: list[ucstr] | None = None,
+) -> str: ...
+```
+
+#### See also
+
+- [License](./types.md#license)
+- [PackageInfo](./types.md#packageinfo)
+
+
+
 ## markdown
 
-[Show source in formatter.py:193](../../../licensecheck/formatter.py#L193)
+[Show source in formatter.py:198](../../../licensecheck/formatter.py#L198)
 
 Format to markdown.
 
@@ -112,7 +148,7 @@ def markdown(
 
 ## plainText
 
-[Show source in formatter.py:170](../../../licensecheck/formatter.py#L170)
+[Show source in formatter.py:175](../../../licensecheck/formatter.py#L175)
 
 Format to ansi.
 
@@ -147,7 +183,7 @@ def plainText(
 
 ## raw
 
-[Show source in formatter.py:248](../../../licensecheck/formatter.py#L248)
+[Show source in formatter.py:278](../../../licensecheck/formatter.py#L278)
 
 Format to json.
 
@@ -182,7 +218,7 @@ def raw(
 
 ## rawCsv
 
-[Show source in formatter.py:278](../../../licensecheck/formatter.py#L278)
+[Show source in formatter.py:308](../../../licensecheck/formatter.py#L308)
 
 Format to csv.
 
@@ -217,7 +253,7 @@ def rawCsv(
 
 ## stripAnsi
 
-[Show source in formatter.py:88](../../../licensecheck/formatter.py#L88)
+[Show source in formatter.py:93](../../../licensecheck/formatter.py#L93)
 
 Strip ansi codes from a given string.
 

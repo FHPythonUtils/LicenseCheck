@@ -7,6 +7,14 @@
 	"project_license": "GPL LICENSE",
 	"packages": [
 		{
+			"name": "Markdown",
+			"homePage": "UNKNOWN",
+			"author": "Manfred Stienstra, Yuri Takhteyev",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
 			"name": "Pygments",
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",
@@ -83,6 +91,14 @@
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",
 			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "importlib-metadata",
+			"homePage": "https://github.com/python/importlib_metadata",
+			"author": "Jason R. Coombs",
+			"license": "APACHE SOFTWARE LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
