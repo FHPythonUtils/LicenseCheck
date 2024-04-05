@@ -75,3 +75,18 @@ def test_doGetReqs_requirements() -> None:
 		"XARRAY" not in deps
 	)  # xarray is an optional dependency of pandas associated with 'computation' key that is not
 	# tracked in test_requirements.txt
+
+def test_doGetReqs_requirements_with_hashes() -> None:
+	using = "requirements"
+	extras = []
+	pyproject = {}
+	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements_hash.txt")]
+	skipDependencies = [types.ucstr("TOSKIP")]
+
+	deps = get_deps.do_get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
+	assert deps == {
+		"PACKAGING"
+	}
+	assert (
+		"TOSKIP" not in deps
+	)
