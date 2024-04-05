@@ -142,7 +142,7 @@ def do_get_reqs(
 				raise RuntimeError(msg)
 
 			for _line in reqPath.read_text(encoding="utf-8").splitlines():
-				line = _line.strip()
+				line = _line.rstrip("\\").strip()
 				if not line or line[0] in {"#", "-"}:
 					continue
 				reqs.add(resolveReq(line))
