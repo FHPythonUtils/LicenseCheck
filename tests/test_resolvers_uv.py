@@ -1,8 +1,8 @@
+import contextlib
 from pathlib import Path
 
 from licensecheck import types
 from licensecheck.resolvers import uv as req_uv
-import contextlib
 
 THISDIR = Path(__file__).resolve().parent
 

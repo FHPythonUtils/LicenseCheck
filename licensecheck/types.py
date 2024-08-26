@@ -11,7 +11,7 @@ class ucstr(str):
 
 	__slots__ = ()
 
-	def __new__(cls, v: str|None) -> ucstr:
+	def __new__(cls, v: str | None) -> ucstr:
 		"""Create a new ucstr from a str.
 
 		:param str v: string to cast
