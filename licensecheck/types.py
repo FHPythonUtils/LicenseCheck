@@ -11,12 +11,14 @@ class ucstr(str):
 
 	__slots__ = ()
 
-	def __new__(cls, v: str) -> ucstr:
+	def __new__(cls, v: str|None) -> ucstr:
 		"""Create a new ucstr from a str.
 
 		:param str v: string to cast
 		:return ucstr: uppercase string.
 		"""
+		if v is None:
+			return ucstr("")
 		return super().__new__(cls, v.upper())
 
 

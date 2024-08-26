@@ -86,7 +86,9 @@ def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
 			author=_pkgMetadataGet(info, "author"),
 			size=size,
 			license=ucstr(
-				licenseClassifier if licenseClassifier != UNKNOWN else info.get("license", UNKNOWN)
+				licenseClassifier
+				if licenseClassifier != UNKNOWN
+				else info.get("license", UNKNOWN) or UNKNOWN
 			),
 		)
 	except KeyError as error:
