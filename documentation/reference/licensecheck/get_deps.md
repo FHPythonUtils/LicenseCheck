@@ -5,51 +5,12 @@
 > Auto-generated documentation for [licensecheck.get_deps](../../../licensecheck/get_deps.py) module.
 
 - [Get Deps](#get-deps)
-  - [do_get_reqs](#do_get_reqs)
   - [getDepsWithLicenses](#getdepswithlicenses)
   - [getReqs](#getreqs)
 
-## do_get_reqs
-
-[Show source in get_deps.py:65](../../../licensecheck/get_deps.py#L65)
-
-Underlying machineary to get requirements.
-
-#### Arguments
-
-----
- - `using` *str* - use requirements, poetry or PEP631.
- - `skipDependencies` *list[str]* - list of dependencies to skip.
- extras (str | None): to-do
- pyproject (dict[str, Any]): to-do
- - `requirementsPaths` *list[Path]* - to-do
-
-#### Returns
-
--------
- - `set[str]` - set of requirement packages
-
-#### Signature
-
-```python
-def do_get_reqs(
-    using: str,
-    skipDependencies: list[ucstr],
-    extras: list[str],
-    pyproject: dict[str, Any],
-    requirementsPaths: list[Path],
-) -> set[ucstr]: ...
-```
-
-#### See also
-
-- [ucstr](./types.md#ucstr)
-
-
-
 ## getDepsWithLicenses
 
-[Show source in get_deps.py:188](../../../licensecheck/get_deps.py#L188)
+[Show source in get_deps.py:75](../../../licensecheck/get_deps.py#L75)
 
 Get a set of dependencies with licenses and determine license compatibility.
 
@@ -57,6 +18,7 @@ Get a set of dependencies with licenses and determine license compatibility.
 
 ----
  - `using` *str* - use requirements or poetry
+ - `myLice` *License* - user license
  - `ignorePackages` *list[ucstr]* - a list of packages to ignore (compat=True)
  - `failPackages` *list[ucstr]* - a list of packages to fail (compat=False)
  - `ignoreLicenses` *list[ucstr]* - a list of licenses to ignore (skipped, compat may still be
@@ -77,13 +39,14 @@ Get a set of dependencies with licenses and determine license compatibility.
 ```python
 def getDepsWithLicenses(
     using: str,
+    myLice: License,
     ignorePackages: list[ucstr],
     failPackages: list[ucstr],
     ignoreLicenses: list[ucstr],
     failLicenses: list[ucstr],
     onlyLicenses: list[ucstr],
     skipDependencies: list[ucstr],
-) -> tuple[License, set[PackageInfo]]: ...
+) -> set[PackageInfo]: ...
 ```
 
 #### See also
@@ -96,7 +59,7 @@ def getDepsWithLicenses(
 
 ## getReqs
 
-[Show source in get_deps.py:22](../../../licensecheck/get_deps.py#L22)
+[Show source in get_deps.py:17](../../../licensecheck/get_deps.py#L17)
 
 Get requirements for the end user project/ lib.
 

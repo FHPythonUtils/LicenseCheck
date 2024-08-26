@@ -37,8 +37,8 @@ packaging = "<25,>=24.0"
 loguru = "<2,>=0.7.2"
 appdirs = "<2,>=1.4.4"
 markdown = "<4,>=3.6"
-uv = "^0.3.3"
-requirements-parser = "^0.11.0"
+uv = "<2,>=0.3.3"
+requirements-parser = "<2,>=0.11.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"

@@ -14,7 +14,7 @@
 
 ## License
 
-[Show source in types.py:54](../../../licensecheck/types.py#L54)
+[Show source in types.py:56](../../../licensecheck/types.py#L56)
 
 #### Attributes
 
@@ -49,7 +49,7 @@ class License(Enum): ...
 
 ## PackageInfo
 
-[Show source in types.py:28](../../../licensecheck/types.py#L28)
+[Show source in types.py:30](../../../licensecheck/types.py#L30)
 
 PackageInfo type.
 
@@ -61,7 +61,7 @@ class PackageInfo: ...
 
 ### PackageInfo().__post_init__
 
-[Show source in types.py:41](../../../licensecheck/types.py#L41)
+[Show source in types.py:43](../../../licensecheck/types.py#L43)
 
 Set the namever once the object is initialised.
 
@@ -73,7 +73,7 @@ def __post_init__(self) -> None: ...
 
 ### PackageInfo().get_filtered_dict
 
-[Show source in types.py:45](../../../licensecheck/types.py#L45)
+[Show source in types.py:47](../../../licensecheck/types.py#L47)
 
 Return a filtered dictionary of the object.
 
@@ -126,5 +126,5 @@ uppercase string.
 #### Signature
 
 ```python
-def __new__(cls, v: str) -> ucstr: ...
+def __new__(cls, v: str | None) -> ucstr: ...
 ```

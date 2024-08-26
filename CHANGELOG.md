@@ -3,7 +3,7 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
-## 2024.3
+## 2024.3 - 2024/08/26
 
 - Use uv to parse dependencies before falling back to the native resolver
 - deprecate the native resolver as many 3rd party libs (uv/pip/poetry) have done better
