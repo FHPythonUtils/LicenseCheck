@@ -8,34 +8,36 @@
 │ license         │ MIT LICENSE  │
 │ project_license │ BSD LICENSE  │
 └─────────────────┴──────────────┘
-                                                                           
-                             List Of Packages                              
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Compatible ┃ Package            ┃ License(s)                            ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ ✔          │ Markdown           │ BSD LICENSE                           │
-│ ✔          │ Pygments           │ BSD LICENSE                           │
-│ ✔          │ aiocontextvars     │ BSD LICENSE                           │
-│ ✔          │ appdirs            │ MIT LICENSE                           │
-│ ✔          │ attrs              │ MIT LICENSE                           │
-│ ✔          │ cattrs             │ MIT LICENSE                           │
-│ ✔          │ certifi            │ MOZILLA PUBLIC LICENSE 2.0 (MPL 2.0)  │
-│ ✔          │ charset-normalizer │ MIT LICENSE                           │
-│ ✔          │ colorama           │ BSD LICENSE                           │
-│ ✔          │ fhconfparser       │ MIT LICENSE                           │
-│ ✔          │ idna               │ BSD LICENSE                           │
-│ ✔          │ importlib-metadata │ APACHE SOFTWARE LICENSE               │
-│ ✔          │ loguru             │ MIT LICENSE                           │
-│ ✔          │ markdown-it-py     │ MIT LICENSE                           │
-│ ✔          │ packaging          │ APACHE SOFTWARE LICENSE;; BSD LICENSE │
-│ ✔          │ platformdirs       │ MIT LICENSE                           │
-│ ✔          │ requests           │ APACHE SOFTWARE LICENSE               │
-│ ✔          │ requests-cache     │ BSD LICENSE                           │
-│ ✔          │ rich               │ MIT LICENSE                           │
-│ ✔          │ tomli              │ MIT LICENSE                           │
-│ ✔          │ typing-extensions  │ PYTHON SOFTWARE FOUNDATION LICENSE    │
-│ ✔          │ url-normalize      │ MIT LICENSE                           │
-│ ✔          │ urllib3            │ MIT LICENSE                           │
-│ ✔          │ win32-setctime     │ MIT LICENSE                           │
-└────────────┴────────────────────┴───────────────────────────────────────┘
+                                                                            
+                              List Of Packages                              
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                            ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✔          │ Markdown            │ BSD LICENSE                           │
+│ ✔          │ Pygments            │ BSD LICENSE                           │
+│ ✔          │ appdirs             │ MIT LICENSE                           │
+│ ✔          │ attrs               │ MIT LICENSE                           │
+│ ✔          │ cattrs              │ MIT LICENSE                           │
+│ ✔          │ certifi             │ MOZILLA PUBLIC LICENSE 2.0 (MPL 2.0)  │
+│ ✔          │ charset-normalizer  │ MIT LICENSE                           │
+│ ✔          │ colorama            │ BSD LICENSE                           │
+│ ✔          │ fhconfparser        │ MIT LICENSE                           │
+│ ✔          │ idna                │ BSD LICENSE                           │
+│ ✔          │ loguru              │ MIT LICENSE                           │
+│ ✔          │ markdown-it-py      │ MIT LICENSE                           │
+│ ✔          │ mdurl               │ MIT LICENSE                           │
+│ ✔          │ packaging           │ APACHE SOFTWARE LICENSE;; BSD LICENSE │
+│ ✔          │ platformdirs        │ MIT LICENSE                           │
+│ ✔          │ requests            │ APACHE SOFTWARE LICENSE               │
+│ ✔          │ requests-cache      │ BSD LICENSE                           │
+│ ✔          │ requirements-parser │ APACHE SOFTWARE LICENSE               │
+│ ✔          │ rich                │ MIT LICENSE                           │
+│ ✔          │ six                 │ MIT LICENSE                           │
+│ ✔          │ tomli               │ MIT LICENSE                           │
+│ ✔          │ types-setuptools    │ APACHE SOFTWARE LICENSE               │
+│ ✔          │ url-normalize       │ MIT LICENSE                           │
+│ ✔          │ urllib3             │ MIT LICENSE                           │
+│ ✔          │ uv                  │ MIT LICENSE;; APACHE SOFTWARE LICENSE │
+│ ✔          │ win32-setctime      │ MIT LICENSE                           │
+└────────────┴─────────────────────┴───────────────────────────────────────┘
 

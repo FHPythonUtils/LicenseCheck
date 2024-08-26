@@ -3,6 +3,11 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2024.3
+
+- Use uv to parse dependencies before falling back to the native resolver
+- deprecate the native resolver as many 3rd party libs (uv/pip/poetry) have done better
+
 ## 2024.2 - 2024/04/04
 
 - Add html output using `markdown` lib https://github.com/FHPythonUtils/LicenseCheck/issues/77

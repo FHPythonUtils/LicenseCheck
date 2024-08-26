@@ -7,7 +7,6 @@
 
 pandas[excel]==2.0.3
 
--c requirements_dev.txt
 
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

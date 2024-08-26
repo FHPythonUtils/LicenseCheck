@@ -2,7 +2,8 @@ from pathlib import Path
 
 import tomli
 
-from licensecheck import get_deps, types
+from licensecheck import types
+from licensecheck.resolvers import native as get_deps
 
 THISDIR = Path(__file__).resolve().parent
 
@@ -14,7 +15,7 @@ def test_doGetReqs_PEP631() -> None:
 	requirementsPaths = []
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	assert get_deps.do_get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths) == {
+	assert get_deps.get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths) == {
 		"DOCKERPTY",
 		"PACKAGING",
 		"ATTRS",
@@ -56,7 +57,7 @@ def test_doGetReqs_requirements() -> None:
 	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements.txt")]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = get_deps.do_get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
+	deps = get_deps.get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
 	assert deps == {
 		"NUMPY",
 		"ODFPY",
@@ -76,6 +77,7 @@ def test_doGetReqs_requirements() -> None:
 	)  # xarray is an optional dependency of pandas associated with 'computation' key that is not
 	# tracked in test_requirements.txt
 
+
 def test_doGetReqs_requirements_with_hashes() -> None:
 	using = "requirements"
 	extras = []
@@ -83,10 +85,6 @@ def test_doGetReqs_requirements_with_hashes() -> None:
 	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements_hash.txt")]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = get_deps.do_get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
-	assert deps == {
-		"PACKAGING"
-	}
-	assert (
-		"TOSKIP" not in deps
-	)
+	deps = get_deps.get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
+	assert deps == {"PACKAGING"}
+	assert "TOSKIP" not in deps

@@ -23,14 +23,6 @@
 			"errorCode": 0
 		},
 		{
-			"name": "aiocontextvars",
-			"homePage": "https://github.com/fantix/aiocontextvars",
-			"author": "Fantix King",
-			"license": "BSD LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
 			"name": "appdirs",
 			"homePage": "http://github.com/ActiveState/appdirs",
 			"author": "Trent Mick",
@@ -95,14 +87,6 @@
 			"errorCode": 0
 		},
 		{
-			"name": "importlib-metadata",
-			"homePage": "https://github.com/python/importlib_metadata",
-			"author": "Jason R. Coombs",
-			"license": "APACHE SOFTWARE LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
 			"name": "loguru",
 			"homePage": "https://github.com/Delgan/loguru",
 			"author": "Delgan",
@@ -112,6 +96,14 @@
 		},
 		{
 			"name": "markdown-it-py",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "mdurl",
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",
 			"license": "MIT LICENSE",
@@ -151,9 +143,25 @@
 			"errorCode": 0
 		},
 		{
+			"name": "requirements-parser",
+			"homePage": "https://github.com/madpah/requirements-parser/#readme",
+			"author": "Paul Horton",
+			"license": "APACHE SOFTWARE LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
 			"name": "rich",
 			"homePage": "https://github.com/Textualize/rich",
 			"author": "Will McGugan",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "six",
+			"homePage": "https://github.com/benjaminp/six",
+			"author": "Benjamin Peterson",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -167,10 +175,10 @@
 			"errorCode": 0
 		},
 		{
-			"name": "typing-extensions",
-			"homePage": "UNKNOWN",
+			"name": "types-setuptools",
+			"homePage": "https://github.com/python/typeshed",
 			"author": "UNKNOWN",
-			"license": "PYTHON SOFTWARE FOUNDATION LICENSE",
+			"license": "APACHE SOFTWARE LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
@@ -187,6 +195,14 @@
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",
 			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "uv",
+			"homePage": "https://pypi.org/project/uv/",
+			"author": "uv",
+			"license": "MIT LICENSE;; APACHE SOFTWARE LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},

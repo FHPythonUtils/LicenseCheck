@@ -1,5 +1,6 @@
 [project]
 # Added to example.
+name = "pep631_socks"
 license = "gpl-3.0-or-later"
 
 # Example copied from https://peps.python.org/pep-0631/#example
@@ -15,7 +16,7 @@ dependencies = [
     'requests >= 2.20.0, < 3',
     'texttable >= 0.9.0, < 2',
     'websocket-client >= 0.32.0, < 1',
-    'toskip >= 0.0.1',
+    # 'toskip >= 0.0.1',
 
     # Conditional
     'backports.shutil_get_terminal_size == 1.0.0; python_version < "3.3"',
