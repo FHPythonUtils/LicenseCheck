@@ -1,0 +1,11 @@
+[project]
+name = "issue_62"
+license = "mit"
+
+
+dependencies = [
+    "deprecated>=1.2.14",
+    "pandas<2",
+    "earthengine-api",
+    "pyarrow"
+]
