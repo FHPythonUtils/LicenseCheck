@@ -20,7 +20,6 @@ def aux_file(file: str) -> str:
 
 test_data = [
 	({"license": "MIT", "file": aux_file("test_main_tc1.txt")}, 0),
-	# ({"license": "GPL", "file": aux_file("test_main_tc2.json"), "format": "json"}, 0),
 	(
 		{
 			"license": "BSD",
