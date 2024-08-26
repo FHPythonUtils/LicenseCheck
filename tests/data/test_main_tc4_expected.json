@@ -131,7 +131,7 @@
 			"homePage": "https://requests.readthedocs.io",
 			"author": "Kenneth Reitz",
 			"license": "APACHE SOFTWARE LICENSE",
-			"licenseCompat": true,
+			"licenseCompat": false,
 			"errorCode": 0
 		},
 		{
@@ -147,7 +147,7 @@
 			"homePage": "https://github.com/madpah/requirements-parser/#readme",
 			"author": "Paul Horton",
 			"license": "APACHE SOFTWARE LICENSE",
-			"licenseCompat": true,
+			"licenseCompat": false,
 			"errorCode": 0
 		},
 		{
@@ -179,7 +179,7 @@
 			"homePage": "https://github.com/python/typeshed",
 			"author": "UNKNOWN",
 			"license": "APACHE SOFTWARE LICENSE",
-			"licenseCompat": true,
+			"licenseCompat": false,
 			"errorCode": 0
 		},
 		{

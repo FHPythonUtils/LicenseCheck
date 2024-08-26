@@ -74,18 +74,20 @@ def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]:
 
 def getDepsWithLicenses(
 	using: str,
+	myLice: License,
 	ignorePackages: list[ucstr],
 	failPackages: list[ucstr],
 	ignoreLicenses: list[ucstr],
 	failLicenses: list[ucstr],
 	onlyLicenses: list[ucstr],
 	skipDependencies: list[ucstr],
-) -> tuple[License, set[PackageInfo]]:
+) -> set[PackageInfo]:
 	"""Get a set of dependencies with licenses and determine license compatibility.
 
 	Args:
 	----
 		using (str): use requirements or poetry
+		myLice (License): user license
 		ignorePackages (list[ucstr]): a list of packages to ignore (compat=True)
 		failPackages (list[ucstr]): a list of packages to fail (compat=False)
 		ignoreLicenses (list[ucstr]): a list of licenses to ignore (skipped, compat may still be
@@ -103,9 +105,6 @@ def getDepsWithLicenses(
 	"""
 	reqs = getReqs(using, skipDependencies)
 
-	# Get my license
-	myLiceTxt = packageinfo.getMyPackageLicense()
-	myLice = license_matrix.licenseType(myLiceTxt)[0]
 	ignoreLicensesType = license_matrix.licenseType(
 		ucstr(JOINS.join(ignoreLicenses)), ignoreLicenses
 	)
@@ -125,7 +124,7 @@ def getDepsWithLicenses(
 			package.licenseCompat = True
 		elif packageName in failPackages:
 			pass  # package.licenseCompat = False
-		# Old behaviour
+		# Else get compat with myLice
 		else:
 			package.licenseCompat = license_matrix.depCompatWMyLice(
 				myLice,
@@ -134,4 +133,4 @@ def getDepsWithLicenses(
 				failLicensesType,
 				onlyLicensesType,
 			)
-	return myLice, packages
+	return packages

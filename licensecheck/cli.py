@@ -12,7 +12,7 @@ from sys import stdout
 
 from fhconfparser import FHConfParser, SimpleConf
 
-from licensecheck import formatter, get_deps, license_matrix, types
+from licensecheck import formatter, get_deps, license_matrix, packageinfo, types
 
 stdout.reconfigure(encoding="utf-8")  # type: ignore[general-type-issues]
 
@@ -116,9 +116,14 @@ def main(args: dict) -> int:
 		else Path(simpleConf.get("file")).open("w", encoding="utf-8")
 	)
 
+	# Get my license
+	myLiceTxt = args["license"] if args.get("license") else packageinfo.getMyPackageLicense()
+	myLice = license_matrix.licenseType(myLiceTxt)[0]
+
 	# Get list of licenses
-	myLice, depsWithLicenses = get_deps.getDepsWithLicenses(
+	depsWithLicenses = get_deps.getDepsWithLicenses(
 		simpleConf.get("using", "poetry"),
+		myLice,
 		list(map(types.ucstr, simpleConf.get("ignore_packages", []))),
 		list(map(types.ucstr, simpleConf.get("fail_packages", []))),
 		list(map(types.ucstr, simpleConf.get("ignore_licenses", []))),
@@ -126,8 +131,6 @@ def main(args: dict) -> int:
 		list(map(types.ucstr, simpleConf.get("only_licenses", []))),
 		list(map(types.ucstr, simpleConf.get("skip_dependencies", []))),
 	)
-
-	myLice = license_matrix.licenseType(args["license"])[0] if args.get("license") else myLice
 
 	# Are any licenses incompatible?
 	incompatible = any(not lice.licenseCompat for lice in depsWithLicenses)
