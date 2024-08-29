@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from fnmatch import fnmatchcase
 from pathlib import Path
 
 import tomli
@@ -120,17 +121,20 @@ def getDepsWithLicenses(
 		# Deal with --ignore-packages and --fail-packages
 		package.licenseCompat = False
 		packageName = package.name.upper()
-		if packageName in ignorePackages:
-			package.licenseCompat = True
-		elif packageName in failPackages:
-			pass  # package.licenseCompat = False
-		# Else get compat with myLice
+		for ignoredPattern in ignorePackages:
+			if fnmatchcase(packageName, ignoredPattern):
+				package.licenseCompat = True
+				break
 		else:
-			package.licenseCompat = license_matrix.depCompatWMyLice(
-				myLice,
-				license_matrix.licenseType(package.license, ignoreLicenses),
-				ignoreLicensesType,
-				failLicensesType,
-				onlyLicensesType,
-			)
+			if packageName in failPackages:
+				pass  # package.licenseCompat = False
+			# Else get compat with myLice
+			else:
+				package.licenseCompat = license_matrix.depCompatWMyLice(
+					myLice,
+					license_matrix.licenseType(package.license, ignoreLicenses),
+					ignoreLicensesType,
+					failLicensesType,
+					onlyLicensesType,
+				)
 	return packages
