@@ -132,7 +132,7 @@ def test_issue_81() -> None:
 	requirementsPaths = [f"{THISDIR}/data/issue_81.txt"]
 	skipDependencies = []
 	with contextlib.suppress(Exception):
-		deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
+		_deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
 	#     RuntimeError:   Ã— No solution found when resolving dependencies:
 	#       â•°â”€â–¶ Because nvidia-cudnn-cu12==8.9.2.26 has no wheels with a matching
 	#           platform tag and you require nvidia-cudnn-cu12==8.9.2.26, we can

@@ -6,9 +6,9 @@ from importlib import metadata
 from pathlib import Path
 from typing import Any
 
+import tomli
 from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
-import tomli
 
 from licensecheck.session import session
 from licensecheck.types import ucstr
@@ -20,7 +20,6 @@ def get_reqs(
 	requirementsPaths: list[Path],
 	pyproject: dict[str, Any],
 ) -> set[ucstr]:
-
 	using = "[unknown]"
 
 	# determine using based on file type
@@ -35,9 +34,13 @@ def get_reqs(
 		except tomli.TOMLDecodeError:
 			using = "requirements"
 
-
-	return do_get_reqs(using=using, skipDependencies=skipDependencies, extras=extras, pyproject=pyproject, requirementsPaths=requirementsPaths)
-
+	return do_get_reqs(
+		using=using,
+		skipDependencies=skipDependencies,
+		extras=extras,
+		pyproject=pyproject,
+		requirementsPaths=requirementsPaths,
+	)
 
 
 def do_get_reqs(

@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -19,7 +22,14 @@ def aux_file(file: str) -> str:
 
 
 test_data = [
-	({"license": "MIT", "file": aux_file("test_main_tc1.txt"), "requirements_paths": ["pyproject.toml"]}, 0),
+	(
+		{
+			"license": "MIT",
+			"file": aux_file("test_main_tc1.txt"),
+			"requirements_paths": ["pyproject.toml"],
+		},
+		0,
+	),
 	(
 		{
 			"license": "BSD",
@@ -44,7 +54,7 @@ test_data = [
 
 
 @pytest.mark.parametrize(("args", "expected_exit_code"), test_data)
-def test_main(args, expected_exit_code) -> None:
+def test_main(args: dict[str, Any], expected_exit_code: int) -> None:
 	exit_code = main(args)
 	assert exit_code == expected_exit_code
 	assert aux_get_text(args["file"]).replace(

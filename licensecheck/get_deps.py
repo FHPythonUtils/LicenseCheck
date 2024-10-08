@@ -12,14 +12,11 @@ from licensecheck.resolvers import uv as res_uv
 from licensecheck.types import JOINS, License, PackageInfo, ucstr
 
 
-
 def resolve_requirements(
 	requirements_paths: list[str],
 	groups: list[str],
 	skip_dependencies: list[ucstr],
-	) -> set[ucstr]:
-
-
+) -> set[ucstr]:
 	try:
 		return res_uv.get_reqs(
 			skipDependencies=skip_dependencies,
@@ -52,7 +49,6 @@ def check(
 	only_licenses: list[ucstr] | None = None,
 	skip_dependencies: list[ucstr] | None = None,
 ) -> tuple[bool, set[PackageInfo]]:
-
 	# Def values
 	ignore_packages = ignore_packages or []
 	fail_packages = fail_packages or []
@@ -60,7 +56,6 @@ def check(
 	fail_licenses = fail_licenses or []
 	only_licenses = only_licenses or []
 	skip_dependencies = skip_dependencies or []
-
 
 	requirements = resolve_requirements(requirements_paths, groups, skip_dependencies)
 

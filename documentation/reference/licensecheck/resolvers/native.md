@@ -5,11 +5,12 @@
 > Auto-generated documentation for [licensecheck.resolvers.native](../../../../licensecheck/resolvers/native.py) module.
 
 - [Native](#native)
+  - [do_get_reqs](#do_get_reqs)
   - [get_reqs](#get_reqs)
 
-## get_reqs
+## do_get_reqs
 
-[Show source in native.py:16](../../../../licensecheck/resolvers/native.py#L16)
+[Show source in native.py:46](../../../../licensecheck/resolvers/native.py#L46)
 
 Underlying machineary to get requirements.
 
@@ -30,12 +31,33 @@ Underlying machineary to get requirements.
 #### Signature
 
 ```python
-def get_reqs(
+def do_get_reqs(
     using: str,
     skipDependencies: list[ucstr],
     extras: list[str],
     pyproject: dict[str, Any],
     requirementsPaths: list[Path],
+) -> set[ucstr]: ...
+```
+
+#### See also
+
+- [ucstr](../types.md#ucstr)
+
+
+
+## get_reqs
+
+[Show source in native.py:17](../../../../licensecheck/resolvers/native.py#L17)
+
+#### Signature
+
+```python
+def get_reqs(
+    skipDependencies: list[ucstr],
+    extras: list[str],
+    requirementsPaths: list[Path],
+    pyproject: dict[str, Any],
 ) -> set[ucstr]: ...
 ```
 

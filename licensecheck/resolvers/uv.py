@@ -17,7 +17,6 @@ def get_reqs(
 	extras: list[str],
 	requirementsPaths: list[str],
 ) -> set[ucstr]:
-
 	for idx, requirement in enumerate(requirementsPaths):
 		if not Path(requirement).exists():
 			msg = f"Could not find specification of requirements ({requirement})."

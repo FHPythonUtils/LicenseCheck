@@ -8,8 +8,7 @@ import argparse
 from dataclasses import fields
 from pathlib import Path
 from sys import exit as sysexit
-from sys import stdout, stdin
-from typing import TextIO
+from sys import stdin, stdout
 
 from fhconfparser import FHConfParser, SimpleConf
 
@@ -123,9 +122,7 @@ def main(args: dict) -> int:
 	simpleConf = SimpleConf(configparser, "licensecheck", args)
 
 	# File
-	requirements_paths = (
-		simpleConf.get("requirements_paths")  or ["__stdin__"]
-	)
+	requirements_paths = simpleConf.get("requirements_paths") or ["__stdin__"]
 	output_file = (
 		stdout
 		if simpleConf.get("file") is None
@@ -133,7 +130,9 @@ def main(args: dict) -> int:
 	)
 
 	# Get my license
-	this_license_text = args["license"] if args.get("license") else packageinfo.getMyPackageLicense()
+	this_license_text = (
+		args["license"] if args.get("license") else packageinfo.getMyPackageLicense()
+	)
 	this_license = license_matrix.licenseType(this_license_text)[0]
 
 	def getFromConfig(key: str) -> list[types.ucstr]:
