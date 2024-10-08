@@ -163,6 +163,7 @@ def test_issue_84() -> None:
 		"KOMBU",
 		"PROMPT-TOOLKIT",
 		"PYTZ",
+		"TZDATA",
 		"VINE",
 		"WCWIDTH",
 	}
