@@ -8,7 +8,8 @@ import argparse
 from dataclasses import fields
 from pathlib import Path
 from sys import exit as sysexit
-from sys import stdout
+from sys import stdout, stdin
+from typing import TextIO
 
 from fhconfparser import FHConfParser, SimpleConf
 
@@ -31,15 +32,22 @@ def cli() -> None:  # pragma: no cover
 		help=f"Output format. one of: {', '.join(list(formatter.formatMap))}. default=simple",
 	)
 	parser.add_argument(
+		"--deps-file",
+		"-i",
+		"-d",
+		help="Filename to read from (omit for stdin)",
+		nargs="+",
+	)
+	parser.add_argument(
+		"--groups",
+		"-g",
+		help="Select groups from supported files",
+		nargs="+",
+	)
+	parser.add_argument(
 		"--file",
 		"-o",
 		help="Filename to write to (omit for stdout)",
-	)
-	parser.add_argument(
-		"--using",
-		"-u",
-		help="Environment to use e.g. requirements.txt. one of: "
-		f"{', '.join(get_deps.USINGS)}. default=poetry",
 	)
 	parser.add_argument(
 		"--ignore-packages",
@@ -110,30 +118,33 @@ def main(args: dict) -> int:
 	simpleConf = SimpleConf(configparser, "licensecheck", args)
 
 	# File
-	textIO = (
+	input_file = (
+		simpleConf.get("deps_file")  or stdin
+	)
+	output_file = (
 		stdout
 		if simpleConf.get("file") is None
 		else Path(simpleConf.get("file")).open("w", encoding="utf-8")
 	)
 
 	# Get my license
-	myLiceTxt = args["license"] if args.get("license") else packageinfo.getMyPackageLicense()
-	myLice = license_matrix.licenseType(myLiceTxt)[0]
+	this_license_text = args["license"] if args.get("license") else packageinfo.getMyPackageLicense()
+	this_license = license_matrix.licenseType(this_license_text)[0]
 
-	# Get list of licenses
-	depsWithLicenses = get_deps.getDepsWithLicenses(
-		simpleConf.get("using", "poetry"),
-		myLice,
-		list(map(types.ucstr, simpleConf.get("ignore_packages", []))),
-		list(map(types.ucstr, simpleConf.get("fail_packages", []))),
-		list(map(types.ucstr, simpleConf.get("ignore_licenses", []))),
-		list(map(types.ucstr, simpleConf.get("fail_licenses", []))),
-		list(map(types.ucstr, simpleConf.get("only_licenses", []))),
-		list(map(types.ucstr, simpleConf.get("skip_dependencies", []))),
+	def getFromConfig(key: str) -> list[types.ucstr]:
+		return list(map(types.ucstr, simpleConf.get(key, [])))
+
+	incompatible, depsWithLicenses = get_deps.check(
+		input_file=input_file,
+		groups=simpleConf.get("groups", []),
+		this_license=this_license,
+		ignore_packages=getFromConfig("ignore_packages"),
+		fail_packages=getFromConfig("fail_packages"),
+		ignore_licenses=getFromConfig("ignore_licenses"),
+		fail_licenses=getFromConfig("fail_licenses"),
+		only_licenses=getFromConfig("only_licenses"),
+		skip_dependencies=getFromConfig("skip_dependencies"),
 	)
-
-	# Are any licenses incompatible?
-	incompatible = any(not lice.licenseCompat for lice in depsWithLicenses)
 
 	# Format the results
 	hide_output_parameters = [types.ucstr(x) for x in simpleConf.get("hide_output_parameters", [])]
@@ -147,11 +158,11 @@ def main(args: dict) -> int:
 	if simpleConf.get("format", "simple") in formatter.formatMap:
 		print(
 			formatter.formatMap[simpleConf.get("format", "simple")](
-				myLice,
+				this_license,
 				sorted(depsWithLicenses),
 				hide_output_parameters,
 			),
-			file=textIO,
+			file=output_file,
 		)
 	else:
 		exitCode = 2
@@ -162,5 +173,5 @@ def main(args: dict) -> int:
 
 	# Cleanup + exit
 	if simpleConf.get("file") is not None:
-		textIO.close()
+		output_file.close()
 	return exitCode

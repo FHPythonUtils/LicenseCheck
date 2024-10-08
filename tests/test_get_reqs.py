@@ -2,17 +2,16 @@ import contextlib
 from pathlib import Path
 
 from licensecheck import types
-from licensecheck.resolvers import uv as req_uv
+from licensecheck.get_deps import resolve_requirements
 
 THISDIR = Path(__file__).resolve().parent
 
 
-def test_PEP631() -> None:
-	extras = ["socks"]
-	requirementsPaths = [f"{THISDIR}/data/pep631_socks.toml"]
+def test_pep631_socks() -> None:
+	using = "PEP631:socks"
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	assert req_uv.get_reqs(skipDependencies, extras, requirementsPaths) == {
+	assert resolve_requirements(using, skipDependencies) == {
 		"DOCKERPTY",
 		"ATTRS",
 		"JSONSCHEMA",
@@ -46,11 +45,12 @@ def test_PEP631() -> None:
 
 
 def test_requirements() -> None:
+	using = "requirements"
 	extras = []
 	requirementsPaths = [f"{THISDIR}/data/test_requirements.txt"]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
+	deps = resolve_requirements(using, skipDependencies, extras, requirementsPaths)
 	assert deps == {
 		"NUMPY",
 		"ODFPY",
@@ -74,21 +74,23 @@ def test_requirements() -> None:
 
 
 def test_requirements_with_hashes() -> None:
+	using = "requirements"
 	extras = []
 	requirementsPaths = [f"{THISDIR}/data/test_requirements_hash.txt"]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
+	deps = resolve_requirements(using, skipDependencies, extras, requirementsPaths)
 	assert deps == {"PACKAGING"}
 	assert "TOSKIP" not in deps
 
 
 def test_issue_62() -> None:
+	using = "PEP631"
 	extras = []
 	requirementsPaths = [f"{THISDIR}/data/issue_62.toml"]
 	skipDependencies = []
 
-	reqs = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
+	reqs = resolve_requirements(using, skipDependencies, extras, requirementsPaths)
 	assert "PYQT5" not in reqs
 
 	assert reqs == {
@@ -128,11 +130,12 @@ def test_issue_62() -> None:
 
 
 def test_issue_81() -> None:
+	using = "requirements"
 	extras = []
 	requirementsPaths = [f"{THISDIR}/data/issue_81.txt"]
 	skipDependencies = []
 	with contextlib.suppress(Exception):
-		deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
+		deps = resolve_requirements(using, skipDependencies, extras, requirementsPaths)
 	#     RuntimeError:   Ã— No solution found when resolving dependencies:
 	#       â•°â”€â–¶ Because nvidia-cudnn-cu12==8.9.2.26 has no wheels with a matching
 	#           platform tag and you require nvidia-cudnn-cu12==8.9.2.26, we can
@@ -140,11 +143,12 @@ def test_issue_81() -> None:
 
 
 def test_issue_84() -> None:
+	using = "requirements"
 	extras = []
 	requirementsPaths = [f"{THISDIR}/data/issue_84.txt"]
 	skipDependencies = []
 
-	deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
+	deps = resolve_requirements(using, skipDependencies, extras, requirementsPaths)
 	assert deps == {
 		"AMQP",
 		"BILLIARD",
