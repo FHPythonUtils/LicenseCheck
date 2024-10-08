@@ -19,13 +19,14 @@ def aux_file(file: str) -> str:
 
 
 test_data = [
-	({"license": "MIT", "file": aux_file("test_main_tc1.txt")}, 0),
+	({"license": "MIT", "file": aux_file("test_main_tc1.txt"), "requirements_paths": ["pyproject.toml"]}, 0),
 	(
 		{
 			"license": "BSD",
 			"file": aux_file("test_main_tc3.txt"),
-			"ignore-packages": ["requests"],
-			"ignore-licenses": ["GPL"],
+			"requirements_paths": ["pyproject.toml"],
+			"ignore_packages": ["requests"],
+			"ignore_licenses": ["GPL"],
 		},
 		0,
 	),
@@ -33,6 +34,7 @@ test_data = [
 		{
 			"license": "GPL",
 			"file": aux_file("test_main_tc4.json"),
+			"requirements_paths": ["pyproject.toml"],
 			"format": "json",
 			"hide_output_parameters": ["size", "version", "namever"],
 		},

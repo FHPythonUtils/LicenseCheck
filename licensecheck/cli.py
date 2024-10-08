@@ -32,16 +32,15 @@ def cli() -> None:  # pragma: no cover
 		help=f"Output format. one of: {', '.join(list(formatter.formatMap))}. default=simple",
 	)
 	parser.add_argument(
-		"--deps-file",
-		"-i",
-		"-d",
-		help="Filename to read from (omit for stdin)",
+		"--requirements-paths",
+		"-r",
+		help="Filenames to read from (omit for stdin)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--groups",
 		"-g",
-		help="Select groups from supported files",
+		help="Select groups/extras from supported files",
 		nargs="+",
 	)
 	parser.add_argument(
@@ -91,7 +90,13 @@ def cli() -> None:  # pragma: no cover
 		action="store_true",
 	)
 	args = vars(parser.parse_args())
-	sysexit(main(args))
+	stdin_path = Path("__stdin__")
+	if stdin:
+		stdin_path.write_text("\n".join(stdin.readlines()), "utf-8")
+	ec = main(args)
+	stdin_path.unlink(missing_ok=True)
+
+	sysexit(ec)
 
 
 def main(args: dict) -> int:
@@ -118,8 +123,8 @@ def main(args: dict) -> int:
 	simpleConf = SimpleConf(configparser, "licensecheck", args)
 
 	# File
-	input_file = (
-		simpleConf.get("deps_file")  or stdin
+	requirements_paths = (
+		simpleConf.get("requirements_paths")  or ["__stdin__"]
 	)
 	output_file = (
 		stdout
@@ -135,7 +140,7 @@ def main(args: dict) -> int:
 		return list(map(types.ucstr, simpleConf.get(key, [])))
 
 	incompatible, depsWithLicenses = get_deps.check(
-		input_file=input_file,
+		requirements_paths=requirements_paths,
 		groups=simpleConf.get("groups", []),
 		this_license=this_license,
 		ignore_packages=getFromConfig("ignore_packages"),

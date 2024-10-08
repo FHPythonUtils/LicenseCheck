@@ -11,7 +11,7 @@ THISDIR = Path(__file__).resolve().parent
 def test_doGetReqs_PEP631() -> None:
 	extras = ["socks"]
 	pyproject = tomli.loads((THISDIR / "data/pep631_socks.toml").read_text(encoding="utf-8"))
-	requirementsPaths = []
+	requirementsPaths = [(THISDIR / "data/pep631_socks.toml")]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
 	assert get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject) == {
