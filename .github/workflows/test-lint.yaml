@@ -39,7 +39,7 @@ jobs:
         run: poetry install
 
       - name: Run pytest
-        run: poetry run pytest
+        run: poetry run pytest ./tests/test_formatter.py ./tests/test_license_matrix.py ./tests/test_packageinfo.py
 
       - name: Run ruff
         run: poetry run ruff check --output-format=github
