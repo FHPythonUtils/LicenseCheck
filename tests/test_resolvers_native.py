@@ -9,13 +9,12 @@ THISDIR = Path(__file__).resolve().parent
 
 
 def test_doGetReqs_PEP631() -> None:
-	using = "PEP631"
 	extras = ["socks"]
 	pyproject = tomli.loads((THISDIR / "data/pep631_socks.toml").read_text(encoding="utf-8"))
-	requirementsPaths = []
+	requirementsPaths = [(THISDIR / "data/pep631_socks.toml")]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	assert get_deps.get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths) == {
+	assert get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject) == {
 		"DOCKERPTY",
 		"PACKAGING",
 		"ATTRS",
@@ -51,13 +50,12 @@ def test_doGetReqs_PEP631() -> None:
 
 
 def test_doGetReqs_requirements() -> None:
-	using = "requirements"
 	extras = [f"{THISDIR}/data/test_requirements.txt"]
 	pyproject = {}
 	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements.txt")]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = get_deps.get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
+	deps = get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject)
 	assert deps == {
 		"NUMPY",
 		"ODFPY",
@@ -79,25 +77,23 @@ def test_doGetReqs_requirements() -> None:
 
 
 def test_doGetReqs_requirements_with_hashes() -> None:
-	using = "requirements"
 	extras = []
 	pyproject = {}
 	requirementsPaths = [Path(f"{THISDIR}/data/test_requirements_hash.txt")]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = get_deps.get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
+	deps = get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject)
 	assert deps == {"PACKAGING"}
 	assert "TOSKIP" not in deps
 
 
 def test_issue_81() -> None:
-	using = "requirements"
 	extras = []
 	pyproject = {}
 	requirementsPaths = [Path(f"{THISDIR}/data/issue_81.txt")]
 	skipDependencies = []
 
-	deps = get_deps.get_reqs(using, skipDependencies, extras, pyproject, requirementsPaths)
+	deps = get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject)
 	assert deps == {
 		"DATACLASSES",
 		"LANGSMITH",

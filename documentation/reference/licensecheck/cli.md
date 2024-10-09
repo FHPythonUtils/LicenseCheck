@@ -24,7 +24,7 @@ def cli() -> None: ...
 
 ## main
 
-[Show source in cli.py:89](../../../licensecheck/cli.py#L89)
+[Show source in cli.py:101](../../../licensecheck/cli.py#L101)
 
 Test entry point.
 
