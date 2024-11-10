@@ -46,7 +46,7 @@ def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]:
 
 	# Requirements
 	if using == "requirements":
-		requirementsPaths = ["requirements.txt"] if len(extras) > 0 else extras
+		requirementsPaths = ["requirements.txt"] if len(extras) == 0 else extras
 		extras = []
 
 	try:
