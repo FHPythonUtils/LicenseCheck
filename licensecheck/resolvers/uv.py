@@ -13,15 +13,10 @@ from licensecheck.types import ucstr
 
 
 def get_reqs(
-	using: str,
 	skipDependencies: list[ucstr],
 	extras: list[str],
 	requirementsPaths: list[str],
 ) -> set[ucstr]:
-	if using == "requirements" and len(extras) > 0:
-		msg = "You may not use extras with requirements.txt"
-		raise RuntimeError(msg)
-
 	for idx, requirement in enumerate(requirementsPaths):
 		if not Path(requirement).exists():
 			msg = f"Could not find specification of requirements ({requirement})."

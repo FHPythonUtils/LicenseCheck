@@ -6,6 +6,7 @@ from importlib import metadata
 from pathlib import Path
 from typing import Any
 
+import tomli
 from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
@@ -14,6 +15,35 @@ from licensecheck.types import ucstr
 
 
 def get_reqs(
+	skipDependencies: list[ucstr],
+	extras: list[str],
+	requirementsPaths: list[Path],
+	pyproject: dict[str, Any],
+) -> set[ucstr]:
+	using = "[unknown]"
+
+	# determine using based on file type
+	for requirementsPath in requirementsPaths:
+		try:
+			tomli.loads(requirementsPath.read_text("utf-8"))
+			if pyproject.get("project", {}).get("dependencies") is not None:
+				using = "PEP631"
+			if pyproject.get("tool", {}).get("poetry", {}).get("dependencies") is not None:
+				using = "poetry"
+
+		except tomli.TOMLDecodeError:
+			using = "requirements"
+
+	return do_get_reqs(
+		using=using,
+		skipDependencies=skipDependencies,
+		extras=extras,
+		pyproject=pyproject,
+		requirementsPaths=requirementsPaths,
+	)
+
+
+def do_get_reqs(
 	using: str,
 	skipDependencies: list[ucstr],
 	extras: list[str],

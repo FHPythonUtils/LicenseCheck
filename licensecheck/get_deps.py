@@ -11,126 +11,84 @@ from licensecheck.resolvers import native as res_native
 from licensecheck.resolvers import uv as res_uv
 from licensecheck.types import JOINS, License, PackageInfo, ucstr
 
-USINGS = ["requirements", "poetry", "PEP631"]
 
-
-def getReqs(using: str, skipDependencies: list[ucstr]) -> set[ucstr]:
-	"""Get requirements for the end user project/ lib.
-
-	>>> getReqs("poetry")
-	>>> getReqs("poetry:dev")
-	>>> getReqs("requirements")
-	>>> getReqs("requirements:requirements.txt;requirements-dev.txt")
-	>>> getReqs("PEP631")
-	>>> getReqs("PEP631:tests")
-
-	Args:
-	----
-		using (str): use requirements, poetry or PEP631.
-		skipDependencies (list[str]): list of dependencies to skip.
-
-	Returns:
-	-------
-		set[str]: set of requirement packages
-
-	"""
-
-	_ = using.split(":", 1)
-	using = _[0]
-	extras = _[1].split(";") if len(_) > 1 else []
-	if using not in USINGS:
-		using = "poetry"
-
-	# if using poetry or pep621
-	requirementsPaths = ["pyproject.toml"]
-
-	# Requirements
-	if using == "requirements":
-		requirementsPaths = ["requirements.txt"] if len(extras) == 0 else extras
-		extras = []
-
+def resolve_requirements(
+	requirements_paths: list[str],
+	groups: list[str],
+	skip_dependencies: list[ucstr],
+) -> set[ucstr]:
 	try:
 		return res_uv.get_reqs(
-			using=using,
-			skipDependencies=skipDependencies,
-			extras=extras,
-			requirementsPaths=requirementsPaths,
+			skipDependencies=skip_dependencies,
+			extras=groups,
+			requirementsPaths=requirements_paths,
 		)
 
 	except RuntimeError:
 		pyproject = {}
-		if "pyproject.toml" in requirementsPaths:
+		if "pyproject.toml" in requirements_paths:
 			pyproject = tomli.loads(Path("pyproject.toml").read_text("utf-8"))
 
 		# Fallback to the old resolver (hopefully we can deprecate this asap!)
 		return res_native.get_reqs(
-			using=using,
-			skipDependencies=skipDependencies,
-			extras=extras,
+			skipDependencies=skip_dependencies,
+			extras=groups,
 			pyproject=pyproject,
-			requirementsPaths=[Path(x) for x in requirementsPaths],
+			requirementsPaths=[Path(x) for x in requirements_paths],
 		)
 
 
-def getDepsWithLicenses(
-	using: str,
-	myLice: License,
-	ignorePackages: list[ucstr],
-	failPackages: list[ucstr],
-	ignoreLicenses: list[ucstr],
-	failLicenses: list[ucstr],
-	onlyLicenses: list[ucstr],
-	skipDependencies: list[ucstr],
-) -> set[PackageInfo]:
-	"""Get a set of dependencies with licenses and determine license compatibility.
+def check(
+	requirements_paths: list[str],
+	groups: list[str],
+	this_license: License,
+	ignore_packages: list[ucstr] | None = None,
+	fail_packages: list[ucstr] | None = None,
+	ignore_licenses: list[ucstr] | None = None,
+	fail_licenses: list[ucstr] | None = None,
+	only_licenses: list[ucstr] | None = None,
+	skip_dependencies: list[ucstr] | None = None,
+) -> tuple[bool, set[PackageInfo]]:
+	# Def values
+	ignore_packages = ignore_packages or []
+	fail_packages = fail_packages or []
+	ignore_licenses = ignore_licenses or []
+	fail_licenses = fail_licenses or []
+	only_licenses = only_licenses or []
+	skip_dependencies = skip_dependencies or []
 
-	Args:
-	----
-		using (str): use requirements or poetry
-		myLice (License): user license
-		ignorePackages (list[ucstr]): a list of packages to ignore (compat=True)
-		failPackages (list[ucstr]): a list of packages to fail (compat=False)
-		ignoreLicenses (list[ucstr]): a list of licenses to ignore (skipped, compat may still be
-		False)
-		failLicenses (list[ucstr]): a list of licenses to fail (compat=False)
-		onlyLicenses (list[ucstr]): a list of allowed licenses (any other license will fail)
-		skipDependencies (list[ucstr]): a list of dependencies to skip (compat=False)
-
-	Returns:
-	-------
-		tuple[License, set[PackageInfo]]: tuple of
-			my package license
-			set of updated dependencies with licenseCompat set
-
-	"""
-	reqs = getReqs(using, skipDependencies)
+	requirements = resolve_requirements(requirements_paths, groups, skip_dependencies)
 
 	ignoreLicensesType = license_matrix.licenseType(
-		ucstr(JOINS.join(ignoreLicenses)), ignoreLicenses
+		ucstr(JOINS.join(ignore_licenses)), ignore_licenses
 	)
-	failLicensesType = license_matrix.licenseType(ucstr(JOINS.join(failLicenses)), ignoreLicenses)
-	onlyLicensesType = license_matrix.licenseType(ucstr(JOINS.join(onlyLicenses)), ignoreLicenses)
+	failLicensesType = license_matrix.licenseType(ucstr(JOINS.join(fail_licenses)), ignore_licenses)
+	onlyLicensesType = license_matrix.licenseType(ucstr(JOINS.join(only_licenses)), ignore_licenses)
 	# licenseType will always return NO_LICENSE when onlyLicenses is empty          # noqa: ERA001
 	if License.NO_LICENSE in onlyLicensesType:
 		onlyLicensesType.remove(License.NO_LICENSE)
 
 	# Check it is compatible with packages and add a note
-	packages = packageinfo.getPackages(reqs)
+	packages = packageinfo.getPackages(requirements)
 	for package in packages:
 		# Deal with --ignore-packages and --fail-packages
 		package.licenseCompat = False
 		packageName = package.name.upper()
-		if packageName in ignorePackages:
+		if packageName in ignore_packages:
 			package.licenseCompat = True
-		elif packageName in failPackages:
+		elif packageName in fail_packages:
 			pass  # package.licenseCompat = False
 		# Else get compat with myLice
 		else:
 			package.licenseCompat = license_matrix.depCompatWMyLice(
-				myLice,
-				license_matrix.licenseType(package.license, ignoreLicenses),
+				this_license,
+				license_matrix.licenseType(package.license, ignore_licenses),
 				ignoreLicensesType,
 				failLicensesType,
 				onlyLicensesType,
 			)
-	return packages
+
+	# Are any licenses incompatible?
+	incompatible = any(not package.licenseCompat for package in packages)
+
+	return incompatible, packages

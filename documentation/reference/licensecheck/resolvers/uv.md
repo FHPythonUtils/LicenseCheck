@@ -15,10 +15,7 @@
 
 ```python
 def get_reqs(
-    using: str,
-    skipDependencies: list[ucstr],
-    extras: list[str],
-    requirementsPaths: list[str],
+    skipDependencies: list[ucstr], extras: list[str], requirementsPaths: list[str]
 ) -> set[ucstr]: ...
 ```
 
