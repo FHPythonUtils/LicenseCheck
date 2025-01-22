@@ -162,7 +162,7 @@ def getMyPackageMetadata() -> dict[str, Any]:
 
 	if Path("pyproject.toml").exists():
 		pyproject = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
-		tool = pyproject["tool"]
+		tool = pyproject.get("tool",{})
 		if "poetry" in tool:
 			return tool["poetry"]
 		if "flit" in tool:
