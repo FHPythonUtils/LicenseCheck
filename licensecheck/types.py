@@ -89,6 +89,7 @@ class License(Enum):
 	EU = 61
 	# PROPRIETARY
 	PROPRIETARY = 190
+	UNKNOWN = 191
 	# No License
 	NO_LICENSE = 200
 

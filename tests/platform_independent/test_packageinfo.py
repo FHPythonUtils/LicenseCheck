@@ -5,21 +5,24 @@ from typing import Any
 
 import pytest
 
-from licensecheck import packageinfo, types
+from licensecheck import types, packageinfo
+from licensecheck.packageinfo import PackageInfoManager
 
 THISDIR = str(Path(__file__).resolve().parent)
 
 
+package_info_manager = PackageInfoManager("https://pypi.org/pypi/")
+
 def test_getPackageInfoLocal() -> None:
 	try:
-		package = packageinfo.getPackageInfoLocal(types.ucstr("requests"))
+		package = package_info_manager.getPackageInfoLocal(types.ucstr("requests"))
 		assert package.name == "requests"
 	except ModuleNotFoundError:
 		assert True
 
 
 def test_getPackageInfoPypi() -> None:
-	package = packageinfo.getPackageInfoPypi(types.ucstr("requests"))
+	package = package_info_manager.getPackageInfoPypi(types.ucstr("requests"))
 
 	assert package.name == "requests"
 	assert package.homePage == "https://requests.readthedocs.io"
@@ -29,7 +32,7 @@ def test_getPackageInfoPypi() -> None:
 
 def test_getPackageInfoLocalNotFound() -> None:
 	try:
-		packageinfo.getPackageInfoLocal(types.ucstr("this_package_does_not_exist"))
+		package_info_manager.getPackageInfoLocal(types.ucstr("this_package_does_not_exist"))
 		raise AssertionError
 	except ModuleNotFoundError:
 		assert True
@@ -37,14 +40,14 @@ def test_getPackageInfoLocalNotFound() -> None:
 
 def test_getPackagePypiLocalNotFound() -> None:
 	try:
-		packageinfo.getPackageInfoPypi(types.ucstr("this_package_does_not_exist"))
+		package_info_manager.getPackageInfoPypi(types.ucstr("this_package_does_not_exist"))
 		raise AssertionError
 	except ModuleNotFoundError:
 		assert True
 
 
 def test_getPackages() -> None:
-	packages = packageinfo.getPackages({types.ucstr("requests")})
+	packages = package_info_manager.getPackages({types.ucstr("requests")})
 
 	assert all(
 		(
@@ -58,7 +61,7 @@ def test_getPackages() -> None:
 
 
 def test_getPackagesNotFound() -> None:
-	packages = packageinfo.getPackages({types.ucstr("this_package_does_not_exist")})
+	packages = package_info_manager.getPackages({types.ucstr("this_package_does_not_exist")})
 
 	assert all(
 		(package.name == "THIS_PACKAGE_DOES_NOT_EXIST" and package.errorCode == 1)

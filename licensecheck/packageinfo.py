@@ -15,84 +15,111 @@ from licensecheck.session import session
 from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
 
+class PackageInfoManager:
+	def __init__(self, pypi_api: str) -> None:
+		self.pypi_api = pypi_api
+
+	def getPackages(self, reqs: set[ucstr]) -> set[PackageInfo]:
+		"""Get dependency info.
+
+		Args:
+		----
+			reqs (set[ucstr]): set of dependency names to gather info on
+
+		Returns:
+		-------
+			set[PackageInfo]: set of dependencies
+
+		"""
+		packageinfo = set()
+		for requirement in reqs:
+			try:
+				packageinfo.add(self.getPackageInfoLocal(requirement))
+			except ModuleNotFoundError:
+				try:
+					packageinfo.add(self.getPackageInfoPypi(requirement))
+				except ModuleNotFoundError:
+					packageinfo.add(PackageInfo(name=requirement, errorCode=1))
+
+		return packageinfo
+
+	def getPackageInfoLocal(self, requirement: ucstr) -> PackageInfo:
+		"""Get package info from local files including version, author
+		and	the license.
+
+		:param str requirement: name of the package
+		:raises ModuleNotFoundError: if the package does not exist
+		:return PackageInfo: package information
+		"""
+		try:
+			# Get pkg metadata,, license, homepage, and author
+			pkgMetadata = metadata.metadata(requirement)
+			lice = licenseFromClassifierlist(pkgMetadata.get_all("Classifier"))
+			if lice == UNKNOWN:
+				lice = _pkgMetadataGet(pkgMetadata, "License")
+			homePage = _pkgMetadataGet(pkgMetadata, "Home-page")
+			author = _pkgMetadataGet(pkgMetadata, "Author")
+			name = _pkgMetadataGet(pkgMetadata, "Name")
+			version = _pkgMetadataGet(pkgMetadata, "Version")
+			size = 0
+			packagePaths = metadata.Distribution.from_name(requirement).files
+			if packagePaths is not None:
+				size = sum(pp.size for pp in packagePaths if pp.size is not None)
+
+			# append to pkgInfo
+			return PackageInfo(
+				name=name,
+				version=version,
+				homePage=homePage,
+				author=author,
+				size=size,
+				license=ucstr(lice),
+			)
+
+		except metadata.PackageNotFoundError as error:
+			raise ModuleNotFoundError from error
+
+	def getPackageInfoPypi(self, requirement: ucstr) -> PackageInfo:
+		"""Get package info from local files including version, author
+		and	the license.
+
+		:param str requirement: name of the package
+		:raises ModuleNotFoundError: if the package does not exist
+		:return PackageInfo: package information
+		"""
+		request = session.get(f"{self.pypi_api}{requirement}/json", timeout=60)
+		response = request.json()
+		try:
+			info = response.get("info", {})
+			licenseClassifier = licenseFromClassifierlist(info["classifiers"])
+
+			size = -1
+			urls = response.get("urls", [])
+			if urls:
+				size = int(urls[-1]["size"])
+
+			return PackageInfo(
+				name=_pkgMetadataGet(info, "name"),
+				version=_pkgMetadataGet(info, "version"),
+				homePage=_pkgMetadataGet(info, "home_page"),
+				author=_pkgMetadataGet(info, "author"),
+				size=size,
+				license=ucstr(
+					licenseClassifier
+					if licenseClassifier != UNKNOWN
+					else info.get("license", UNKNOWN) or UNKNOWN
+				),
+			)
+		except KeyError as error:
+			raise ModuleNotFoundError from error
+
+
 def _pkgMetadataGet(pkgMetadata: metadata.PackageMetadata | dict[str, Any], key: str) -> str:
 	"""Get a string from a key from pkgMetadata."""
 	value = pkgMetadata.get(key, UNKNOWN)
 	if not isinstance(value, str) and isinstance(value, Iterable):
 		value = JOINS.join(str(x) for x in value)
 	return str(value) or UNKNOWN
-
-
-def getPackageInfoLocal(requirement: ucstr) -> PackageInfo:
-	"""Get package info from local files including version, author
-	and	the license.
-
-	:param str requirement: name of the package
-	:raises ModuleNotFoundError: if the package does not exist
-	:return PackageInfo: package information
-	"""
-	try:
-		# Get pkg metadata,, license, homepage, and author
-		pkgMetadata = metadata.metadata(requirement)
-		lice = licenseFromClassifierlist(pkgMetadata.get_all("Classifier"))
-		if lice == UNKNOWN:
-			lice = _pkgMetadataGet(pkgMetadata, "License")
-		homePage = _pkgMetadataGet(pkgMetadata, "Home-page")
-		author = _pkgMetadataGet(pkgMetadata, "Author")
-		name = _pkgMetadataGet(pkgMetadata, "Name")
-		version = _pkgMetadataGet(pkgMetadata, "Version")
-		size = 0
-		packagePaths = metadata.Distribution.from_name(requirement).files
-		if packagePaths is not None:
-			size = sum(pp.size for pp in packagePaths if pp.size is not None)
-
-		# append to pkgInfo
-		return PackageInfo(
-			name=name,
-			version=version,
-			homePage=homePage,
-			author=author,
-			size=size,
-			license=ucstr(lice),
-		)
-
-	except metadata.PackageNotFoundError as error:
-		raise ModuleNotFoundError from error
-
-
-def getPackageInfoPypi(requirement: ucstr) -> PackageInfo:
-	"""Get package info from local files including version, author
-	and	the license.
-
-	:param str requirement: name of the package
-	:raises ModuleNotFoundError: if the package does not exist
-	:return PackageInfo: package information
-	"""
-	request = session.get(f"https://pypi.org/pypi/{requirement}/json", timeout=60)
-	response = request.json()
-	try:
-		info = response.get("info", {})
-		licenseClassifier = licenseFromClassifierlist(info["classifiers"])
-
-		size = -1
-		urls = response.get("urls", [])
-		if urls:
-			size = int(urls[-1]["size"])
-
-		return PackageInfo(
-			name=_pkgMetadataGet(info, "name"),
-			version=_pkgMetadataGet(info, "version"),
-			homePage=_pkgMetadataGet(info, "home_page"),
-			author=_pkgMetadataGet(info, "author"),
-			size=size,
-			license=ucstr(
-				licenseClassifier
-				if licenseClassifier != UNKNOWN
-				else info.get("license", UNKNOWN) or UNKNOWN
-			),
-		)
-	except KeyError as error:
-		raise ModuleNotFoundError from error
 
 
 def licenseFromClassifierlist(classifiers: list[str] | None | list[Any]) -> ucstr:
@@ -117,31 +144,6 @@ def licenseFromClassifierlist(classifiers: list[str] | None | list[Any]) -> ucst
 			if lice != "OSI Approved":
 				licenses.append(lice)
 	return ucstr(JOINS.join(licenses) if len(licenses) > 0 else UNKNOWN)
-
-
-def getPackages(reqs: set[ucstr]) -> set[PackageInfo]:
-	"""Get dependency info.
-
-	Args:
-	----
-		reqs (set[ucstr]): set of dependency names to gather info on
-
-	Returns:
-	-------
-		set[PackageInfo]: set of dependencies
-
-	"""
-	packageinfo = set()
-	for requirement in reqs:
-		try:
-			packageinfo.add(getPackageInfoLocal(requirement))
-		except ModuleNotFoundError:
-			try:
-				packageinfo.add(getPackageInfoPypi(requirement))
-			except ModuleNotFoundError:
-				packageinfo.add(PackageInfo(name=requirement, errorCode=1))
-
-	return packageinfo
 
 
 def getMyPackageMetadata() -> dict[str, Any]:

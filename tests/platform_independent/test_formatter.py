@@ -1,9 +1,12 @@
+from __future__ import annotations
 from pathlib import Path
 
-from licensecheck import formatter
+from licensecheck import fmt
 from licensecheck.types import License, PackageInfo, ucstr
+import pytest
+from pathlib import Path
 
-formatter.INFO = {"program": "licensecheck", "version": "dev", "license": "MIT LICENSE"}
+fmt.INFO = {"program": "licensecheck", "version": "dev", "license": "MIT LICENSE"}
 
 THISDIR = str(Path(__file__).resolve().parent)
 
@@ -34,85 +37,47 @@ complexPackages = [
 myLice = License.MIT
 
 
-def test_simpleMarkdown() -> None:
-	fmt = formatter.markdown(myLice, simplePackages)
-	# Path(f"{THISDIR}/data/simple.md").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/simple.md").read_text("utf-8")
+@pytest.mark.parametrize(
+	"_fmt, packages, expected_output_file, hide_params",
+	[
+		("markdown", simplePackages, "simple.md", None),
+		("markdown", complexPackages, "advanced.md", None),
+		("markdown", complexPackages, "advanced_ignore_params.md", []),
+		("json", simplePackages, "simple.json", None),
+		("json", complexPackages, "advanced.json", None),
+		(
+			"json",
+			complexPackages,
+			"advanced_ignore_params.json",
+			[ucstr("HOMEPAGE"), ucstr("AUTHOR")],
+		),
+		("csv", simplePackages, "simple.csv", None),
+		("csv", complexPackages, "advanced.csv", None),
+		("ansi", simplePackages, "simple.ansi", None),
+		("ansi", complexPackages, "advanced.ansi", None),
+		("ansi", complexPackages, "advanced.ansi", []),
+		("simple", simplePackages, "simple.txt", None),
+		("simple", complexPackages, "advanced.txt", None),
+		("simple", complexPackages, "advanced.txt", [ucstr("WRONG_PARAMETER")]),
+	],
+)
+def test_output__fmt(
+	_fmt: str,
+	packages: list[PackageInfo],
+	expected_output_file: str,
+	hide_params: list[ucstr] | None,
+):
+	actual_output = fmt.fmt(_fmt, myLice, packages, hide_parameters=hide_params)
+	expected_output = Path(f"{THISDIR}/data/{expected_output_file}")
+	# expected_output.write_text(actual_output, "utf-8")
+	assert assert_eq(actual_output, expected_output.read_text("utf-8"))
 
 
-def test_advancedMarkdown() -> None:
-	fmt = formatter.markdown(myLice, complexPackages)
-	# Path(f"{THISDIR}/data/advanced.md").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/advanced.md").read_text("utf-8")
+def assert_eq(actual_input: str, expected_output: str):
+	actual = actual_input.strip().splitlines()
+	expected = expected_output.strip().splitlines()
 
+	if len(expected) != len(actual):
+		return False
 
-def test_advancedMarkdownIgnoreParams() -> None:
-	fmt = formatter.markdown(myLice, complexPackages)
-	# Path(f"{THISDIR}/data/advanced_ignore_params.md").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/advanced_ignore_params.md").read_text("utf-8")
-
-
-def test_simpleRaw() -> None:
-	fmt = formatter.raw(myLice, simplePackages)
-	# Path(f"{THISDIR}/data/simple.json").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/simple.json").read_text("utf-8")
-
-
-def test_advancedRaw() -> None:
-	fmt = formatter.raw(myLice, complexPackages)
-	# Path(f"{THISDIR}/data/advanced.json").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/advanced.json").read_text("utf-8")
-
-
-def test_advancedRawIgnoreParams() -> None:
-	fmt = formatter.raw(
-		myLice, complexPackages, hide_parameters=[ucstr("HOMEPAGE"), ucstr("AUTHOR")]
-	)
-	# Path(f"{THISDIR}/data/advanced_ignore_params.json").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/advanced_ignore_params.json").read_text("utf-8")
-
-
-def test_simpleRawCsv() -> None:
-	fmt = formatter.rawCsv(myLice, simplePackages)
-	# Path(f"{THISDIR}/data/simple.csv").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/simple.csv").read_text("utf-8")
-
-
-def test_advancedRawCsv() -> None:
-	fmt = formatter.rawCsv(myLice, complexPackages)
-	# Path(f"{THISDIR}/data/advanced.csv").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/advanced.csv").read_text("utf-8")
-
-
-def test_simpleAnsi() -> None:
-	fmt = formatter.ansi(myLice, simplePackages)
-	# Path(f"{THISDIR}/data/simple.ansi").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/simple.ansi").read_text("utf-8")
-
-
-def test_advancedAnsi() -> None:
-	fmt = formatter.ansi(myLice, complexPackages)
-	# Path(f"{THISDIR}/data/advanced.ansi").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/advanced.ansi").read_text("utf-8")
-
-
-def test_advancedAnsiIgnoreParams() -> None:
-	fmt = formatter.ansi(myLice, complexPackages, hide_parameters=[])
-	assert fmt == Path(f"{THISDIR}/data/advanced.ansi").read_text("utf-8")
-
-
-def test_simplePlainText() -> None:
-	fmt = formatter.plainText(myLice, simplePackages)
-	# Path(f"{THISDIR}/data/simple.txt").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/simple.txt").read_text("utf-8")
-
-
-def test_advancedPlainText() -> None:
-	fmt = formatter.plainText(myLice, complexPackages)
-	# Path(f"{THISDIR}/data/advanced.txt").write_text(fmt, "utf-8")
-	assert fmt == Path(f"{THISDIR}/data/advanced.txt").read_text("utf-8")
-
-
-def test_advancedPlainTextIgnoreParams() -> None:
-	fmt = formatter.plainText(myLice, complexPackages, hide_parameters=[ucstr("WRONG_PARAMETER")])
-	assert fmt == Path(f"{THISDIR}/data/advanced.txt").read_text("utf-8")
+	return [x.strip() for x in actual] == [x.strip() for x in expected]

@@ -6,7 +6,8 @@ from pathlib import Path
 
 import tomli
 
-from licensecheck import license_matrix, packageinfo
+from licensecheck import license_matrix
+from licensecheck.packageinfo import PackageInfoManager
 from licensecheck.resolvers import native as res_native
 from licensecheck.resolvers import uv as res_uv
 from licensecheck.types import JOINS, License, PackageInfo, ucstr
@@ -42,6 +43,7 @@ def check(
 	requirements_paths: list[str],
 	groups: list[str],
 	this_license: License,
+	package_info_manager: PackageInfoManager,
 	ignore_packages: list[ucstr] | None = None,
 	fail_packages: list[ucstr] | None = None,
 	ignore_licenses: list[ucstr] | None = None,
@@ -69,7 +71,7 @@ def check(
 		onlyLicensesType.remove(License.NO_LICENSE)
 
 	# Check it is compatible with packages and add a note
-	packages = packageinfo.getPackages(requirements)
+	packages = package_info_manager.getPackages(requirements)
 	for package in packages:
 		# Deal with --ignore-packages and --fail-packages
 		package.licenseCompat = False

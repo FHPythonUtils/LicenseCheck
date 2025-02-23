@@ -12,7 +12,8 @@ from sys import stdin, stdout
 
 from fhconfparser import FHConfParser, SimpleConf
 
-from licensecheck import formatter, get_deps, license_matrix, packageinfo, types
+from licensecheck import fmt, get_deps, packageinfo, types
+from licensecheck import license_matrix
 
 stdout.reconfigure(encoding="utf-8")  # type: ignore[general-type-issues]
 
@@ -23,12 +24,13 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--license",
 		"-l",
-		help="",
+		help="Specify the project license explicitly, rather than rely on "
+		"licensecheck interpreting this from pyproject.toml",
 	)
 	parser.add_argument(
 		"--format",
 		"-f",
-		help=f"Output format. one of: {', '.join(list(formatter.formatMap))}. default=simple",
+		help=f"Output format. one of: {', '.join(list(fmt.formatMap))}. default=simple",
 	)
 	parser.add_argument(
 		"--requirements-paths",
@@ -45,47 +47,57 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--file",
 		"-o",
-		help="Filename to write to (omit for stdout)",
+		help="Filename to write output to (omit this for stdout)",
 	)
 	parser.add_argument(
 		"--ignore-packages",
-		help="a list of packages to ignore (compat=True)",
+		help="List of packages/dependencies to ignore (compat=True)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--fail-packages",
-		help="a list of packages to fail (compat=False)",
+		help="List of packages/dependencies to fail (compat=False)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--ignore-licenses",
-		help="a list of licenses to ignore (skipped, compat may still be False)",
+		help="List of licenses to ignore (skipped, compat may still be False)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--fail-licenses",
-		help="a list of licenses to fail (compat=False)",
+		help="List of licenses to fail (compat=False)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--only-licenses",
-		help="a list of allowed licenses (any other license will fail)",
+		help="List of allowed licenses (packages/dependencies with any other license will fail)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--skip-dependencies",
-		help="a list of packages to skip (compat=True)",
+		help="List of packages/dependencies to skip (this sets the 'compatability' to True)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--hide-output-parameters",
-		help="a list of parameters to hide from the produced output",
+		help="List of parameters to hide from the produced output",
 		nargs="+",
+	)
+	parser.add_argument(
+		"--show-only-failing",
+		help="Only output a list of incompatible/ failing packages from this lib",
+		action="store_true",
+	)
+	parser.add_argument(
+		"--pypi-api",
+		help="Specify a custom pypi api endpoint, for example if using a custom pypi server",
+		default="https://pypi.org/pypi/",
 	)
 	parser.add_argument(
 		"--zero",
 		"-0",
-		help="Return non zero exit code if an incompatible license is found",
+		help="Return non zero exit code if an incompatible license is found, ideal for CI/CD",
 		action="store_true",
 	)
 	args = vars(parser.parse_args())
@@ -98,7 +110,7 @@ def cli() -> None:  # pragma: no cover
 	sysexit(ec)
 
 
-def main(args: dict) -> int:
+def main(args: dict| argparse.Namespace) -> int:
 	"""Test entry point.
 
 	Note: FHConfParser (Parses in the following order: `pyproject.toml`,
@@ -138,10 +150,13 @@ def main(args: dict) -> int:
 	def getFromConfig(key: str) -> list[types.ucstr]:
 		return list(map(types.ucstr, simpleConf.get(key, [])))
 
+	package_info_manager = packageinfo.PackageInfoManager(simpleConf.get("pypi_api"))
+
 	incompatible, depsWithLicenses = get_deps.check(
 		requirements_paths=requirements_paths,
 		groups=simpleConf.get("groups", []),
 		this_license=this_license,
+		package_info_manager=package_info_manager,
 		ignore_packages=getFromConfig("ignore_packages"),
 		fail_packages=getFromConfig("fail_packages"),
 		ignore_licenses=getFromConfig("ignore_licenses"),
@@ -159,12 +174,14 @@ def main(args: dict) -> int:
 			f"Valid parameters are: {', '.join(available_params)}"
 		)
 		raise ValueError(msg)
-	if simpleConf.get("format", "simple") in formatter.formatMap:
+	if simpleConf.get("format", "simple") in fmt.formatMap:
 		print(
-			formatter.formatMap[simpleConf.get("format", "simple")](
+			fmt.fmt(
+				simpleConf.get("format", "simple"),
 				this_license,
 				sorted(depsWithLicenses),
 				hide_output_parameters,
+				show_only_failing=args.get("show_only_failing", False),
 			),
 			file=output_file,
 		)
