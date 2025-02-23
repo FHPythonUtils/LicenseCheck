@@ -158,7 +158,10 @@ def getMyPackageMetadata() -> dict[str, Any]:
 		config = configparser.ConfigParser()
 		config.read("setup.cfg")
 		if "metadata" in config.sections() and "license" in config["metadata"]:
-			classifiers = config.get("metadata", "classifiers").strip().splitlines()
+			if "classifier" in config["metadata"]:
+				classifiers = config.get("metadata", "classifier").strip().splitlines()
+			else:
+				classifiers = config.get("metadata", "classifiers").strip().splitlines()
 			licenseStr = ucstr(config.get("metadata", "license"))
 			return {"classifiers": classifiers, "license": licenseStr}
 
