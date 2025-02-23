@@ -1,0 +1,218 @@
+{
+	"info": {
+		"program": "licensecheck",
+		"version": "dev",
+		"license": "MIT LICENSE"
+	},
+	"project_license": "GPL LICENSE",
+	"packages": [
+		{
+			"name": "Markdown",
+			"homePage": "UNKNOWN",
+			"author": "Manfred Stienstra, Yuri Takhteyev",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "Pygments",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "appdirs",
+			"homePage": "http://github.com/ActiveState/appdirs",
+			"author": "Trent Mick",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "attrs",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "cattrs",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "certifi",
+			"homePage": "https://github.com/certifi/python-certifi",
+			"author": "Kenneth Reitz",
+			"license": "MOZILLA PUBLIC LICENSE 2.0 (MPL 2.0)",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "charset-normalizer",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "colorama",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "fhconfparser",
+			"homePage": "https://github.com/FHPythonUtils/FHConfParser",
+			"author": "FredHappyface",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "idna",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "loguru",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "markdown-it-py",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "mdurl",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "packaging",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "APACHE SOFTWARE LICENSE;; BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "platformdirs",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "requests",
+			"homePage": "https://requests.readthedocs.io",
+			"author": "Kenneth Reitz",
+			"license": "APACHE SOFTWARE LICENSE",
+			"licenseCompat": false,
+			"errorCode": 0
+		},
+		{
+			"name": "requests-cache",
+			"homePage": "https://github.com/requests-cache/requests-cache",
+			"author": "Roman Haritonov",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "requirements-parser",
+			"homePage": "https://github.com/madpah/requirements-parser/#readme",
+			"author": "Paul Horton",
+			"license": "APACHE SOFTWARE LICENSE",
+			"licenseCompat": false,
+			"errorCode": 0
+		},
+		{
+			"name": "rich",
+			"homePage": "https://github.com/Textualize/rich",
+			"author": "Will McGugan",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "six",
+			"homePage": "https://github.com/benjaminp/six",
+			"author": "Benjamin Peterson",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "tomli",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "types-setuptools",
+			"homePage": "https://github.com/python/typeshed",
+			"author": "UNKNOWN",
+			"license": "APACHE SOFTWARE LICENSE",
+			"licenseCompat": false,
+			"errorCode": 0
+		},
+		{
+			"name": "url-normalize",
+			"homePage": "https://github.com/niksite/url-normalize",
+			"author": "Nikolay Panov",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "urllib3",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "uv",
+			"homePage": "https://pypi.org/project/uv/",
+			"author": "uv",
+			"license": "MIT LICENSE;; APACHE SOFTWARE LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "win32_setctime",
+			"homePage": "https://github.com/Delgan/win32-setctime",
+			"author": "Delgan",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		}
+	]
+}

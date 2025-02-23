@@ -16,11 +16,11 @@ jobs:
     strategy:
       matrix:
         python-version:
-          - '3.8'
           - '3.9'
           - '3.10'
           - '3.11'
           - '3.12'
+          - '3.13'
 
     steps:
       - name: Checkout code
@@ -31,16 +31,16 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Poetry
+      - name: Install UV
         run: |
-          curl -sSL https://install.python-poetry.org | python3 -
+          curl -LsSf https://astral.sh/uv/install.sh | sh
 
       - name: Install dependencies
-        run: poetry install
+        run: uv sync
 
       - name: Run pytest
-        run: poetry run pytest ./tests/platform_independent
+        run: uv run pytest
 
       - name: Run ruff
-        run: poetry run ruff check --output-format=github
+        run: uv run ruff check --output-format=github
         continue-on-error: true

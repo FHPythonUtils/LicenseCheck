@@ -1,9 +1,11 @@
-[tool.poetry]
+[project]
 name = "licensecheck"
 version = "2024.3"
-license = "mit"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
-authors = ["FredHappyface"]
+authors = [{ name = "FredHappyface" }]
+requires-python = ">=3.9"
+readme = "README.md"
+license = "mit"
 classifiers = [
 	"Environment :: Console",
 	"Environment :: MacOS X",
@@ -16,41 +18,39 @@ classifiers = [
 	"Programming Language :: Python :: Implementation :: CPython",
 	"Topic :: Security",
 	"Topic :: Software Development :: Libraries :: Python Modules",
-	"Topic :: Utilities"
+	"Topic :: Utilities",
 ]
-homepage = "https://github.com/FHPythonUtils/LicenseCheck"
-repository = "https://github.com/FHPythonUtils/LicenseCheck"
-documentation = "https://github.com/FHPythonUtils/LicenseCheck/blob/master/README.md"
-readme = "README.md"
+dependencies = [
+	"appdirs>=1.4.4",
+	"fhconfparser>=2024.1",
+	"loguru>=0.7.3",
+	"markdown>=3.7",
+	"packaging>=24.2",
+	"requests>=2.32.3",
+	"requests-cache>=1.2.1",
+	"requirements-parser>=0.11.0",
+	"rich>=13.9.4",
+	"tomli>=2.2.1",
+	"uv>=0.6.2",
+]
 
-[tool.poetry.scripts]
-licensecheck = 'licensecheck:cli'
+[project.urls]
+Homepage = "https://github.com/FHPythonUtils/LicenseCheck"
+Repository = "https://github.com/FHPythonUtils/LicenseCheck"
+Documentation = "https://github.com/FHPythonUtils/LicenseCheck/blob/master/README.md"
 
-[tool.poetry.dependencies]
-python = "^3.8"
-requests = "<3,>=2.31.0"
-fhconfparser = "<2026,>=2024.1"
-tomli = "<3,>=2.0.1"
-rich = "<14,>=13.7.1"
-requests-cache = "<2,>=1.2.0"
-packaging = "<25,>=24.0"
-loguru = "<2,>=0.7.2"
-appdirs = "<2,>=1.4.4"
-markdown = "<4,>=3.6"
-uv = "<2,>=0.3.3"
-requirements-parser = "<2,>=0.11.0"
+[project.scripts]
+licensecheck = "licensecheck:cli"
 
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.1.1"
-handsdown = "^2.1.0"
-coverage = "^7.4.4"
-ruff = "^0.3.3"
-pyright = "^1.1.354"
-pytest-loguru = "^0.3.0"
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[dependency-groups]
+dev = [
+	"coverage>=7.6.1",
+	"handsdown>=2.1.0",
+	"pyright>=1.1.394",
+	"pytest>=8.3.4",
+	"pytest-loguru>=0.4.0",
+	"ruff>=0.9.7",
+]
 
 [tool.ruff]
 line-length = 100
@@ -60,7 +60,6 @@ target-version = "py38"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-	"ANN101",  # type annotation for self in method
 	"COM812",  # enforce trailing comma
 	"D2",  # pydocstyle formatting
 	"ISC001",
@@ -87,8 +86,6 @@ venvPath = "."
 venv = ".venv"
 
 [tool.licensecheck]
-# using = "requirements:requirements.txt;requirements_optional.txt"
-# format = "json"
 
 [tool.tox]
 legacy_tox_ini = """
@@ -103,3 +100,7 @@ env_list =
 deps = pytest
 commands = pytest tests
 """
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -14,7 +14,7 @@ def test_licenseLookup() -> None:
 		licenseName = license_matrix.licenseLookup(types.ucstr(rawLicense))._name_
 		licenses.append(licenseName)
 
-	for x in types.License._member_names_:  # noqa: SLF001
+	for x in types.License._member_names_:
 		if x not in licenses:
 			logger.error(f"{x} not in licenses")
 			raise AssertionError

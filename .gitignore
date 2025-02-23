@@ -1,9 +1,9 @@
-requirements_optional.txt
+!test
+uv.lock
+profile.*
+
+# DepHell stuff
 poetry.lock
-*.~lock*
-*.sqlite
-tests/data/test_main_tc*.*
-!tests/data/test_main_tc*_expected.*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

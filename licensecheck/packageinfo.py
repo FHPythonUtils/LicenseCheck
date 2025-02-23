@@ -162,7 +162,7 @@ def getMyPackageMetadata() -> dict[str, Any]:
 
 	if Path("pyproject.toml").exists():
 		pyproject = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
-		tool = pyproject.get("tool",{})
+		tool = pyproject.get("tool", {})
 		if "poetry" in tool:
 			return tool["poetry"]
 		if "flit" in tool:
@@ -188,7 +188,7 @@ def getMyPackageLicense() -> ucstr:
 	if "license" in metaData:
 		if isinstance(metaData["license"], dict) and metaData["license"].get("text") is not None:
 			return ucstr(metaData["license"].get("text", UNKNOWN))
-		return ucstr(f'{metaData["license"]}')
+		return ucstr(f"{metaData['license']}")
 	return ucstr(input("Enter the project license\n>"))
 
 

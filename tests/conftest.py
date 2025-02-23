@@ -9,7 +9,7 @@ from loguru import logger
 _ = _caplog
 
 
-@pytest.fixture()
+@pytest.fixture
 def caplog(_caplog: LogCaptureFixture) -> Generator[LogCaptureFixture, None, None]:
 	"""Wrapper over caplog fixture to fix loguru logs.
 

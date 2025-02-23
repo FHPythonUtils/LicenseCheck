@@ -1,24 +1,46 @@
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.3
+    rev: v0.9.6
     hooks:
       - id: ruff
         args: [ --fix ]
       - id: ruff-format
 
   - repo: https://github.com/RobertCraigie/pyright-python
-    rev: v1.1.354
+    rev: v1.1.394
     hooks:
     - id: pyright
 
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.3.3
+  - repo: local
     hooks:
-    -   id: python-safety-dependencies-check
-        files: pyproject.toml
+      - id: generate requirements
+        name: generate requirements
+        entry: uv export --no-hashes --no-emit-project --no-dev -o requirements.txt
+        language: system
+        pass_filenames: false
+      - id: safety
+        name: safety
+        entry: uv run safety
+        language: system
+        pass_filenames: false
+      - id: make docs
+        name: make docs
+        entry: uv run handsdown  --cleanup -o documentation/reference
+        language: system
+        pass_filenames: false
+      - id: build package
+        name: build package
+        entry: uv build
+        language: system
+        pass_filenames: false
+      - id: pytest
+        name: pytest
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -35,7 +57,7 @@ repos:
       - id: mixed-line-ending
 
   - repo: https://github.com/boidolr/pre-commit-images
-    rev: v1.5.2
+    rev: v1.8.4
     hooks:
       - id: optimize-jpg
       - id: optimize-png
