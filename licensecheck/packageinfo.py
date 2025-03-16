@@ -7,135 +7,202 @@ import contextlib
 from collections.abc import Iterable
 from importlib import metadata
 from pathlib import Path
+import re
 from typing import Any
 
+import license_expression
 import tomli
+import requests
+from license_expression import Licensing
 
 from licensecheck.session import session
 from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
 
+RAW_JOINS = " AND "
+
 class PackageInfoManager:
-	def __init__(self, pypi_api: str) -> None:
+	"""Manages retrieval of local and remote package information."""
+
+	def __init__(self, pypi_api: str = "https://pypi.org/pypi/") -> None:
 		self.pypi_api = pypi_api
 
 	def getPackages(self, reqs: set[ucstr]) -> set[PackageInfo]:
-		"""Get dependency info.
+		"""Retrieve package information from local installation or PyPI.
 
 		Args:
-		----
-			reqs (set[ucstr]): set of dependency names to gather info on
+		    reqs (set[ucstr]): Set of dependency names to retrieve information for.
 
 		Returns:
-		-------
-			set[PackageInfo]: set of dependencies
-
+		    set[PackageInfo]: A set of package information objects.
 		"""
-		packageinfo = set()
-		for requirement in reqs:
-			try:
-				packageinfo.add(self.getPackageInfoLocal(requirement))
-			except ModuleNotFoundError:
-				try:
-					packageinfo.add(self.getPackageInfoPypi(requirement))
-				except ModuleNotFoundError:
-					packageinfo.add(PackageInfo(name=requirement, errorCode=1))
+		package_info_set = set()
 
-		return packageinfo
+		for package in reqs:
+			package_info = self.get_package_info(package)
+			package_info_set.add(package_info)
 
-	def getPackageInfoLocal(self, requirement: ucstr) -> PackageInfo:
-		"""Get package info from local files including version, author
-		and	the license.
+		return package_info_set
 
-		:param str requirement: name of the package
-		:raises ModuleNotFoundError: if the package does not exist
-		:return PackageInfo: package information
+	def get_package_info(self, package: ucstr) -> PackageInfo:
+		"""Retrieve package information, preferring local data.
+
+		Args:
+		    package (ucstr): Package name.
+
+		Returns:
+		    PackageInfo: Information about the package.
+		"""
+		pkg_info = PackageInfo(name=package, errorCode=1)
+		try:
+			pkg_info =  LocalPackageInfo.get_info(package)
+		except ModuleNotFoundError:
+			with contextlib.suppress(ModuleNotFoundError):
+				pkg_info =  RemotePackageInfo.get_info(package, self.pypi_api)
+
+
+		licensing = Licensing()
+		parsed = None
+		try:
+			parsed = licensing.parse(re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", pkg_info.license.splitlines()[0]))
+		except license_expression.ExpressionParseError:
+			pass
+		if parsed is None:
+			return pkg_info
+
+		tokens = sorted(parsed.literals)
+		pkg_info.license = ucstr(JOINS.join(x.key for x in tokens))
+		return pkg_info
+
+
+class LocalPackageInfo:
+	"""Handles retrieval of package info from local installation."""
+
+	@staticmethod
+	def get_info(package: ucstr) -> PackageInfo:
+		"""Retrieve package metadata from local installation.
+
+		Args:
+		    package (ucstr): Package name.
+
+		Raises:
+		    ModuleNotFoundError: If the package is not found locally.
+
+		Returns:
+		    PackageInfo: Local package information.
 		"""
 		try:
-			# Get pkg metadata,, license, homepage, and author
-			pkgMetadata = metadata.metadata(requirement)
-			lice = licenseFromClassifierlist(pkgMetadata.get_all("Classifier"))
-			if lice == UNKNOWN:
-				lice = _pkgMetadataGet(pkgMetadata, "License")
-			homePage = _pkgMetadataGet(pkgMetadata, "Home-page")
-			author = _pkgMetadataGet(pkgMetadata, "Author")
-			name = _pkgMetadataGet(pkgMetadata, "Name")
-			version = _pkgMetadataGet(pkgMetadata, "Version")
-			size = 0
-			packagePaths = metadata.Distribution.from_name(requirement).files
-			if packagePaths is not None:
-				size = sum(pp.size for pp in packagePaths if pp.size is not None)
+			metadata_obj = metadata.metadata(package)
+			license_str = meta_get(metadata_obj, "License_Expression")
+			if license_str == UNKNOWN:
+				license_str = from_classifiers(metadata_obj.get_all("Classifier"))
+			if license_str == UNKNOWN:
+				license_str = meta_get(metadata_obj, "License")
 
-			# append to pkgInfo
 			return PackageInfo(
-				name=name,
-				version=version,
-				homePage=homePage,
-				author=author,
-				size=size,
-				license=ucstr(lice),
+				name=meta_get(metadata_obj, "Name"),
+				version=meta_get(metadata_obj, "Version"),
+				homePage=meta_get(metadata_obj, "Home-page"),
+				author=meta_get(metadata_obj, "Author"),
+				size=LocalPackageInfo.get_size(package),
+				license=ucstr(license_str),
 			)
-
 		except metadata.PackageNotFoundError as error:
 			raise ModuleNotFoundError from error
 
-	def getPackageInfoPypi(self, requirement: ucstr) -> PackageInfo:
-		"""Get package info from local files including version, author
-		and	the license.
+	@staticmethod
+	def get_size(package: ucstr) -> int:
+		"""Retrieve installed package size.
 
-		:param str requirement: name of the package
-		:raises ModuleNotFoundError: if the package does not exist
-		:return PackageInfo: package information
+		Args:
+		    package (ucstr): Package name.
+
+		Returns:
+		    int: Size in bytes.
 		"""
-		request = session.get(f"{self.pypi_api}{requirement}/json", timeout=60)
-		response = request.json()
-		try:
-			info = response.get("info", {})
-			licenseClassifier = licenseFromClassifierlist(info["classifiers"])
-
-			size = -1
-			urls = response.get("urls", [])
-			if urls:
-				size = int(urls[-1]["size"])
-
-			return PackageInfo(
-				name=_pkgMetadataGet(info, "name"),
-				version=_pkgMetadataGet(info, "version"),
-				homePage=_pkgMetadataGet(info, "home_page"),
-				author=_pkgMetadataGet(info, "author"),
-				size=size,
-				license=ucstr(
-					licenseClassifier
-					if licenseClassifier != UNKNOWN
-					else info.get("license", UNKNOWN) or UNKNOWN
-				),
-			)
-		except KeyError as error:
-			raise ModuleNotFoundError from error
+		package_files = metadata.Distribution.from_name(package).files
+		return sum(f.size for f in package_files if f.size is not None) if package_files else 0
 
 
-def _pkgMetadataGet(pkgMetadata: metadata.PackageMetadata | dict[str, Any], key: str) -> str:
-	"""Get a string from a key from pkgMetadata."""
-	value = pkgMetadata.get(key, UNKNOWN)
-	if not isinstance(value, str) and isinstance(value, Iterable):
-		value = JOINS.join(str(x) for x in value)
-	return str(value) or UNKNOWN
+class RemotePackageInfo:
+	"""Handles retrieval of package info from PyPI."""
+
+	@staticmethod
+	def get_info(package: ucstr, pypi_api: str) -> PackageInfo:
+		"""Retrieve package metadata from PyPI.
+
+		Args:
+		    package (ucstr): Package name.
+		    pypi_api (str): PyPI API base URL.
+
+		Raises:
+		    ModuleNotFoundError: If package is not found.
+
+		Returns:
+		    PackageInfo: Remote package information.
+		"""
+		response = session.get(f"{pypi_api}{package}/json", timeout=60)
+
+		if response.status_code != 200:
+			raise ModuleNotFoundError
+
+		data = response.json().get("info", {})
+
+		license_str = meta_get(data, "license_expression")
+		if license_str == UNKNOWN:
+			license_str = from_classifiers(data.get("classifiers", []))
+		if license_str == UNKNOWN:
+			license_str = meta_get(data, "license")
+
+		return PackageInfo(
+			name=meta_get(data, "name"),
+			version=meta_get(data, "version"),
+			homePage=meta_get(data, "home_page"),
+			author=meta_get(data, "author"),
+			size=RemotePackageInfo.get_size(data),
+			license=ucstr(license_str),
+		)
+
+	@staticmethod
+	def get_size(data: dict[str, Any]) -> int:
+		"""Retrieve package size from PyPI metadata.
+
+		Args:
+		    data (dict[str, Any]): PyPI response JSON.
+
+		Returns:
+		    int: Package size in bytes.
+		"""
+		urls = data.get("urls", [])
+		return int(urls[-1]["size"]) if urls else -1
 
 
-def licenseFromClassifierlist(classifiers: list[str] | None | list[Any]) -> ucstr:
-	"""Get license string from a list of project classifiers.
+
+def meta_get(metadata_obj: metadata.PackageMetadata | dict[str, Any], key: str) -> str:
+	"""Retrieve metadata value safely.
 
 	Args:
-	----
-		classifiers (list[str]): list of classifiers
+		metadata_obj (metadata.PackageMetadata | dict[str, Any]): Metadata source.
+		key (str): Metadata key.
 
 	Returns:
-	-------
-		str: the license name
+		str: Retrieved metadata value.
+	"""
+	value = metadata_obj.get(key, UNKNOWN)
+	if isinstance(value, Iterable) and not isinstance(value, str):
+		return RAW_JOINS.join(str(x) for x in value)
+	return str(value) if value else UNKNOWN
 
+
+def from_classifiers(classifiers: list[str] | None) -> ucstr:
+	"""Extract license from classifiers.
+
+	:param list[str] | None classifiers: list of classifiers
+	:return ucstr: licenses as a ucstr
 	"""
 	if not classifiers:
 		return UNKNOWN
+
 	licenses: list[str] = []
 	for _val in classifiers:
 		val = str(_val)
@@ -143,85 +210,52 @@ def licenseFromClassifierlist(classifiers: list[str] | None | list[Any]) -> ucst
 			lice = val.split(" :: ")[-1]
 			if lice != "OSI Approved":
 				licenses.append(lice)
-	return ucstr(JOINS.join(licenses) if len(licenses) > 0 else UNKNOWN)
+	return ucstr(RAW_JOINS.join(licenses) if len(licenses) > 0 else UNKNOWN)
 
 
-def getMyPackageMetadata() -> dict[str, Any]:
-	"""Get the package classifiers and license from "setup.cfg", "pyproject.toml".
+class ProjectMetadata:
+	"""Handles extraction of project metadata from configuration files."""
 
-	Returns
-	-------
-		dict[str, Any]: {"classifiers": list[str], "license": ucstr}
+	@staticmethod
+	def get_metadata() -> dict[str, Any]:
+		"""Extract project metadata from setup.cfg or pyproject.toml.
 
-	"""
-	if Path("setup.cfg").exists():
-		config = configparser.ConfigParser()
-		config.read("setup.cfg")
-		if "metadata" in config.sections() and "license" in config["metadata"]:
-			if "classifier" in config["metadata"]:
-				classifiers = config.get("metadata", "classifier").strip().splitlines()
-			else:
-				classifiers = config.get("metadata", "classifiers").strip().splitlines()
-			licenseStr = ucstr(config.get("metadata", "license"))
-			return {"classifiers": classifiers, "license": licenseStr}
+		:return dict[str, Any]: Extracted metadata.
+		"""
+		if Path("setup.cfg").exists():
+			config = configparser.ConfigParser()
+			config.read("setup.cfg")
+			if "metadata" in config:
+				classifiers = config.get("metadata", "classifier", fallback="").strip().splitlines()
+				license_str = ucstr(config.get("metadata", "license", fallback=""))
+				return {"classifiers": classifiers, "license": license_str}
 
-	if Path("pyproject.toml").exists():
-		pyproject = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
-		tool = pyproject.get("tool", {})
-		if "poetry" in tool:
-			return tool["poetry"]
-		if "flit" in tool:
-			return tool["flit"]["metadata"]
-		if pyproject.get("project") is not None:
-			return pyproject["project"]
+		if Path("pyproject.toml").exists():
+			pyproject = tomli.loads(Path("pyproject.toml").read_text(encoding="utf-8"))
+			tool = pyproject.get("tool", {})
+			return (
+				pyproject.get("project", {})
+				or tool.get("poetry")
+				or tool.get("flit", {}).get("metadata", {})
 
-	return {"classifiers": [], "license": ucstr("")}
+			)
 
+		return {"classifiers": [], "license": UNKNOWN}
 
-def getMyPackageLicense() -> ucstr:
-	"""Get the package license from "setup.cfg", "pyproject.toml" or user input.
+	@staticmethod
+	def get_license() -> ucstr:
+		"""Extract license from project metadata.
 
-	Returns
-	-------
-		str: license name
+		Returns:
+		    ucstr: License string.
+		"""
+		metadata = ProjectMetadata.get_metadata()
+		license_str = from_classifiers(metadata.get("classifiers", []))
 
-	"""
-	metaData = getMyPackageMetadata()
-	licenseClassifier = licenseFromClassifierlist(metaData.get("classifiers", []))
-	if licenseClassifier != UNKNOWN:
-		return licenseClassifier
-	if "license" in metaData:
-		if isinstance(metaData["license"], dict) and metaData["license"].get("text") is not None:
-			return ucstr(metaData["license"].get("text", UNKNOWN))
-		return ucstr(f"{metaData['license']}")
-	return ucstr(input("Enter the project license\n>"))
+		if license_str != UNKNOWN:
+			return license_str
 
+		if isinstance(metadata.get("license"), dict):
+			return ucstr(metadata["license"].get("text", UNKNOWN))
 
-def getModuleSize(path: Path, name: ucstr) -> int:
-	"""Get the size of a given module as an int.
-
-	Args:
-	----
-		path (Path): path to package
-		name (str): name of package
-
-	Returns:
-	-------
-		int: size in bytes
-
-	"""
-	HTTP_OK = 200
-	size = 0
-	with contextlib.suppress(AttributeError):
-		size = sum(
-			f.stat().st_size
-			for f in path.glob("**/*")
-			if f.is_file() and "__pycache__" not in str(f)
-		)
-	if size > 0:
-		return size
-	request = session.get(f"https://pypi.org/pypi/{name}/json", timeout=60)
-	if request.status_code != HTTP_OK:
-		return 0
-	response = request.json()
-	return int(response["urls"][-1]["size"])
+		return ucstr(metadata.get("license", UNKNOWN))

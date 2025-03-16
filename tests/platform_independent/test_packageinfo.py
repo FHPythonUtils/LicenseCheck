@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib
 from pathlib import Path
 from typing import Any
 
@@ -13,16 +14,17 @@ THISDIR = str(Path(__file__).resolve().parent)
 
 package_info_manager = PackageInfoManager("https://pypi.org/pypi/")
 
+
 def test_getPackageInfoLocal() -> None:
 	try:
-		package = package_info_manager.getPackageInfoLocal(types.ucstr("requests"))
+		package = packageinfo.LocalPackageInfo.get_info(types.ucstr("requests"))
 		assert package.name == "requests"
 	except ModuleNotFoundError:
 		assert True
 
 
 def test_getPackageInfoPypi() -> None:
-	package = package_info_manager.getPackageInfoPypi(types.ucstr("requests"))
+	package = packageinfo.RemotePackageInfo.get_info(types.ucstr("requests"),"https://pypi.org/pypi/")
 
 	assert package.name == "requests"
 	assert package.homePage == "https://requests.readthedocs.io"
@@ -32,7 +34,7 @@ def test_getPackageInfoPypi() -> None:
 
 def test_getPackageInfoLocalNotFound() -> None:
 	try:
-		package_info_manager.getPackageInfoLocal(types.ucstr("this_package_does_not_exist"))
+		packageinfo.LocalPackageInfo.get_info(types.ucstr("this_package_does_not_exist"))
 		raise AssertionError
 	except ModuleNotFoundError:
 		assert True
@@ -40,7 +42,7 @@ def test_getPackageInfoLocalNotFound() -> None:
 
 def test_getPackagePypiLocalNotFound() -> None:
 	try:
-		package_info_manager.getPackageInfoPypi(types.ucstr("this_package_does_not_exist"))
+		packageinfo.RemotePackageInfo.get_info(types.ucstr("this_package_does_not_exist"), "https://pypi.org/pypi/")
 		raise AssertionError
 	except ModuleNotFoundError:
 		assert True
@@ -48,7 +50,6 @@ def test_getPackagePypiLocalNotFound() -> None:
 
 def test_getPackages() -> None:
 	packages = package_info_manager.getPackages({types.ucstr("requests")})
-
 	assert all(
 		(
 			package.name == "requests"
@@ -69,25 +70,23 @@ def test_getPackagesNotFound() -> None:
 	)
 
 
-def test_licenseFromClassifierlist() -> None:
+def test_from_classifiers() -> None:
 	licenses = []
 	for rawLicense in Path(f"{THISDIR}/data/pypiClassifiers.txt").read_text("utf-8").splitlines():
-		licenses.append(packageinfo.licenseFromClassifierlist([rawLicense]))
+		licenses.append(packageinfo.from_classifiers([rawLicense]))
 	# Path(f"{THISDIR}/data/licenses.txt").write_text("\n".join(licenses), "utf-8")
 	assert "\n".join(licenses) == Path(f"{THISDIR}/data/licenses.txt").read_text("utf-8")
 
 
 def test_licenseFromEmptyClassifierlist() -> None:
 	licenses = []
-	licenses.append(packageinfo.licenseFromClassifierlist([]))
+	licenses.append(packageinfo.from_classifiers([]))
 	assert licenses == [types.UNKNOWN]
 
 
 def test_getModuleSize() -> None:
-	size = packageinfo.getModuleSize(
-		Path("this_package_does_not_exist"), types.ucstr("this_package_does_not_exist")
-	)
-	assert size == 0
+	with pytest.raises(importlib.metadata.PackageNotFoundError):
+		packageinfo.LocalPackageInfo.get_size(types.ucstr("this_package_does_not_exist"))
 
 
 # Define test cases
@@ -98,11 +97,11 @@ def test_getModuleSize() -> None:
 		({"name": ["Package Name"], "version": "1.0"}, "name", "Package Name"),
 		({"name": [1], "version": "1.0"}, "name", "1"),
 		({"name": 1, "version": "1.0"}, "name", "1"),
-		({"name": None, "version": "1.0"}, "name", "None"),
-		({"name": ["Package", "Name"], "version": "1.0"}, "name", "Package;; Name"),
+		({"name": None, "version": "1.0"}, "name", types.UNKNOWN),
+		({"name": ["Package", "Name"], "version": "1.0"}, "name", "Package AND Name"),
 		({}, "name", types.UNKNOWN),
 		({"name": "Package Name", "version": "1.0"}, "description", types.UNKNOWN),
 	],
 )
-def test_pkgMetadataGet(pkg_metadata: dict[str, Any], key: str, expected: str) -> None:
-	assert packageinfo._pkgMetadataGet(pkg_metadata, key) == expected  # noqa: SLF001
+def test_get_metadata(pkg_metadata: dict[str, Any], key: str, expected: str) -> None:
+	assert packageinfo.meta_get(pkg_metadata, key) == expected

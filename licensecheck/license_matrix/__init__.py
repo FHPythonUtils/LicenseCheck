@@ -53,6 +53,7 @@ with Path(THISDIR / "matrix.csv").open(mode="r", newline="", encoding="utf-8") a
 
 
 termToLicense = {
+	"UNKNOWN": L.UNKNOWN,
 	"PUBLIC DOMAIN": L.PUBLIC,
 	"CC-PDDC": L.PUBLIC,
 	"CC0-1.0": L.PUBLIC,

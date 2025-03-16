@@ -60,4 +60,5 @@ test_data = [
 def test_main(args: dict[str, Any], expected_exit_code: int) -> None:
 	exit_code = main(args)
 	assert exit_code == expected_exit_code
+	# Path(args["file"].replace(".", "_expected.")).write_text(aux_get_text(args["file"]), encoding="utf-8")
 	assert aux_get_text(args["file"]) == aux_get_text(args["file"].replace(".", "_expected."))

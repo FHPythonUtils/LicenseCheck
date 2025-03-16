@@ -17,12 +17,14 @@
 │ ✔          │ Pygments            │ BSD LICENSE                           │
 │ ✔          │ appdirs             │ MIT LICENSE                           │
 │ ✔          │ attrs               │ MIT LICENSE                           │
+│ ✔          │ boolean.py          │ BSD-2-CLAUSE                          │
 │ ✔          │ cattrs              │ MIT LICENSE                           │
-│ ✔          │ certifi             │ MOZILLA PUBLIC LICENSE 2.0 (MPL 2.0)  │
+│ ✔          │ certifi             │ MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_  │
 │ ✔          │ charset-normalizer  │ MIT LICENSE                           │
 │ ✔          │ colorama            │ BSD LICENSE                           │
 │ ✔          │ fhconfparser        │ MIT LICENSE                           │
 │ ✔          │ idna                │ BSD LICENSE                           │
+│ ✔          │ license-expression  │ APACHE-2.0                            │
 │ ✔          │ loguru              │ MIT LICENSE                           │
 │ ✔          │ markdown-it-py      │ MIT LICENSE                           │
 │ ✔          │ mdurl               │ MIT LICENSE                           │
@@ -38,7 +40,7 @@
 │ ✔          │ types-setuptools    │ APACHE SOFTWARE LICENSE               │
 │ ✔          │ url-normalize       │ MIT LICENSE                           │
 │ ✔          │ urllib3             │ MIT LICENSE                           │
-│ ✔          │ uv                  │ MIT LICENSE;; APACHE SOFTWARE LICENSE │
+│ ✔          │ uv                  │ APACHE SOFTWARE LICENSE;; MIT LICENSE │
 │ ✔          │ win32_setctime      │ MIT LICENSE                           │
 └────────────┴─────────────────────┴───────────────────────────────────────┘
 

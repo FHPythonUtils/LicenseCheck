@@ -39,6 +39,14 @@
 			"errorCode": 0
 		},
 		{
+			"name": "boolean.py",
+			"homePage": "https://github.com/bastikr/boolean.py",
+			"author": "Sebastian Kraemer",
+			"license": "BSD-2-CLAUSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
 			"name": "cattrs",
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",
@@ -50,7 +58,7 @@
 			"name": "certifi",
 			"homePage": "https://github.com/certifi/python-certifi",
 			"author": "Kenneth Reitz",
-			"license": "MOZILLA PUBLIC LICENSE 2.0 (MPL 2.0)",
+			"license": "MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
@@ -84,6 +92,14 @@
 			"author": "UNKNOWN",
 			"license": "BSD LICENSE",
 			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "license-expression",
+			"homePage": "https://github.com/aboutcode-org/license-expression",
+			"author": "nexB. Inc. and others",
+			"license": "APACHE-2.0",
+			"licenseCompat": false,
 			"errorCode": 0
 		},
 		{
@@ -160,8 +176,8 @@
 		},
 		{
 			"name": "setuptools",
-			"homePage": "None",
-			"author": "None",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -210,7 +226,7 @@
 			"name": "uv",
 			"homePage": "https://pypi.org/project/uv/",
 			"author": "uv",
-			"license": "MIT LICENSE;; APACHE SOFTWARE LICENSE",
+			"license": "APACHE SOFTWARE LICENSE;; MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
