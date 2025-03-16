@@ -1,18 +1,19 @@
 # License Matrix
 
-[Licensecheck Index](../README.md#licensecheck-index) / [Licensecheck](./index.md#licensecheck) / License Matrix
+[Licensecheck Index](../../README.md#licensecheck-index) / [Licensecheck](../index.md#licensecheck) / License Matrix
 
-> Auto-generated documentation for [licensecheck.license_matrix](../../../licensecheck/license_matrix.py) module.
+> Auto-generated documentation for [licensecheck.license_matrix](../../../../licensecheck/license_matrix/__init__.py) module.
 
 - [License Matrix](#license-matrix)
   - [depCompatWMyLice](#depcompatwmylice)
   - [liceCompat](#licecompat)
   - [licenseLookup](#licenselookup)
   - [licenseType](#licensetype)
+  - [Modules](#modules)
 
 ## depCompatWMyLice
 
-[Show source in license_matrix.py:130](../../../licensecheck/license_matrix.py#L130)
+[Show source in __init__.py:137](../../../../licensecheck/license_matrix/__init__.py#L137)
 
 Identify if the end user license is compatible with the dependency license(s).
 
@@ -44,13 +45,13 @@ def depCompatWMyLice(
 
 #### See also
 
-- [License](./types.md#license)
+- [License](../types.md#license)
 
 
 
 ## liceCompat
 
-[Show source in license_matrix.py:170](../../../licensecheck/license_matrix.py#L170)
+[Show source in __init__.py:177](../../../../licensecheck/license_matrix/__init__.py#L177)
 
 Identify if the end user license is compatible with the dependency license.
 
@@ -81,13 +82,13 @@ def liceCompat(
 
 #### See also
 
-- [License](./types.md#license)
+- [License](../types.md#license)
 
 
 
 ## licenseLookup
 
-[Show source in license_matrix.py:55](../../../licensecheck/license_matrix.py#L55)
+[Show source in __init__.py:99](../../../../licensecheck/license_matrix/__init__.py#L99)
 
 Identify a license from an uppercase string representation of a license.
 
@@ -109,14 +110,14 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 
 #### See also
 
-- [License](./types.md#license)
-- [ucstr](./types.md#ucstr)
+- [License](../types.md#license)
+- [ucstr](../types.md#ucstr)
 
 
 
 ## licenseType
 
-[Show source in license_matrix.py:111](../../../licensecheck/license_matrix.py#L111)
+[Show source in __init__.py:118](../../../../licensecheck/license_matrix/__init__.py#L118)
 
 Return a list of license types from a license string.
 
@@ -140,5 +141,11 @@ def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[
 
 #### See also
 
-- [License](./types.md#license)
-- [ucstr](./types.md#ucstr)
+- [License](../types.md#license)
+- [ucstr](../types.md#ucstr)
+
+
+
+## Modules
+
+- [Spdx](./spdx.md)

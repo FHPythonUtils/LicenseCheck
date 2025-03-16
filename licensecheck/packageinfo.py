@@ -4,22 +4,21 @@ from __future__ import annotations
 
 import configparser
 import contextlib
+import re
 from collections.abc import Iterable
 from importlib import metadata
 from pathlib import Path
-import re
 from typing import Any
 
 import license_expression
 import tomli
-import requests
 from license_expression import Licensing
 
 from licensecheck.session import session
 from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
-
 RAW_JOINS = " AND "
+
 
 class PackageInfoManager:
 	"""Manages retrieval of local and remote package information."""
@@ -35,6 +34,7 @@ class PackageInfoManager:
 
 		Returns:
 		    set[PackageInfo]: A set of package information objects.
+
 		"""
 		package_info_set = set()
 
@@ -52,19 +52,21 @@ class PackageInfoManager:
 
 		Returns:
 		    PackageInfo: Information about the package.
+
 		"""
 		pkg_info = PackageInfo(name=package, errorCode=1)
 		try:
-			pkg_info =  LocalPackageInfo.get_info(package)
+			pkg_info = LocalPackageInfo.get_info(package)
 		except ModuleNotFoundError:
 			with contextlib.suppress(ModuleNotFoundError):
-				pkg_info =  RemotePackageInfo.get_info(package, self.pypi_api)
-
+				pkg_info = RemotePackageInfo.get_info(package, self.pypi_api)
 
 		licensing = Licensing()
 		parsed = None
 		try:
-			parsed = licensing.parse(re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", pkg_info.license.splitlines()[0]))
+			parsed = licensing.parse(
+				re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", pkg_info.license.splitlines()[0])
+			)
 		except license_expression.ExpressionParseError:
 			pass
 		if parsed is None:
@@ -90,6 +92,7 @@ class LocalPackageInfo:
 
 		Returns:
 		    PackageInfo: Local package information.
+
 		"""
 		try:
 			metadata_obj = metadata.metadata(package)
@@ -119,6 +122,7 @@ class LocalPackageInfo:
 
 		Returns:
 		    int: Size in bytes.
+
 		"""
 		package_files = metadata.Distribution.from_name(package).files
 		return sum(f.size for f in package_files if f.size is not None) if package_files else 0
@@ -140,6 +144,7 @@ class RemotePackageInfo:
 
 		Returns:
 		    PackageInfo: Remote package information.
+
 		"""
 		response = session.get(f"{pypi_api}{package}/json", timeout=60)
 
@@ -172,10 +177,10 @@ class RemotePackageInfo:
 
 		Returns:
 		    int: Package size in bytes.
+
 		"""
 		urls = data.get("urls", [])
 		return int(urls[-1]["size"]) if urls else -1
-
 
 
 def meta_get(metadata_obj: metadata.PackageMetadata | dict[str, Any], key: str) -> str:
@@ -187,6 +192,7 @@ def meta_get(metadata_obj: metadata.PackageMetadata | dict[str, Any], key: str) 
 
 	Returns:
 		str: Retrieved metadata value.
+
 	"""
 	value = metadata_obj.get(key, UNKNOWN)
 	if isinstance(value, Iterable) and not isinstance(value, str):
@@ -237,7 +243,6 @@ class ProjectMetadata:
 				pyproject.get("project", {})
 				or tool.get("poetry")
 				or tool.get("flit", {}).get("metadata", {})
-
 			)
 
 		return {"classifiers": [], "license": UNKNOWN}
@@ -248,6 +253,7 @@ class ProjectMetadata:
 
 		Returns:
 		    ucstr: License string.
+
 		"""
 		metadata = ProjectMetadata.get_metadata()
 		license_str = from_classifiers(metadata.get("classifiers", []))

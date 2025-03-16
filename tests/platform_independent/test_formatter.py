@@ -1,10 +1,11 @@
 from __future__ import annotations
+
 from pathlib import Path
+
+import pytest
 
 from licensecheck import fmt
 from licensecheck.types import License, PackageInfo, ucstr
-import pytest
-from pathlib import Path
 
 fmt.INFO = {"program": "licensecheck", "version": "dev", "license": "MIT LICENSE"}
 
@@ -38,7 +39,7 @@ myLice = License.MIT
 
 
 @pytest.mark.parametrize(
-	"_fmt, packages, expected_output_file, hide_params",
+	("_fmt", "packages", "expected_output_file", "hide_params"),
 	[
 		("markdown", simplePackages, "simple.md", None),
 		("markdown", complexPackages, "advanced.md", None),
@@ -66,14 +67,14 @@ def test_output__fmt(
 	packages: list[PackageInfo],
 	expected_output_file: str,
 	hide_params: list[ucstr] | None,
-):
+) -> None:
 	actual_output = fmt.fmt(_fmt, myLice, packages, hide_parameters=hide_params)
 	expected_output = Path(f"{THISDIR}/data/{expected_output_file}")
 	# expected_output.write_text(actual_output, "utf-8")
 	assert assert_eq(actual_output, expected_output.read_text("utf-8"))
 
 
-def assert_eq(actual_input: str, expected_output: str):
+def assert_eq(actual_input: str, expected_output: str) -> bool:
 	actual = actual_input.strip().splitlines()
 	expected = expected_output.strip().splitlines()
 

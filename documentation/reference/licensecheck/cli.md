@@ -24,7 +24,7 @@ def cli() -> None: ...
 
 ## main
 
-[Show source in cli.py:101](../../../licensecheck/cli.py#L101)
+[Show source in cli.py:112](../../../licensecheck/cli.py#L112)
 
 Test entry point.
 
@@ -35,5 +35,5 @@ Note: FHConfParser (Parses in the following order: `pyproject.toml`,
 #### Signature
 
 ```python
-def main(args: dict) -> int: ...
+def main(args: dict | argparse.Namespace) -> int: ...
 ```

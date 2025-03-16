@@ -110,11 +110,9 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 		if liceStr.strip() in licenseStr:
 			return lice
 
-
 	if licenseStr not in (ignoreLicenses or ""):
 		logger.warning(f"'{licenseStr}' License not identified so falling back to UNKNOWN")
 	return L.UNKNOWN
-
 
 
 def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[L]:

@@ -21,17 +21,18 @@ classifiers = [
 	"Topic :: Utilities",
 ]
 dependencies = [
-	"appdirs>=1.4.4",
-	"fhconfparser>=2024.1",
-	"loguru>=0.7.3",
-	"markdown>=3.7",
-	"packaging>=24.2",
-	"requests>=2.32.3",
-	"requests-cache>=1.2.1",
-	"requirements-parser>=0.11.0",
-	"rich>=13.9.4",
-	"tomli>=2.2.1",
-	"uv>=0.6.2",
+    "appdirs>=1.4.4",
+    "fhconfparser>=2024.1",
+    "license-expression>=30.4.1",
+    "loguru>=0.7.3",
+    "markdown>=3.7",
+    "packaging>=24.2",
+    "requests>=2.32.3",
+    "requests-cache>=1.2.1",
+    "requirements-parser>=0.11.0",
+    "rich>=13.9.4",
+    "tomli>=2.2.1",
+    "uv>=0.6.6",
 ]
 
 [project.urls]
@@ -44,12 +45,13 @@ licensecheck = "licensecheck:cli"
 
 [dependency-groups]
 dev = [
-	"coverage>=7.6.1",
-	"handsdown>=2.1.0",
-	"pyright>=1.1.394",
-	"pytest>=8.3.4",
-	"pytest-loguru>=0.4.0",
-	"ruff>=0.9.7",
+    "coverage>=7.6.12",
+    "handsdown>=2.1.0",
+    "pyright>=1.1.396",
+    "pytest>=8.3.5",
+    "pytest-loguru>=0.4.0",
+    "ruff>=0.11.0",
+    "safety>=3.3.1",
 ]
 
 [tool.ruff]

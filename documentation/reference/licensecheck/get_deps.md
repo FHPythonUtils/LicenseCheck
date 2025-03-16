@@ -10,7 +10,7 @@
 
 ## check
 
-[Show source in get_deps.py:41](../../../licensecheck/get_deps.py#L41)
+[Show source in get_deps.py:42](../../../licensecheck/get_deps.py#L42)
 
 #### Signature
 
@@ -19,6 +19,7 @@ def check(
     requirements_paths: list[str],
     groups: list[str],
     this_license: License,
+    package_info_manager: PackageInfoManager,
     ignore_packages: list[ucstr] | None = None,
     fail_packages: list[ucstr] | None = None,
     ignore_licenses: list[ucstr] | None = None,
@@ -31,13 +32,14 @@ def check(
 #### See also
 
 - [License](./types.md#license)
+- [PackageInfoManager](./packageinfo.md#packageinfomanager)
 - [PackageInfo](./types.md#packageinfo)
 
 
 
 ## resolve_requirements
 
-[Show source in get_deps.py:15](../../../licensecheck/get_deps.py#L15)
+[Show source in get_deps.py:16](../../../licensecheck/get_deps.py#L16)
 
 #### Signature
 

@@ -11,9 +11,9 @@
 
 - [Module](./module.md)
 - [Cli](./cli.md)
-- [Formatter](./formatter.md)
+- [Fmt](./fmt.md)
 - [Get Deps](./get_deps.md)
-- [License Matrix](./license_matrix.md)
+- [License Matrix](license_matrix/index.md)
 - [Packageinfo](./packageinfo.md)
 - [Resolvers](resolvers/index.md)
 - [Session](./session.md)

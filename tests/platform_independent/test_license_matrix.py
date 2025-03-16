@@ -1,5 +1,5 @@
-from pathlib import Path
 import sys
+from pathlib import Path
 
 from _pytest.logging import LogCaptureFixture  # pyright: ignore [reportMissingImports]
 from loguru import logger
@@ -43,8 +43,11 @@ def test_licenseType() -> None:
 	# cmp_file.write_text("\n".join(licenses), "utf-8")
 	assert licenseNames == cmp_file.read_text("utf-8").splitlines()
 
+
 def test_licenseType_unknown() -> None:
-    assert all(x == types.L.UNKNOWN for x in license_matrix.licenseType("this_license_does_not_exist"))
+	assert all(
+		x == types.L.UNKNOWN for x in license_matrix.licenseType("this_license_does_not_exist")
+	)
 
 
 def test_licenseType_empty() -> None:

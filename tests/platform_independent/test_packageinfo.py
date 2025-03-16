@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from licensecheck import types, packageinfo
+from licensecheck import packageinfo, types
 from licensecheck.packageinfo import PackageInfoManager
 
 THISDIR = str(Path(__file__).resolve().parent)
@@ -24,7 +24,9 @@ def test_getPackageInfoLocal() -> None:
 
 
 def test_getPackageInfoPypi() -> None:
-	package = packageinfo.RemotePackageInfo.get_info(types.ucstr("requests"),"https://pypi.org/pypi/")
+	package = packageinfo.RemotePackageInfo.get_info(
+		types.ucstr("requests"), "https://pypi.org/pypi/"
+	)
 
 	assert package.name == "requests"
 	assert package.homePage == "https://requests.readthedocs.io"
@@ -42,7 +44,9 @@ def test_getPackageInfoLocalNotFound() -> None:
 
 def test_getPackagePypiLocalNotFound() -> None:
 	try:
-		packageinfo.RemotePackageInfo.get_info(types.ucstr("this_package_does_not_exist"), "https://pypi.org/pypi/")
+		packageinfo.RemotePackageInfo.get_info(
+			types.ucstr("this_package_does_not_exist"), "https://pypi.org/pypi/"
+		)
 		raise AssertionError
 	except ModuleNotFoundError:
 		assert True

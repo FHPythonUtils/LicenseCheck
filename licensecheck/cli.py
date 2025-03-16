@@ -12,8 +12,7 @@ from sys import stdin, stdout
 
 from fhconfparser import FHConfParser, SimpleConf
 
-from licensecheck import fmt, get_deps, packageinfo, types
-from licensecheck import license_matrix
+from licensecheck import fmt, get_deps, license_matrix, packageinfo, types
 
 stdout.reconfigure(encoding="utf-8")  # type: ignore[general-type-issues]
 
@@ -110,7 +109,7 @@ def cli() -> None:  # pragma: no cover
 	sysexit(ec)
 
 
-def main(args: dict| argparse.Namespace) -> int:
+def main(args: dict | argparse.Namespace) -> int:
 	"""Test entry point.
 
 	Note: FHConfParser (Parses in the following order: `pyproject.toml`,
