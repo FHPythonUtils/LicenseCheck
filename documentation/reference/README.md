@@ -6,9 +6,9 @@ A full list of `Licensecheck` project modules.
 
 - [Licensecheck](licensecheck/index.md#licensecheck)
     - [Module](licensecheck/module.md#module)
+    - [Checker](licensecheck/checker.md#checker)
     - [Cli](licensecheck/cli.md#cli)
     - [Fmt](licensecheck/fmt.md#fmt)
-    - [Get Deps](licensecheck/get_deps.md#get-deps)
     - [License Matrix](licensecheck/license_matrix/index.md#license-matrix)
         - [Spdx](licensecheck/license_matrix/spdx.md#spdx)
     - [Packageinfo](licensecheck/packageinfo.md#packageinfo)

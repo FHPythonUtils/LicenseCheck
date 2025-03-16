@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from fnmatch import fnmatch
 from pathlib import Path
 
 import tomli
@@ -76,9 +77,9 @@ def check(
 		# Deal with --ignore-packages and --fail-packages
 		package.licenseCompat = False
 		packageName = package.name.upper()
-		if packageName in ignore_packages:
+		if any(fnmatch(packageName, pattern) for pattern in ignore_packages):
 			package.licenseCompat = True
-		elif packageName in fail_packages:
+		elif any(fnmatch(packageName, pattern) for pattern in fail_packages):
 			pass  # package.licenseCompat = False
 		# Else get compat with myLice
 		else:

@@ -1,16 +1,16 @@
-# Get Deps
+# Checker
 
-[Licensecheck Index](../README.md#licensecheck-index) / [Licensecheck](./index.md#licensecheck) / Get Deps
+[Licensecheck Index](../README.md#licensecheck-index) / [Licensecheck](./index.md#licensecheck) / Checker
 
-> Auto-generated documentation for [licensecheck.get_deps](../../../licensecheck/get_deps.py) module.
+> Auto-generated documentation for [licensecheck.checker](../../../licensecheck/checker.py) module.
 
-- [Get Deps](#get-deps)
+- [Checker](#checker)
   - [check](#check)
   - [resolve_requirements](#resolve_requirements)
 
 ## check
 
-[Show source in get_deps.py:42](../../../licensecheck/get_deps.py#L42)
+[Show source in checker.py:43](../../../licensecheck/checker.py#L43)
 
 #### Signature
 
@@ -39,7 +39,7 @@ def check(
 
 ## resolve_requirements
 
-[Show source in get_deps.py:16](../../../licensecheck/get_deps.py#L16)
+[Show source in checker.py:17](../../../licensecheck/checker.py#L17)
 
 #### Signature
 

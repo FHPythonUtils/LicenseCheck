@@ -12,7 +12,7 @@ from sys import stdin, stdout
 
 from fhconfparser import FHConfParser, SimpleConf
 
-from licensecheck import fmt, get_deps, license_matrix, packageinfo, types
+from licensecheck import checker, fmt, license_matrix, packageinfo, types
 
 stdout.reconfigure(encoding="utf-8")  # type: ignore[general-type-issues]
 
@@ -50,12 +50,12 @@ def cli() -> None:  # pragma: no cover
 	)
 	parser.add_argument(
 		"--ignore-packages",
-		help="List of packages/dependencies to ignore (compat=True)",
+		help="List of packages/dependencies to ignore (compat=True), globs are supported",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--fail-packages",
-		help="List of packages/dependencies to fail (compat=False)",
+		help="List of packages/dependencies to fail (compat=False), globs are supported",
 		nargs="+",
 	)
 	parser.add_argument(
@@ -151,7 +151,7 @@ def main(args: dict | argparse.Namespace) -> int:
 
 	package_info_manager = packageinfo.PackageInfoManager(simpleConf.get("pypi_api"))
 
-	incompatible, depsWithLicenses = get_deps.check(
+	incompatible, depsWithLicenses = checker.check(
 		requirements_paths=requirements_paths,
 		groups=simpleConf.get("groups", []),
 		this_license=this_license,

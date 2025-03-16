@@ -10,9 +10,9 @@
 ## Modules
 
 - [Module](./module.md)
+- [Checker](./checker.md)
 - [Cli](./cli.md)
 - [Fmt](./fmt.md)
-- [Get Deps](./get_deps.md)
 - [License Matrix](license_matrix/index.md)
 - [Packageinfo](./packageinfo.md)
 - [Resolvers](resolvers/index.md)
