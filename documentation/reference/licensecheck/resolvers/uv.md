@@ -15,7 +15,10 @@
 
 ```python
 def get_reqs(
-    skipDependencies: list[ucstr], extras: list[str], requirementsPaths: list[str]
+    skipDependencies: list[ucstr],
+    extras: list[str],
+    requirementsPaths: list[str],
+    index_url: str = "https://pypi.org",
 ) -> set[ucstr]: ...
 ```
 

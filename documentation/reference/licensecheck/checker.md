@@ -10,7 +10,7 @@
 
 ## check
 
-[Show source in checker.py:43](../../../licensecheck/checker.py#L43)
+[Show source in checker.py:47](../../../licensecheck/checker.py#L47)
 
 #### Signature
 
@@ -39,13 +39,16 @@ def check(
 
 ## resolve_requirements
 
-[Show source in checker.py:17](../../../licensecheck/checker.py#L17)
+[Show source in checker.py:18](../../../licensecheck/checker.py#L18)
 
 #### Signature
 
 ```python
 def resolve_requirements(
-    requirements_paths: list[str], groups: list[str], skip_dependencies: list[ucstr]
+    requirements_paths: list[str],
+    groups: list[str],
+    skip_dependencies: list[ucstr],
+    index_url: str,
 ) -> set[ucstr]: ...
 ```
 

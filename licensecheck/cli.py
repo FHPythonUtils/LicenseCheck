@@ -34,7 +34,7 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--requirements-paths",
 		"-r",
-		help="Filenames to read from (omit for stdin)",
+		help="Filenames to read from (omit for stdin if piping, else pyproject.toml)",
 		nargs="+",
 	)
 	parser.add_argument(
@@ -91,7 +91,7 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--pypi-api",
 		help="Specify a custom pypi api endpoint, for example if using a custom pypi server",
-		default="https://pypi.org/pypi/",
+		default="https://pypi.org",
 	)
 	parser.add_argument(
 		"--zero",
@@ -100,16 +100,21 @@ def cli() -> None:  # pragma: no cover
 		action="store_true",
 	)
 	args = vars(parser.parse_args())
+
 	stdin_path = Path("__stdin__")
-	if stdin:
-		stdin_path.write_text("\n".join(stdin.readlines()), "utf-8")
+	if not args.get("requirements_paths"):
+		if stdin.isatty():
+			args["requirements_paths"] = ["pyproject.toml"]
+		else:
+			stdin_path.write_text("\n".join(stdin.readlines()), encoding="utf-8")
+
 	ec = main(args)
 	stdin_path.unlink(missing_ok=True)
 
 	sysexit(ec)
 
 
-def main(args: dict | argparse.Namespace) -> int:
+def main(args: dict) -> int:
 	"""Test entry point.
 
 	Note: FHConfParser (Parses in the following order: `pyproject.toml`,
@@ -142,7 +147,7 @@ def main(args: dict | argparse.Namespace) -> int:
 
 	# Get my license
 	this_license_text = (
-		args["license"] if args.get("license") else packageinfo.getMyPackageLicense()
+		args["license"] if args.get("license") else packageinfo.ProjectMetadata.get_license()
 	)
 	this_license = license_matrix.licenseType(this_license_text)[0]
 

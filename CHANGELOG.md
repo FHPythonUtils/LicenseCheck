@@ -3,6 +3,16 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2025.0.1 - 2025/03/16
+
+- update the cli interface to remove some confusing functionality
+- refactor the library / code qa improvements
+- Allow for alias of classifier in setup.cfg, thanks https://github.com/ericwb: #106
+- Add support for SPDX license expression metadata after PEP 639: #107
+- Add use regex/glob pattern to ignore multiple packages, thanks https://github.com/JulianKimmig: #108
+- Prioritise ['project'] table over ['tool.poetry'] in pyproject.toml: #104
+- Add option to show only failing packages: #98
+
 ## 2024.3 - 2024/08/26
 
 - Use uv to parse dependencies before falling back to the native resolver

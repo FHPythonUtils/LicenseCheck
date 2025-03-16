@@ -6,6 +6,7 @@ from fnmatch import fnmatch
 from pathlib import Path
 
 import tomli
+from loguru import logger
 
 from licensecheck import license_matrix
 from licensecheck.packageinfo import PackageInfoManager
@@ -18,15 +19,18 @@ def resolve_requirements(
 	requirements_paths: list[str],
 	groups: list[str],
 	skip_dependencies: list[ucstr],
+	index_url: str,
 ) -> set[ucstr]:
 	try:
 		return res_uv.get_reqs(
 			skipDependencies=skip_dependencies,
 			extras=groups,
 			requirementsPaths=requirements_paths,
+			index_url=index_url,
 		)
 
-	except RuntimeError:
+	except RuntimeError as e:
+		logger.warning(e)
 		pyproject = {}
 		if "pyproject.toml" in requirements_paths:
 			pyproject = tomli.loads(Path("pyproject.toml").read_text("utf-8"))
@@ -60,7 +64,12 @@ def check(
 	only_licenses = only_licenses or []
 	skip_dependencies = skip_dependencies or []
 
-	requirements = resolve_requirements(requirements_paths, groups, skip_dependencies)
+	requirements = resolve_requirements(
+		requirements_paths,
+		groups,
+		skip_dependencies,
+		index_url=package_info_manager.pypi_search,
+	)
 
 	ignoreLicensesType = license_matrix.licenseType(
 		ucstr(JOINS.join(ignore_licenses)), ignore_licenses

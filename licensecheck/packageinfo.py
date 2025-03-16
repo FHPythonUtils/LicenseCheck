@@ -23,13 +23,15 @@ RAW_JOINS = " AND "
 class PackageInfoManager:
 	"""Manages retrieval of local and remote package information."""
 
-	def __init__(self, pypi_api: str = "https://pypi.org/pypi/") -> None:
+	def __init__(self, base_pypi_url: str = "https://pypi.org") -> None:
 		"""Manage retrieval of local and remote package information.
 
 		:param str pypi_api: url of pypi server. Typically the public instance, defaults
-		to "https://pypi.org/pypi/"
+		to "https://pypi.org"
 		"""
-		self.pypi_api = pypi_api
+		self.base_pypi_url = base_pypi_url
+		self.pypi_api = base_pypi_url + "/pypi/"
+		self.pypi_search = base_pypi_url + "/simple/"
 
 	def getPackages(self, reqs: set[ucstr]) -> set[PackageInfo]:
 		"""Retrieve package information from local installation or PyPI.

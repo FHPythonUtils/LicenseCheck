@@ -110,7 +110,8 @@ def do_get_reqs(
 			msg = "Could not find specification of requirements (pyproject.toml)."
 			raise RuntimeError(msg) from error
 		for extra in extras:
-			reqLists.append(project["optional-dependencies"][extra])
+			extra_info = project.get("optional-dependencies", {}).get(extra)
+			reqLists.append(extra_info) if extra_info else ""
 		for reqList in reqLists:
 			for req in reqList:
 				reqs.add(resolveReq(req))

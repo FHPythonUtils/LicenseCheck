@@ -16,6 +16,7 @@ def get_reqs(
 	skipDependencies: list[ucstr],
 	extras: list[str],
 	requirementsPaths: list[str],
+	index_url: str = "https://pypi.org",
 ) -> set[ucstr]:
 	for idx, requirement in enumerate(requirementsPaths):
 		if not Path(requirement).exists():
@@ -29,7 +30,9 @@ def get_reqs(
 			requirementsPaths[idx] = destination_file.as_posix()
 
 	extras_cmd = [f"--extra {extra}" for extra in extras]
-	command = f"uv pip compile {' '.join(requirementsPaths)} {' '.join(extras_cmd)}"
+	command = (
+		f"uv pip compile {' '.join(requirementsPaths)} {' '.join(extras_cmd)} --index {index_url}"
+	)
 
 	result = subprocess.run(command, shell=True, capture_output=True, text=True, check=False)
 

@@ -28,11 +28,12 @@ the project license
 ## Table of Contents
 
 - [Examples from the command-line](#examples-from-the-command-line)
-	- [Using requirements](#using-requirements)
+	- [Pipe a requirements.txt file as input](#pipe-a-requirementstxt-file-as-input)
+	- [Using pyproject.toml (default if not piping input)](#using-pyprojecttoml-default-if-not-piping-input)
 	- [Failing on packages under MIT license](#failing-on-packages-under-mit-license)
-	- [Custom requirements.txt in json format](#custom-requirementstxt-in-json-format)
-	- [Poetry with dev requirements](#poetry-with-dev-requirements)
-	- [PEP 631 (with or without optional dependencies)](#pep-631-with-or-without-optional-dependencies)
+	- [Only allow a predefined set of licenses](#only-allow-a-predefined-set-of-licenses)
+	- [Show only failing](#show-only-failing)
+	- [Use csv format](#use-csv-format)
 - [Help](#help)
 - [Configuration Example](#configuration-example)
 	- [Example 1: pyproject.toml](#example-1-pyprojecttoml)
@@ -74,268 +75,226 @@ the project license
 
 See below for the output if you run `licensecheck` in this directory
 
-```txt
->> licensecheck
+### Pipe a requirements.txt file as input
 
-                             list of packages
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Compatible ┃ Package             ┃ License(s)                           ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ ✔          │ urllib3             │ MIT License                          │
-│ ✔          │ types-setuptools    │ Apache Software License              │
-│ ✔          │ tomli               │ MIT License                          │
-│ ✔          │ idna                │ BSD License                          │
-│ ✔          │ Pygments            │ BSD License                          │
-│ ✔          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0) │
-│ ✔          │ fhconfparser        │ MIT License                          │
-│ ✔          │ rich                │ MIT License                          │
-│ ✔          │ charset-normalizer  │ MIT License                          │
-│ ✔          │ requirements-parser │ Apache Software License              │
-│ ✔          │ commonmark          │ BSD License                          │
-│ ✔          │ requests            │ Apache Software License              │
-│ ✔          │ attrs               │ MIT License                          │
+```txt
+>> cat ./requirements.txt | licensecheck
+
+               Info
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Item            ┃ Value        ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ program         │ licensecheck │
+│ version         │ 2025         │
+│ license         │ MIT LICENSE  │
+│ project_license │ MIT LICENSE  │
+└─────────────────┴──────────────┘
+
+                              List Of Packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                            ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✔          │ Markdown            │ BSD LICENSE                           │
+│ ✔          │ Pygments            │ BSD LICENSE                           │
+│ ✔          │ appdirs             │ MIT LICENSE                           │
+│ ✔          │ attrs               │ MIT LICENSE                           │
+│ ✔          │ boolean.py          │ BSD-2-CLAUSE                          │
+│ ✔          │ cattrs              │ MIT LICENSE                           │
+│ ✔          │ certifi             │ MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_  │
+│ ✔          │ charset-normalizer  │ MIT LICENSE                           │
+│ ✔          │ colorama            │ BSD LICENSE                           │
+│ ✔          │ fhconfparser        │ MIT LICENSE                           │
+│ ✔          │ idna                │ BSD LICENSE                           │
+│ ✔          │ license-expression  │ APACHE-2.0                            │
+│ ✔          │ loguru              │ MIT LICENSE                           │
+│ ✔          │ markdown-it-py      │ MIT LICENSE                           │
+│ ✔          │ mdurl               │ MIT LICENSE                           │
+│ ✔          │ packaging           │ APACHE SOFTWARE LICENSE;; BSD LICENSE │
+│ ✔          │ platformdirs        │ MIT LICENSE                           │
+│ ✔          │ requests            │ APACHE SOFTWARE LICENSE               │
+│ ✔          │ requests-cache      │ BSD LICENSE                           │
+│ ✔          │ requirements-parser │ APACHE SOFTWARE LICENSE               │
+│ ✔          │ rich                │ MIT LICENSE                           │
+│ ✔          │ setuptools          │ MIT LICENSE                           │
+│ ✔          │ six                 │ MIT LICENSE                           │
+│ ✔          │ tomli               │ MIT LICENSE                           │
+│ ✔          │ types-setuptools    │ APACHE SOFTWARE LICENSE               │
+│ ✔          │ url-normalize       │ MIT LICENSE                           │
+│ ✔          │ urllib3             │ MIT LICENSE                           │
+│ ✔          │ uv                  │ APACHE SOFTWARE LICENSE;; MIT LICENSE │
+│ ✔          │ win32_setctime      │ MIT LICENSE                           │
+└────────────┴─────────────────────┴───────────────────────────────────────┘
+
 └────────────┴─────────────────────┴──────────────────────────────────────┘
 ```
 
-### Using requirements
+### Using pyproject.toml (default if not piping input)
 
 ```txt
->> licensecheck -u requirements
-
-                       list of packages
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Compatible ┃ Package             ┃ License(s)              ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ ✔          │ requirements-parser │ Apache Software License │
-│ ✔          │ requests            │ Apache Software License │
-│ ✔          │ rich                │ MIT License             │
-│ ✔          │ fhconfparser        │ MIT License             │
-│ ✔          │ tomli               │ MIT License             │
-└────────────┴─────────────────────┴─────────────────────────┘
+>> licensecheck  --fail-licenses mit
+...
 ```
 
 ### Failing on packages under MIT license
 
 ```txt
->> licensecheck --fail-licenses mit
+>> licensecheck  --fail-licenses mit
 
-                             list of packages
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Compatible ┃ Package             ┃ License(s)                           ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ ✔          │ idna                │ BSD License                          │
-│ ✔          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0) │
-│ ✔          │ Pygments            │ BSD License                          │
-│ ✔          │ commonmark          │ BSD License                          │
-│ ✔          │ requirements-parser │ Apache Software License              │
-│ ✖          │ fhconfparser        │ MIT License                          │
-│ ✖          │ tomli               │ MIT License                          │
-│ ✔          │ types-setuptools    │ Apache Software License              │
-│ ✖          │ attrs               │ MIT License                          │
-│ ✖          │ charset-normalizer  │ MIT License                          │
-│ ✖          │ rich                │ MIT License                          │
-│ ✖          │ urllib3             │ MIT License                          │
-│ ✔          │ requests            │ Apache Software License              │
-└────────────┴─────────────────────┴──────────────────────────────────────┘
+               Info
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Item            ┃ Value        ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ program         │ licensecheck │
+│ version         │ 2025.0.1     │
+│ license         │ MIT LICENSE  │
+│ project_license │ MIT LICENSE  │
+└─────────────────┴──────────────┘
+
+                              List Of Packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                            ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✔          │ Markdown            │ BSD LICENSE                           │
+│ ✔          │ Pygments            │ BSD LICENSE                           │
+│ ✖          │ appdirs             │ MIT LICENSE                           │
+│ ✖          │ attrs               │ MIT LICENSE                           │
+│ ✔          │ boolean.py          │ BSD-2-CLAUSE                          │
+│ ✖          │ cattrs              │ MIT LICENSE                           │
+│ ✔          │ certifi             │ MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_  │
+│ ✖          │ charset-normalizer  │ MIT LICENSE                           │
+│ ✔          │ colorama            │ BSD LICENSE                           │
+│ ✖          │ fhconfparser        │ MIT LICENSE                           │
+│ ✔          │ idna                │ BSD LICENSE                           │
+│ ✔          │ license-expression  │ APACHE-2.0                            │
+│ ✖          │ loguru              │ MIT LICENSE                           │
+│ ✖          │ markdown-it-py      │ MIT LICENSE                           │
+│ ✖          │ mdurl               │ MIT LICENSE                           │
+│ ✔          │ packaging           │ APACHE SOFTWARE LICENSE;; BSD LICENSE │
+│ ✖          │ platformdirs        │ MIT LICENSE                           │
+│ ✔          │ requests            │ APACHE SOFTWARE LICENSE               │
+│ ✔          │ requests-cache      │ BSD LICENSE                           │
+│ ✔          │ requirements-parser │ APACHE SOFTWARE LICENSE               │
+│ ✖          │ rich                │ MIT LICENSE                           │
+│ ✖          │ setuptools          │ MIT LICENSE                           │
+│ ✖          │ six                 │ MIT LICENSE                           │
+│ ✖          │ tomli               │ MIT LICENSE                           │
+│ ✔          │ types-setuptools    │ APACHE SOFTWARE LICENSE               │
+│ ✖          │ url-normalize       │ MIT LICENSE                           │
+│ ✖          │ urllib3             │ MIT LICENSE                           │
+│ ✔          │ uv                  │ APACHE SOFTWARE LICENSE;; MIT LICENSE │
+│ ✖          │ win32_setctime      │ MIT LICENSE                           │
+└────────────┴─────────────────────┴───────────────────────────────────────┘
+
+
 ```
 
 ### Only allow a predefined set of licenses
 
 ```txt
 
->> licensecheck --only-licenses mit
+>> licensecheck --only-licenses mit apache
+...
+                             List Of Packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package             ┃ License(s)                            ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✖          │ Markdown            │ BSD LICENSE                           │
+│ ✖          │ Pygments            │ BSD LICENSE                           │
+│ ✔          │ appdirs             │ MIT LICENSE                           │
+│ ✔          │ attrs               │ MIT LICENSE                           │
+│ ✖          │ boolean.py          │ BSD-2-CLAUSE                          │
+│ ✔          │ cattrs              │ MIT LICENSE                           │
+│ ✖          │ certifi             │ MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_  │
+...
 
-                             list of packages
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Compatible ┃ Package             ┃ License(s)                           ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ ✖          │ idna                │ BSD License                          │
-│ ✖          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0) │
-│ ✖          │ Pygments            │ BSD License                          │
-│ ✖          │ commonmark          │ BSD License                          │
-│ ✖          │ requirements-parser │ Apache Software License              │
-│ ✔          │ fhconfparser        │ MIT License                          │
-│ ✔          │ tomli               │ MIT License                          │
-│ ✖          │ types-setuptools    │ Apache Software License              │
-│ ✔          │ attrs               │ MIT License                          │
-│ ✔          │ charset-normalizer  │ MIT License                          │
-│ ✔          │ rich                │ MIT License                          │
-│ ✔          │ urllib3             │ MIT License                          │
-│ ✖          │ requests            │ Apache Software License              │
-└────────────┴─────────────────────┴──────────────────────────────────────┘
 ```
 
-### Custom requirements.txt in json format
 
-Add optional path to requirements.txt as outlined in https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228. Eg. `licensecheck --using requirements:c:/path/to/reqs.txt;path/to/other/reqs.txt`
+
+### Show only failing
 
 ```txt
->> licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json
-{
-	"info": {
-		"program": "licensecheck",
-		"version": "2022.2.0"
-	},
-	"packages": [
-		{
-			"name": "requests",
-			"version": "2.28.1",
-			"namever": "requests-2.28.1",
-			"size": 180253,
-			"homePage": "https://requests.readthedocs.io",
-			"author": "Kenneth Reitz",
-			"license": "Apache Software License",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "rich",
-			"version": "12.6.0",
-			"namever": "rich-12.6.0",
-			"size": 905975,
-			"homePage": "https://github.com/willmcgugan/rich",
-			"author": "Will McGugan",
-			"license": "MIT License",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "tomli",
-			"version": "2.0.1",
-			"namever": "tomli-2.0.1",
-			"size": 26252,
-			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "MIT License",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "requirements-parser",
-			"version": "0.5.0",
-			"namever": "requirements-parser-0.5.0",
-			"size": 11523,
-			"homePage": "https://github.com/madpah/requirements-parser",
-			"author": "Paul Horton",
-			"license": "Apache Software License",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "fhconfparser",
-			"version": "2022",
-			"namever": "fhconfparser-2022",
-			"size": 14586,
-			"homePage": "https://github.com/FHPythonUtils/FHConfParser",
-			"author": "FredHappyface",
-			"license": "MIT License",
-			"licenseCompat": true,
-			"errorCode": 0
-		}
-	]
-}
+>>> licensecheck  --only-licenses mit apache --show-only-failing
+
+               Info
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Item            ┃ Value        ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ program         │ licensecheck │
+│ version         │ 2025.0.1     │
+│ license         │ MIT LICENSE  │
+│ project_license │ MIT LICENSE  │
+└─────────────────┴──────────────┘
+
+                           List Of Packages
+┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Compatible ┃ Package        ┃ License(s)                           ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ ✖          │ Markdown       │ BSD LICENSE                          │
+│ ✖          │ Pygments       │ BSD LICENSE                          │
+│ ✖          │ boolean.py     │ BSD-2-CLAUSE                         │
+│ ✖          │ certifi        │ MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_ │
+│ ✖          │ colorama       │ BSD LICENSE                          │
+│ ✖          │ idna           │ BSD LICENSE                          │
+│ ✖          │ requests-cache │ BSD LICENSE                          │
+└────────────┴────────────────┴──────────────────────────────────────┘
 ```
 
-### Poetry with dev requirements
+### Use csv format
 
-Add `-u poetry:dev` to command-line to include dev packages (excluded by default)
-
-```txt
->> licensecheck -u poetry:dev
-
-                                  list of packages
-┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
-┃ Compatible ┃ Package             ┃ License(s)                                    ┃
-┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ ✔          │ astroid             │ GNU Lesser General Public License v2 (LGPLv2) │
-│ ✔          │ rich                │ MIT License                                   │
-│ ✔          │ types-setuptools    │ Apache Software License                       │
-│ ✔          │ fhconfparser        │ MIT License                                   │
-│ ✔          │ typed-ast           │ Apache License 2.0                            │
-│ ✔          │ py                  │ MIT License                                   │
-│ ✔          │ mccabe              │ MIT License                                   │
-│ ✔          │ tomlkit             │ MIT License                                   │
-│ ✔          │ coverage            │ Apache Software License                       │
-│ ✔          │ Pygments            │ BSD License                                   │
-│ ✔          │ requests            │ Apache Software License                       │
-│ ✔          │ requirements-parser │ Apache Software License                       │
-│ ✔          │ tomli               │ MIT License                                   │
-│ ✔          │ pluggy              │ MIT License                                   │
-│ ✔          │ isort               │ MIT License                                   │
-│ ✔          │ urllib3             │ MIT License                                   │
-│ ✖          │ pylint              │ GNU General Public License v2 (GPLv2)         │
-│ ✔          │ iniconfig           │ MIT License                                   │
-│ ✔          │ wrapt               │ BSD License                                   │
-│ ✔          │ pytest              │ MIT License                                   │
-│ ✔          │ pip                 │ MIT License                                   │
-│ ✔          │ charset-normalizer  │ MIT License                                   │
-│ ✔          │ packaging           │ Apache Software License, BSD License          │
-│ ✔          │ commonmark          │ BSD License                                   │
-│ ✔          │ lazy-object-proxy   │ BSD License                                   │
-│ ✔          │ platformdirs        │ MIT License                                   │
-│ ✔          │ certifi             │ Mozilla Public License 2.0 (MPL 2.0)          │
-│ ✔          │ colorama            │ BSD License                                   │
-│ ✔          │ attrs               │ MIT License                                   │
-│ ✔          │ dill                │ BSD License                                   │
-│ ✔          │ idna                │ BSD License                                   │
-│ ✔          │ importlib-resources │ Apache Software License                       │
-│ ✔          │ handsdown           │ MIT License                                   │
-│ ✔          │ pyparsing           │ MIT License                                   │
-└────────────┴─────────────────────┴───────────────────────────────────────────────┘
+```csv
+>>> licensecheck  --only-licenses mit apache --show-only-failing -f csv
+name,version,size,homePage,author,license,licenseCompat,errorCode,namever
+Markdown,3.7,361400,UNKNOWN,"Manfred Stienstra, Yuri Takhteyev",BSD LICENSE,False,0,Markdown-3.7
+Pygments,2.19.1,4508396,UNKNOWN,UNKNOWN,BSD LICENSE,False,0,Pygments-2.19.1
+boolean.py,4.0,109354,https://github.com/bastikr/boolean.py,Sebastian Kraemer,BSD-2-CLAUSE,False,0,boolean.py-4.0
+certifi,2025.1.31,305559,https://github.com/certifi/python-certifi,Kenneth Reitz,MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_,False,0,certifi-2025.1.31
+colorama,0.4.6,76299,UNKNOWN,UNKNOWN,BSD LICENSE,False,0,colorama-0.4.6
+idna,3.10,349141,UNKNOWN,UNKNOWN,BSD LICENSE,False,0,idna-3.10
+requests-cache,1.2.1,174099,https://github.com/requests-cache/requests-cache,Roman Haritonov,BSD LICENSE,False,0,requests-cache-1.2.1
 ```
-
-### PEP 631 (with or without optional dependencies)
-
-PEP 631 mode enables support for reading dependency information from `pyproject.toml` in the format specified by PEP 631.
-This format is used by build systems such as hatch.
-
-You can enable this mode by using `-u PEP631`, and include the optional dependencies of extras by using `-u PEP631:tests;dev;docs`,
-but it's recommended to use this instead:
-
-```toml
-[tool.licensecheck]
-using = "PEP631"
-
-# OR
-
-[tool.licensecheck]
-using = "PEP631:tests;dev;docs"
-```
-
-By default no optional dependencies are included.
 
 ## Help
 
 ```txt
-usage: __main__.py [-h] [--format FORMAT] [--file FILE] [--using USING]
-                   [--ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]]
-                   [--fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]]
-                   [--ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]]
-                   [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]]
-                   [--only_licenses ONLY_LICENSES [ONLY_LICENSES ...]] [--zero]
+usage: licensecheck [-h] [--license LICENSE] [--format FORMAT] [--requirements-paths REQUIREMENTS_PATHS [REQUIREMENTS_PATHS ...]]
+                    [--groups GROUPS [GROUPS ...]] [--file FILE] [--ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]]
+                    [--fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]] [--ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]]
+                    [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]] [--only-licenses ONLY_LICENSES [ONLY_LICENSES ...]]
+                    [--skip-dependencies SKIP_DEPENDENCIES [SKIP_DEPENDENCIES ...]]
+                    [--hide-output-parameters HIDE_OUTPUT_PARAMETERS [HIDE_OUTPUT_PARAMETERS ...]] [--show-only-failing]
+                    [--pypi-api PYPI_API] [--zero]
 
 Output the licenses used by dependencies and check if these are compatible with the project license.
 
 options:
   -h, --help            show this help message and exit
+  --license LICENSE, -l LICENSE
+                        Specify the project license explicitly, rather than rely on licensecheck interpreting this from pyproject.toml
   --format FORMAT, -f FORMAT
-                        Output format. one of: json, markdown, csv, ansi, simple. default=simple
-  --file FILE, -o FILE  Filename to write to (omit for stdout)
-  --using USING, -u USING
-                        Environment to use e.g. requirements.txt. one of: requirements, poetry, PEP631. default=poetry
+                        Output format. one of: json, markdown, html, csv, ansi, simple. default=simple
+  --requirements-paths REQUIREMENTS_PATHS [REQUIREMENTS_PATHS ...], -r REQUIREMENTS_PATHS [REQUIREMENTS_PATHS ...]
+                        Filenames to read from (omit for stdin if piping, else pyproject.toml)
+  --groups GROUPS [GROUPS ...], -g GROUPS [GROUPS ...]
+                        Select groups/extras from supported files
+  --file FILE, -o FILE  Filename to write output to (omit this for stdout)
   --ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]
-                        a list of packages to ignore (compat=True)
+                        List of packages/dependencies to ignore (compat=True), globs are supported
   --fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]
-                        a list of packages to fail (compat=False)
+                        List of packages/dependencies to fail (compat=False), globs are supported
   --ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]
-                        a list of licenses to ignore (skipped, compat may still be False)
+                        List of licenses to ignore (skipped, compat may still be False)
   --fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]
-                        a list of licenses to fail (compat=False)
+                        List of licenses to fail (compat=False)
   --only-licenses ONLY_LICENSES [ONLY_LICENSES ...]
-                        a list of allowed licenses (any other license will fail)
+                        List of allowed licenses (packages/dependencies with any other license will fail)
   --skip-dependencies SKIP_DEPENDENCIES [SKIP_DEPENDENCIES ...]
-						a list of dependencies to skip (compat=False)
-  --zero, -0            Return non zero exit code if an incompatible license is found
+                        List of packages/dependencies to skip (this sets the 'compatability' to True)
+  --hide-output-parameters HIDE_OUTPUT_PARAMETERS [HIDE_OUTPUT_PARAMETERS ...]
+                        List of parameters to hide from the produced output
+  --show-only-failing   Only output a list of incompatible/ failing packages from this lib
+  --pypi-api PYPI_API   Specify a custom pypi api endpoint, for example if using a custom pypi server
+  --zero, -0            Return non zero exit code if an incompatible license is found, ideal for CI/CD
 ```
 
 You can also import this into your own project and use any of the functions

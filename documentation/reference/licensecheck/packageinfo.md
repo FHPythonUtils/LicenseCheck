@@ -22,7 +22,7 @@
 
 ## LocalPackageInfo
 
-[Show source in packageinfo.py:75](../../../licensecheck/packageinfo.py#L75)
+[Show source in packageinfo.py:77](../../../licensecheck/packageinfo.py#L77)
 
 Handles retrieval of package info from local installation.
 
@@ -34,7 +34,7 @@ class LocalPackageInfo: ...
 
 ### LocalPackageInfo.get_info
 
-[Show source in packageinfo.py:78](../../../licensecheck/packageinfo.py#L78)
+[Show source in packageinfo.py:80](../../../licensecheck/packageinfo.py#L80)
 
 Retrieve package metadata from local installation.
 
@@ -61,7 +61,7 @@ def get_info(package: ucstr) -> PackageInfo: ...
 
 ### LocalPackageInfo.get_size
 
-[Show source in packageinfo.py:104](../../../licensecheck/packageinfo.py#L104)
+[Show source in packageinfo.py:106](../../../licensecheck/packageinfo.py#L106)
 
 Retrieve installed package size.
 
@@ -97,12 +97,12 @@ Manages retrieval of local and remote package information.
 
 ```python
 class PackageInfoManager:
-    def __init__(self, pypi_api: str = "https://pypi.org/pypi/") -> None: ...
+    def __init__(self, base_pypi_url: str = "https://pypi.org") -> None: ...
 ```
 
 ### PackageInfoManager().getPackages
 
-[Show source in packageinfo.py:34](../../../licensecheck/packageinfo.py#L34)
+[Show source in packageinfo.py:36](../../../licensecheck/packageinfo.py#L36)
 
 Retrieve package information from local installation or PyPI.
 
@@ -126,7 +126,7 @@ def getPackages(self, reqs: set[ucstr]) -> set[PackageInfo]: ...
 
 ### PackageInfoManager().get_package_info
 
-[Show source in packageinfo.py:48](../../../licensecheck/packageinfo.py#L48)
+[Show source in packageinfo.py:50](../../../licensecheck/packageinfo.py#L50)
 
 Retrieve package information, preferring local data.
 
@@ -154,7 +154,7 @@ def get_package_info(self, package: ucstr) -> PackageInfo: ...
 
 ## ProjectMetadata
 
-[Show source in packageinfo.py:192](../../../licensecheck/packageinfo.py#L192)
+[Show source in packageinfo.py:194](../../../licensecheck/packageinfo.py#L194)
 
 Handles extraction of project metadata from configuration files.
 
@@ -166,7 +166,7 @@ class ProjectMetadata: ...
 
 ### ProjectMetadata.get_license
 
-[Show source in packageinfo.py:220](../../../licensecheck/packageinfo.py#L220)
+[Show source in packageinfo.py:222](../../../licensecheck/packageinfo.py#L222)
 
 Extract license from project metadata.
 
@@ -188,7 +188,7 @@ def get_license() -> ucstr: ...
 
 ### ProjectMetadata.get_metadata
 
-[Show source in packageinfo.py:195](../../../licensecheck/packageinfo.py#L195)
+[Show source in packageinfo.py:197](../../../licensecheck/packageinfo.py#L197)
 
 Extract project metadata from setup.cfg or pyproject.toml.
 
@@ -208,7 +208,7 @@ def get_metadata() -> dict[str, Any]: ...
 
 ## RemotePackageInfo
 
-[Show source in packageinfo.py:115](../../../licensecheck/packageinfo.py#L115)
+[Show source in packageinfo.py:117](../../../licensecheck/packageinfo.py#L117)
 
 Handles retrieval of package info from PyPI.
 
@@ -220,7 +220,7 @@ class RemotePackageInfo: ...
 
 ### RemotePackageInfo.get_info
 
-[Show source in packageinfo.py:118](../../../licensecheck/packageinfo.py#L118)
+[Show source in packageinfo.py:120](../../../licensecheck/packageinfo.py#L120)
 
 Retrieve package metadata from PyPI.
 
@@ -248,7 +248,7 @@ def get_info(package: ucstr, pypi_api: str) -> PackageInfo: ...
 
 ### RemotePackageInfo.get_size
 
-[Show source in packageinfo.py:148](../../../licensecheck/packageinfo.py#L148)
+[Show source in packageinfo.py:150](../../../licensecheck/packageinfo.py#L150)
 
 Retrieve package size from PyPI metadata.
 
@@ -270,7 +270,7 @@ def get_size(data: dict[str, Any]) -> int: ...
 
 ## from_classifiers
 
-[Show source in packageinfo.py:173](../../../licensecheck/packageinfo.py#L173)
+[Show source in packageinfo.py:175](../../../licensecheck/packageinfo.py#L175)
 
 Extract license from classifiers.
 
@@ -295,7 +295,7 @@ def from_classifiers(classifiers: list[str] | None) -> ucstr: ...
 
 ## meta_get
 
-[Show source in packageinfo.py:160](../../../licensecheck/packageinfo.py#L160)
+[Show source in packageinfo.py:162](../../../licensecheck/packageinfo.py#L162)
 
 Retrieve metadata value safely.
 

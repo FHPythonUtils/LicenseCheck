@@ -1,9 +1,12 @@
 from __future__ import annotations
-import pytest
+
 from unittest.mock import MagicMock
-from licensecheck.types import PackageInfo, ucstr, License
-from licensecheck.packageinfo import PackageInfoManager
+
+import pytest
+
 from licensecheck.checker import check
+from licensecheck.packageinfo import PackageInfoManager
+from licensecheck.types import License, PackageInfo, ucstr
 
 
 @pytest.fixture
@@ -37,6 +40,7 @@ def test_check(
 		PackageInfo(name="PACKAGE_B", license=ucstr("GPL-3.0"), licenseCompat=False),
 	}
 	mock_package_info_manager.getPackages.return_value = mock_packages
+	mock_package_info_manager.pypi_search = "https://pypi.org/simple"
 
 	incompatible, packages = check(
 		requirements_paths=["requirements.txt"],
