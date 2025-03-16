@@ -14,7 +14,7 @@
 
 ## License
 
-[Show source in types.py:56](../../../licensecheck/types.py#L56)
+[Show source in types.py:58](../../../licensecheck/types.py#L58)
 
 #### Attributes
 
@@ -49,7 +49,7 @@ class License(Enum): ...
 
 ## PackageInfo
 
-[Show source in types.py:30](../../../licensecheck/types.py#L30)
+[Show source in types.py:32](../../../licensecheck/types.py#L32)
 
 PackageInfo type.
 
@@ -61,7 +61,7 @@ class PackageInfo: ...
 
 ### PackageInfo().__post_init__
 
-[Show source in types.py:43](../../../licensecheck/types.py#L43)
+[Show source in types.py:45](../../../licensecheck/types.py#L45)
 
 Set the namever once the object is initialised.
 
@@ -73,7 +73,7 @@ def __post_init__(self) -> None: ...
 
 ### PackageInfo().get_filtered_dict
 
-[Show source in types.py:47](../../../licensecheck/types.py#L47)
+[Show source in types.py:49](../../../licensecheck/types.py#L49)
 
 Return a filtered dictionary of the object.
 
@@ -98,7 +98,7 @@ def get_filtered_dict(self, hide_output_parameters: list[ucstr]) -> dict: ...
 
 ## ucstr
 
-[Show source in types.py:9](../../../licensecheck/types.py#L9)
+[Show source in types.py:11](../../../licensecheck/types.py#L11)
 
 Uppercase string.
 
@@ -110,7 +110,7 @@ class ucstr(str): ...
 
 ### ucstr().__new__
 
-[Show source in types.py:14](../../../licensecheck/types.py#L14)
+[Show source in types.py:16](../../../licensecheck/types.py#L16)
 
 Create a new ucstr from a str.
 
@@ -126,5 +126,5 @@ uppercase string.
 #### Signature
 
 ```python
-def __new__(cls, v: str | None) -> ucstr: ...
+def __new__(cls, v: str | None) -> Self: ...
 ```

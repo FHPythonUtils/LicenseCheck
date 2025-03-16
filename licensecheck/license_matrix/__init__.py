@@ -199,6 +199,4 @@ def liceCompat(
 	licenses = list(L)
 	row, col = licenses.index(myLicense) + 1, licenses.index(lice) + 1
 
-	if LICENSE_MATRIX[row][col] == "1":
-		return True
-	return False
+	return LICENSE_MATRIX[row][col] == "1"

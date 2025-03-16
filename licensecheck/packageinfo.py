@@ -24,17 +24,18 @@ class PackageInfoManager:
 	"""Manages retrieval of local and remote package information."""
 
 	def __init__(self, pypi_api: str = "https://pypi.org/pypi/") -> None:
+		"""Manage retrieval of local and remote package information.
+
+		:param str pypi_api: url of pypi server. Typically the public instance, defaults
+		to "https://pypi.org/pypi/"
+		"""
 		self.pypi_api = pypi_api
 
 	def getPackages(self, reqs: set[ucstr]) -> set[PackageInfo]:
 		"""Retrieve package information from local installation or PyPI.
 
-		Args:
-		    reqs (set[ucstr]): Set of dependency names to retrieve information for.
-
-		Returns:
-		    set[PackageInfo]: A set of package information objects.
-
+		:param set[ucstr] reqs: Set of dependency names to retrieve information for.
+		:return set[PackageInfo]: A set of package information objects.
 		"""
 		package_info_set = set()
 
@@ -47,12 +48,8 @@ class PackageInfoManager:
 	def get_package_info(self, package: ucstr) -> PackageInfo:
 		"""Retrieve package information, preferring local data.
 
-		Args:
-		    package (ucstr): Package name.
-
-		Returns:
-		    PackageInfo: Information about the package.
-
+		:param ucstr pacage: Package name.
+		:return PackageInfo: Information about the package.
 		"""
 		pkg_info = PackageInfo(name=package, errorCode=1)
 		try:
@@ -63,12 +60,10 @@ class PackageInfoManager:
 
 		licensing = Licensing()
 		parsed = None
-		try:
+		with contextlib.suppress(license_expression.ExpressionParseError):
 			parsed = licensing.parse(
 				re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", pkg_info.license.splitlines()[0])
 			)
-		except license_expression.ExpressionParseError:
-			pass
 		if parsed is None:
 			return pkg_info
 
@@ -84,15 +79,8 @@ class LocalPackageInfo:
 	def get_info(package: ucstr) -> PackageInfo:
 		"""Retrieve package metadata from local installation.
 
-		Args:
-		    package (ucstr): Package name.
-
-		Raises:
-		    ModuleNotFoundError: If the package is not found locally.
-
-		Returns:
-		    PackageInfo: Local package information.
-
+		:param ucstr package: Package name.
+		:return PackageInfo: Local package information.
 		"""
 		try:
 			metadata_obj = metadata.metadata(package)
@@ -117,12 +105,8 @@ class LocalPackageInfo:
 	def get_size(package: ucstr) -> int:
 		"""Retrieve installed package size.
 
-		Args:
-		    package (ucstr): Package name.
-
-		Returns:
-		    int: Size in bytes.
-
+		:param ucstr package: Package name.
+		:return int: Size in bytes.
 		"""
 		package_files = metadata.Distribution.from_name(package).files
 		return sum(f.size for f in package_files if f.size is not None) if package_files else 0
@@ -135,16 +119,9 @@ class RemotePackageInfo:
 	def get_info(package: ucstr, pypi_api: str) -> PackageInfo:
 		"""Retrieve package metadata from PyPI.
 
-		Args:
-		    package (ucstr): Package name.
-		    pypi_api (str): PyPI API base URL.
-
-		Raises:
-		    ModuleNotFoundError: If package is not found.
-
-		Returns:
-		    PackageInfo: Remote package information.
-
+		:param ucstr package: Package name.
+		:param str pypi_api: PyPI API base URL.
+		:return PackageInfo: Remote package information.
 		"""
 		response = session.get(f"{pypi_api}{package}/json", timeout=60)
 
@@ -172,12 +149,9 @@ class RemotePackageInfo:
 	def get_size(data: dict[str, Any]) -> int:
 		"""Retrieve package size from PyPI metadata.
 
-		Args:
-		    data (dict[str, Any]): PyPI response JSON.
+		:param dict[str, Any] data: PyPI response JSON.
 
-		Returns:
-		    int: Package size in bytes.
-
+		:return int: Package size in bytes.
 		"""
 		urls = data.get("urls", [])
 		return int(urls[-1]["size"]) if urls else -1
@@ -186,13 +160,9 @@ class RemotePackageInfo:
 def meta_get(metadata_obj: metadata.PackageMetadata | dict[str, Any], key: str) -> str:
 	"""Retrieve metadata value safely.
 
-	Args:
-		metadata_obj (metadata.PackageMetadata | dict[str, Any]): Metadata source.
-		key (str): Metadata key.
-
-	Returns:
-		str: Retrieved metadata value.
-
+	:param metadata.PackageMetadata | dict[str, Any] metadata_obj: Metadata source.
+	:param str key: Metadata key.
+	:return str: Retrieved metadata value.
 	"""
 	value = metadata_obj.get(key, UNKNOWN)
 	if isinstance(value, Iterable) and not isinstance(value, str):
@@ -251,9 +221,7 @@ class ProjectMetadata:
 	def get_license() -> ucstr:
 		"""Extract license from project metadata.
 
-		Returns:
-		    ucstr: License string.
-
+		:return ucstr: License string.
 		"""
 		metadata = ProjectMetadata.get_metadata()
 		license_str = from_classifiers(metadata.get("classifiers", []))

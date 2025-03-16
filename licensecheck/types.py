@@ -5,13 +5,15 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
+from typing_extensions import Self
+
 
 class ucstr(str):
 	"""Uppercase string."""
 
 	__slots__ = ()
 
-	def __new__(cls, v: str | None) -> ucstr:
+	def __new__(cls, v: str | None) -> Self:
 		"""Create a new ucstr from a str.
 
 		:param str v: string to cast

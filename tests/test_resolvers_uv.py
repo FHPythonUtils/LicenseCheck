@@ -133,8 +133,8 @@ def test_issue_81() -> None:
 	skipDependencies = []
 	with contextlib.suppress(Exception):
 		_deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
-	#     RuntimeError:   Ã— No solution found when resolving dependencies:
-	#       â•°â”€â–¶ Because nvidia-cudnn-cu12==8.9.2.26 has no wheels with a matching
+	#     RuntimeError:    No solution found when resolving dependencies:
+	#        Because nvidia-cudnn-cu12==8.9.2.26 has no wheels with a matching
 	#           platform tag and you require nvidia-cudnn-cu12==8.9.2.26, we can
 	#           conclude that your requirements are unsatisfiable.
 

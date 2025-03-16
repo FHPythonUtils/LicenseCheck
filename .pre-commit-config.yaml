@@ -64,4 +64,4 @@ repos:
       - id: optimize-svg
       - id: optimize-webp
 
-exclude: "tests/data|documentation/reference"
+exclude: "tests/data|tests/platform_independent/data|documentation/reference"
