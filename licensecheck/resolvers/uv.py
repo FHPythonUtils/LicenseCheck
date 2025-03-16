@@ -34,7 +34,7 @@ def get_reqs(
 	result = subprocess.run(command, shell=True, capture_output=True, text=True, check=False)
 
 	if result.returncode != 0:
-		raise RuntimeError(result.stderr)
+		raise RuntimeError(result.stderr, result.stdout)
 
 	reqs = requirements.parse(result.stdout)
 	reqs_out = [ucstr(x.name) for x in reqs]

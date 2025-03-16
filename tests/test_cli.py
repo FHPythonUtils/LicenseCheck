@@ -5,12 +5,12 @@ from typing import Any
 
 import pytest
 
-from licensecheck import formatter, main
+from licensecheck import fmt, main
 
 THISDIR = str(Path(__file__).resolve().parent)
 
 
-formatter.INFO = {"program": "licensecheck", "version": "dev", "license": "MIT LICENSE"}
+fmt.INFO = {"program": "licensecheck", "version": "dev", "license": "MIT LICENSE"}
 
 
 def aux_get_text(file: str) -> str:
@@ -25,6 +25,7 @@ test_data = [
 	(
 		{
 			"license": "MIT",
+			"pypi_api": "https://pypi.org/pypi/",
 			"file": aux_file("test_main_tc1.txt"),
 			"requirements_paths": ["pyproject.toml"],
 		},
@@ -33,6 +34,7 @@ test_data = [
 	(
 		{
 			"license": "BSD",
+			"pypi_api": "https://pypi.org/pypi/",
 			"file": aux_file("test_main_tc3.txt"),
 			"requirements_paths": ["pyproject.toml"],
 			"ignore_packages": ["requests"],
@@ -43,6 +45,7 @@ test_data = [
 	(
 		{
 			"license": "GPL",
+			"pypi_api": "https://pypi.org/pypi/",
 			"file": aux_file("test_main_tc4.json"),
 			"requirements_paths": ["pyproject.toml"],
 			"format": "json",
@@ -57,7 +60,4 @@ test_data = [
 def test_main(args: dict[str, Any], expected_exit_code: int) -> None:
 	exit_code = main(args)
 	assert exit_code == expected_exit_code
-	assert aux_get_text(args["file"]).replace(
-		"typing_extensions",
-		"typing-extensions",  # for python 3.8
-	) == aux_get_text(args["file"].replace(".", "_expected."))
+	assert aux_get_text(args["file"]) == aux_get_text(args["file"].replace(".", "_expected."))

@@ -159,6 +159,14 @@
 			"errorCode": 0
 		},
 		{
+			"name": "setuptools",
+			"homePage": "None",
+			"author": "None",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
 			"name": "six",
 			"homePage": "https://github.com/benjaminp/six",
 			"author": "Benjamin Peterson",

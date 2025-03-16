@@ -1,4 +1,5 @@
 from pathlib import Path
+import sys
 
 from _pytest.logging import LogCaptureFixture  # pyright: ignore [reportMissingImports]
 from loguru import logger
@@ -7,37 +8,48 @@ from licensecheck import license_matrix, types
 
 THISDIR = str(Path(__file__).resolve().parent)
 
+logger.remove()
+logger.add(sys.stderr, colorize=False)
+
 
 def test_licenseLookup() -> None:
+	"""Check that all of the License Enums are present in the processed dataset, we add "NO_LICENSE"
+	as all test data contains some license.
+
+	"""
 	licenses = []
 	for rawLicense in Path(f"{THISDIR}/data/rawLicenses.txt").read_text("utf-8").splitlines():
 		licenseName = license_matrix.licenseLookup(types.ucstr(rawLicense))._name_
 		licenses.append(licenseName)
 
+	licenses.append("NO_LICENSE")
 	for x in types.License._member_names_:
 		if x not in licenses:
-			logger.error(f"{x} not in licenses")
-			raise AssertionError
+			msg = f"{x} not in licenses"
+			logger.error(msg)
+			raise AssertionError(msg)
 
-	# Path(f"{THISDIR}/data/licenseCheckLicenses.txt").write_text("\n".join(licenses), "utf-8")
-	assert "\n".join(licenses) == Path(f"{THISDIR}/data/licenseCheckLicenses.txt").read_text(
-		"utf-8"
-	)
+	cmp_file = Path(f"{THISDIR}/data/licenseCheckLicenses.txt")
+
+	# cmp_file.write_text("\n".join(licenses), "utf-8")
+	assert "\n".join(licenses) == cmp_file.read_text("utf-8")
 
 
 def test_licenseType() -> None:
 	licenses = Path(f"{THISDIR}/data/rawLicenses.txt").read_text("utf-8").replace("\n", types.JOINS)
 	licenseNames = [x._name_ for x in license_matrix.licenseType(types.ucstr(licenses))]
-	assert (
-		licenseNames
-		== Path(f"{THISDIR}/data/licenseCheckLicenses.txt").read_text("utf-8").splitlines()
-	)
+	cmp_file = Path(f"{THISDIR}/data/licenseCheckLicenses.txt")
+
+	# cmp_file.write_text("\n".join(licenses), "utf-8")
+	assert licenseNames == cmp_file.read_text("utf-8").splitlines()
+
+def test_licenseType_unknown() -> None:
+    assert all(x == types.L.UNKNOWN for x in license_matrix.licenseType("this_license_does_not_exist"))
 
 
 def test_licenseType_empty() -> None:
 	no_licenses = [
-		all(x == types.L.NO_LICENSE for x in license_matrix.licenseType(y))
-		for y in ["", None, "this_license_does_not_exist"]
+		all(x == types.L.NO_LICENSE for x in license_matrix.licenseType(y)) for y in ["", None]
 	]
 	assert all(no_licenses)
 
@@ -66,7 +78,7 @@ def test_warningsForIgnoredLicense(caplog: LogCaptureFixture) -> None:
 	license_matrix.licenseLookup(zope, [])
 	assert any(
 		record.levelname == "WARNING"
-		and f"'{zope}' License not identified so falling back to NO_LICENSE" in record.message
+		and f"'{zope}' License not identified so falling back to UNKNOWN" in record.message
 		for record in caplog.records
 	)
 

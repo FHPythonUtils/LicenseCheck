@@ -56,8 +56,8 @@
 		},
 		{
 			"name": "charset-normalizer",
-			"homePage": "https://github.com/Ousret/charset_normalizer",
-			"author": "Ahmed TAHRI",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -88,8 +88,8 @@
 		},
 		{
 			"name": "loguru",
-			"homePage": "https://github.com/Delgan/loguru",
-			"author": "Delgan",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -159,6 +159,14 @@
 			"errorCode": 0
 		},
 		{
+			"name": "setuptools",
+			"homePage": "None",
+			"author": "None",
+			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
 			"name": "six",
 			"homePage": "https://github.com/benjaminp/six",
 			"author": "Benjamin Peterson",
@@ -207,7 +215,7 @@
 			"errorCode": 0
 		},
 		{
-			"name": "win32-setctime",
+			"name": "win32_setctime",
 			"homePage": "https://github.com/Delgan/win32-setctime",
 			"author": "Delgan",
 			"license": "MIT LICENSE",

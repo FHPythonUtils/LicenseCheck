@@ -32,6 +32,7 @@
 │ ✔          │ requests-cache      │ BSD LICENSE                           │
 │ ✔          │ requirements-parser │ APACHE SOFTWARE LICENSE               │
 │ ✔          │ rich                │ MIT LICENSE                           │
+│ ✔          │ setuptools          │ MIT LICENSE                           │
 │ ✔          │ six                 │ MIT LICENSE                           │
 │ ✔          │ tomli               │ MIT LICENSE                           │
 │ ✔          │ types-setuptools    │ APACHE SOFTWARE LICENSE               │

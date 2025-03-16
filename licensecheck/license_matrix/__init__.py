@@ -102,6 +102,8 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 	:param list[ucstr] | None ignoreLicenses: licenses to ignore, defaults to None
 	:return L: License represented by licenseStr
 	"""
+	if len(licenseStr or "") < 1:
+		return L.NO_LICENSE
 
 	for liceStr, lice in termToLicense.items():
 		if liceStr.strip() in licenseStr:
@@ -109,8 +111,8 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: list[ucstr] | None = None) 
 
 
 	if licenseStr not in (ignoreLicenses or ""):
-		logger.warning(f"'{licenseStr}' License not identified so falling back to NO_LICENSE")
-	return L.NO_LICENSE
+		logger.warning(f"'{licenseStr}' License not identified so falling back to UNKNOWN")
+	return L.UNKNOWN
 
 
 
