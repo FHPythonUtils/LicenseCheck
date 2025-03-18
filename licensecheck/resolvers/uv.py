@@ -9,15 +9,16 @@ from pathlib import Path
 
 import requirements
 
-from licensecheck.types import ucstr
+from licensecheck.types import ucstr, PackageInfo
 
 
 def get_reqs(
 	skipDependencies: list[ucstr],
+	groups: list[str],
 	extras: list[str],
 	requirementsPaths: list[str],
-	index_url: str = "https://pypi.org",
-) -> set[ucstr]:
+	index_url: str = "https://pypi.org/simple",
+) -> set[PackageInfo]:
 	for idx, requirement in enumerate(requirementsPaths):
 		if not Path(requirement).exists():
 			msg = f"Could not find specification of requirements ({requirement})."
@@ -29,9 +30,11 @@ def get_reqs(
 			shutil.copy(requirement, destination_file)
 			requirementsPaths[idx] = destination_file.as_posix()
 
+	groups_cmd = [f"--group {group}" for group in groups]
 	extras_cmd = [f"--extra {extra}" for extra in extras]
 	command = (
-		f"uv pip compile {' '.join(requirementsPaths)} {' '.join(extras_cmd)} --index {index_url}"
+		f"uv pip compile --index {index_url}"
+		f" {' '.join(requirementsPaths)} {' '.join(extras_cmd)} {' '.join(groups_cmd)}"
 	)
 
 	result = subprocess.run(command, shell=True, capture_output=True, text=True, check=False)
@@ -40,6 +43,9 @@ def get_reqs(
 		raise RuntimeError(result.stderr, result.stdout)
 
 	reqs = requirements.parse(result.stdout)
-	reqs_out = [ucstr(x.name) for x in reqs]
 
-	return set(reqs_out) - set(skipDependencies)
+	return {
+		PackageInfo(name=x.name or "", version=next((y[1] for y in x.specs), None))
+		for x in reqs
+		if ucstr(x.name) not in skipDependencies
+	}

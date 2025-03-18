@@ -1,6 +1,7 @@
 !test
 uv.lock
 profile.*
+ignore/**
 
 # DepHell stuff
 poetry.lock

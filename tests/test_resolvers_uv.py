@@ -12,7 +12,10 @@ def test_PEP631() -> None:
 	requirementsPaths = [f"{THISDIR}/data/pep631_socks.toml"]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	assert req_uv.get_reqs(skipDependencies, extras, requirementsPaths) == {
+	deps = req_uv.get_reqs(skipDependencies=skipDependencies, extras=extras, groups=[], requirementsPaths=requirementsPaths)
+	reqs = {d.name.upper() for d in deps}
+
+	assert reqs == {
 		"DOCKERPTY",
 		"ATTRS",
 		"JSONSCHEMA",
@@ -46,12 +49,13 @@ def test_PEP631() -> None:
 
 
 def test_requirements() -> None:
-	extras = []
 	requirementsPaths = [f"{THISDIR}/data/test_requirements.txt"]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
-	assert deps == {
+	deps = req_uv.get_reqs(skipDependencies, extras=[], groups=[], requirementsPaths=requirementsPaths)
+	reqs = {d.name.upper() for d in deps}
+
+	assert reqs == {
 		"NUMPY",
 		"ODFPY",
 		"OPENPYXL",
@@ -66,29 +70,28 @@ def test_requirements() -> None:
 		"XLRD",
 		"XLSXWRITER",
 	}
-	assert "OPENPYXL" in deps
+	assert "OPENPYXL" in reqs
 	assert (
-		"XARRAY" not in deps
+		"XARRAY" not in reqs
 	)  # xarray is an optional dependency of pandas associated with 'computation' key that is not
 	# tracked in test_requirements.txt
 
 
 def test_requirements_with_hashes() -> None:
-	extras = []
 	requirementsPaths = [f"{THISDIR}/data/test_requirements_hash.txt"]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
-	assert deps == {"PACKAGING"}
-	assert "TOSKIP" not in deps
+	deps = req_uv.get_reqs(skipDependencies, extras=[], groups=[], requirementsPaths=requirementsPaths)
+	reqs = {d.name.upper() for d in deps}
+	assert reqs == {"PACKAGING"}
+	assert "TOSKIP" not in reqs
 
 
 def test_issue_62() -> None:
-	extras = []
 	requirementsPaths = [f"{THISDIR}/data/issue_62.toml"]
-	skipDependencies = []
 
-	reqs = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
+	deps = req_uv.get_reqs(skipDependencies = [], extras=[], groups=[], requirementsPaths=requirementsPaths)
+	reqs = {d.name.upper() for d in deps}
 	assert "PYQT5" not in reqs
 
 	assert reqs == {
@@ -128,11 +131,10 @@ def test_issue_62() -> None:
 
 
 def test_issue_81() -> None:
-	extras = []
 	requirementsPaths = [f"{THISDIR}/data/issue_81.txt"]
-	skipDependencies = []
 	with contextlib.suppress(Exception):
-		_deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
+		_deps = req_uv.get_reqs(skipDependencies = [], extras=[], groups=[], requirementsPaths=requirementsPaths)
+
 	#     RuntimeError:    No solution found when resolving dependencies:
 	#        Because nvidia-cudnn-cu12==8.9.2.26 has no wheels with a matching
 	#           platform tag and you require nvidia-cudnn-cu12==8.9.2.26, we can
@@ -140,12 +142,10 @@ def test_issue_81() -> None:
 
 
 def test_issue_84() -> None:
-	extras = []
 	requirementsPaths = [f"{THISDIR}/data/issue_84.txt"]
-	skipDependencies = []
 
-	deps = req_uv.get_reqs(skipDependencies, extras, requirementsPaths)
-	assert deps == {
+	deps = req_uv.get_reqs(skipDependencies = [], extras=[], groups=[], requirementsPaths=requirementsPaths)
+	assert {d.name.upper() for d in deps} == {
 		"AMQP",
 		"BILLIARD",
 		"CELERY",

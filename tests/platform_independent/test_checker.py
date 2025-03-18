@@ -45,6 +45,7 @@ def test_check(
 	incompatible, packages = check(
 		requirements_paths=["requirements.txt"],
 		groups=[],
+		extras=[],
 		this_license=License.GPL_3_PLUS,
 		package_info_manager=mock_package_info_manager,
 		ignore_packages=ignore_packages,

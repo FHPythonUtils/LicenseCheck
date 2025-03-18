@@ -1,6 +1,6 @@
 [project]
 name = "licensecheck"
-version = "2025.0.1"
+version = "2025.1.0"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = [{ name = "FredHappyface" }]
 requires-python = ">=3.9"
@@ -32,7 +32,7 @@ dependencies = [
     "requirements-parser>=0.11.0",
     "rich>=13.9.4",
     "tomli>=2.2.1",
-    "uv>=0.6.6",
+    "uv>=0.6.8",
 ]
 
 [project.urls]

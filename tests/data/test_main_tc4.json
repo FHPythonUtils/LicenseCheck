@@ -7,22 +7,6 @@
 	"project_license": "GPL LICENSE",
 	"packages": [
 		{
-			"name": "Markdown",
-			"homePage": "UNKNOWN",
-			"author": "Manfred Stienstra, Yuri Takhteyev",
-			"license": "BSD LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "Pygments",
-			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "BSD LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
 			"name": "appdirs",
 			"homePage": "http://github.com/ActiveState/appdirs",
 			"author": "Trent Mick",
@@ -39,7 +23,7 @@
 			"errorCode": 0
 		},
 		{
-			"name": "boolean.py",
+			"name": "boolean-py",
 			"homePage": "https://github.com/bastikr/boolean.py",
 			"author": "Sebastian Kraemer",
 			"license": "BSD-2-CLAUSE",
@@ -111,6 +95,14 @@
 			"errorCode": 0
 		},
 		{
+			"name": "markdown",
+			"homePage": "UNKNOWN",
+			"author": "Manfred Stienstra, Yuri Takhteyev",
+			"license": "BSD LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
 			"name": "markdown-it-py",
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",
@@ -139,6 +131,14 @@
 			"homePage": "UNKNOWN",
 			"author": "UNKNOWN",
 			"license": "MIT LICENSE",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
+			"name": "pygments",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "BSD LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
@@ -231,7 +231,7 @@
 			"errorCode": 0
 		},
 		{
-			"name": "win32_setctime",
+			"name": "win32-setctime",
 			"homePage": "https://github.com/Delgan/win32-setctime",
 			"author": "Delgan",
 			"license": "MIT LICENSE",

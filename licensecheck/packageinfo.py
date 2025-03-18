@@ -16,6 +16,13 @@ from license_expression import Licensing
 
 from licensecheck.session import session
 from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
+from licensecheck.resolvers import native as res_native
+from licensecheck.resolvers import uv as res_uv
+from pathlib import Path
+from email.message import Message
+import requests
+import tomli
+from loguru import logger
 
 RAW_JOINS = " AND "
 
@@ -33,7 +40,39 @@ class PackageInfoManager:
 		self.pypi_api = base_pypi_url + "/pypi/"
 		self.pypi_search = base_pypi_url + "/simple/"
 
-	def getPackages(self, reqs: set[ucstr]) -> set[PackageInfo]:
+	def resolve_requirements(
+		self,
+		requirements_paths: list[str],
+		groups: list[str],
+		extras: list[str],
+		skip_dependencies: list[ucstr],
+	):
+		try:
+			self.reqs = res_uv.get_reqs(
+				skipDependencies=skip_dependencies,
+				groups=groups,
+				extras=extras,
+				requirementsPaths=requirements_paths,
+				index_url=self.pypi_search,
+			)
+			return
+
+		except RuntimeError as e:
+			logger.warning(e)
+			pyproject = {}
+			if "pyproject.toml" in requirements_paths:
+				pyproject = tomli.loads(Path("pyproject.toml").read_text("utf-8"))
+
+			# Fallback to the old resolver (hopefully we can deprecate this asap!)
+			self.reqs = res_native.get_reqs(
+				skipDependencies=skip_dependencies,
+				extras=groups,
+				pyproject=pyproject,
+				requirementsPaths=[Path(x) for x in requirements_paths],
+			)
+			return
+
+	def getPackages(self) -> set[PackageInfo]:
 		"""Retrieve package information from local installation or PyPI.
 
 		:param set[ucstr] reqs: Set of dependency names to retrieve information for.
@@ -41,145 +80,195 @@ class PackageInfoManager:
 		"""
 		package_info_set = set()
 
-		for package in reqs:
+		for package in self.reqs:
 			package_info = self.get_package_info(package)
 			package_info_set.add(package_info)
 
 		return package_info_set
 
-	def get_package_info(self, package: ucstr) -> PackageInfo:
+	def get_package_info(self, package: PackageInfo) -> PackageInfo:
 		"""Retrieve package information, preferring local data.
 
 		:param ucstr pacage: Package name.
 		:return PackageInfo: Information about the package.
 		"""
-		pkg_info = PackageInfo(name=package, errorCode=1)
-		try:
-			pkg_info = LocalPackageInfo.get_info(package)
-		except ModuleNotFoundError:
-			with contextlib.suppress(ModuleNotFoundError):
-				pkg_info = RemotePackageInfo.get_info(package, self.pypi_api)
+		pkg_info = PackageInfo(name=package.name, version=package.version, errorCode=1)
 
-		licensing = Licensing()
-		parsed = None
-		with contextlib.suppress(license_expression.ExpressionParseError):
-			parsed = licensing.parse(
-				re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", pkg_info.license.splitlines()[0])
-			)
-		if parsed is None:
-			return pkg_info
+		lpi = LocalPackageInfo(package=package)
+		rpi = RemotePackageInfo(pypi_api=self.pypi_api, package=package)
 
-		tokens = sorted(parsed.literals)
-		pkg_info.license = ucstr(JOINS.join(x.key for x in tokens))
+		pkg_info = PackageInfo(
+			name=package.name,
+			version=lpi.get_version() or rpi.get_version(),
+			size=lpi.get_size() or rpi.get_size(),
+			homePage=lpi.get_homePage() or rpi.get_homePage(),
+			author=lpi.get_author() or rpi.get_author(),
+			license=ucstr(lpi.get_license() or rpi.get_license()),
+		)
+
+		if rpi.error_state:
+			pkg_info.errorCode = 1
+
+		if pkg_info.license:
+			licensing = Licensing()
+			parsed = None
+			with contextlib.suppress(license_expression.ExpressionParseError):
+				parsed = licensing.parse(
+					re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", pkg_info.license.splitlines()[0])
+				)
+			if parsed is None:
+				return pkg_info
+
+			tokens = sorted(parsed.literals)
+			pkg_info.license = ucstr(JOINS.join(x.key for x in tokens))
+
 		return pkg_info
 
 
 class LocalPackageInfo:
 	"""Handles retrieval of package info from local installation."""
 
-	@staticmethod
-	def get_info(package: ucstr) -> PackageInfo:
-		"""Retrieve package metadata from local installation.
-
-		:param ucstr package: Package name.
-		:return PackageInfo: Local package information.
-		"""
+	def __init__(self, package: PackageInfo) -> None:
+		self.package = package
 		try:
-			metadata_obj = metadata.metadata(package)
-			license_str = meta_get(metadata_obj, "License_Expression")
-			if license_str == UNKNOWN:
-				license_str = from_classifiers(metadata_obj.get_all("Classifier"))
-			if license_str == UNKNOWN:
-				license_str = meta_get(metadata_obj, "License")
-
-			return PackageInfo(
-				name=meta_get(metadata_obj, "Name"),
-				version=meta_get(metadata_obj, "Version"),
-				homePage=meta_get(metadata_obj, "Home-page"),
-				author=meta_get(metadata_obj, "Author"),
-				size=LocalPackageInfo.get_size(package),
-				license=ucstr(license_str),
-			)
+			self.meta = metadata.metadata(package.name)
 		except metadata.PackageNotFoundError as error:
-			raise ModuleNotFoundError from error
+			# In the event of an error create an empty dict like object
+			self.meta = Message()
 
-	@staticmethod
-	def get_size(package: ucstr) -> int:
+	def get_license(self) -> str | None:
+		license_str = (
+			meta_get(self.meta, "License_Expression")
+			or from_classifiers(self.meta.get_all("Classifier"))
+			or meta_get(self.meta, "License")
+		)
+
+		return license_str
+
+	def get_name(self) -> str | None:
+		return meta_get(self.meta, "Name")
+
+	def get_version(self) -> str | None:
+		return meta_get(self.meta, "Version")
+
+	def get_homePage(self) -> str | None:
+		return meta_get(self.meta, "Home-page")
+
+	def get_author(self) -> str | None:
+		return meta_get(self.meta, "Author")
+
+	def get_size(self) -> int:
 		"""Retrieve installed package size.
 
 		:param ucstr package: Package name.
 		:return int: Size in bytes.
 		"""
-		package_files = metadata.Distribution.from_name(package).files
-		return sum(f.size for f in package_files if f.size is not None) if package_files else 0
+		try:
+			package_files = metadata.Distribution.from_name(self.package.name).files
+			return sum(f.size for f in package_files if f.size) if package_files else 0
+		except metadata.PackageNotFoundError:
+			return 0  # Package not found
 
 
 class RemotePackageInfo:
 	"""Handles retrieval of package info from PyPI."""
 
-	@staticmethod
-	def get_info(package: ucstr, pypi_api: str) -> PackageInfo:
-		"""Retrieve package metadata from PyPI.
+	def __init__(self, pypi_api: str, package: PackageInfo) -> None:
+		self.pypi_api = pypi_api
+		self.package = package
+		self.raw_data: dict = None  # type: ignore # Becuase we lateinit this
+		self.error_state = None
 
-		:param ucstr package: Package name.
-		:param str pypi_api: PyPI API base URL.
-		:return PackageInfo: Remote package information.
-		"""
-		response = session.get(f"{pypi_api}{package}/json", timeout=60)
+	def poke_pypi(self):
+		if self.raw_data is None:
+			# Attempt to get versioned data first
+			data = (
+				self.make_req(url=f"{self.pypi_api}{self.package.name}/{self.package.version}/json")
+				if self.package.version
+				else None
+			)
+			# Otherwise just get the latest
+			if not data:
+				data = self.make_req(url=f"{self.pypi_api}{self.package.name}/json")
+			self.raw_data = data
 
-		if response.status_code != 200:
-			raise ModuleNotFoundError
+	def make_req(self, url: str) -> dict:
+		try:
+			response = session.get(url, timeout=60)
 
-		data = response.json().get("info", {})
+			if response.status_code != 200:
+				self.error_state = f"Non-200 when contacting {url}"
+				return {}
 
-		license_str = meta_get(data, "license_expression")
-		if license_str == UNKNOWN:
-			license_str = from_classifiers(data.get("classifiers", []))
-		if license_str == UNKNOWN:
-			license_str = meta_get(data, "license")
+			return response.json().get("info", {})
+		except requests.exceptions.JSONDecodeError:
+			self.error_state = f"Unable to decode package info from {url}"
+			return {}
+		except requests.exceptions.RequestException:
+			self.error_state = f"Some exception when contacting {url}"
+			return {}
 
-		return PackageInfo(
-			name=meta_get(data, "name"),
-			version=meta_get(data, "version"),
-			homePage=meta_get(data, "home_page"),
-			author=meta_get(data, "author"),
-			size=RemotePackageInfo.get_size(data),
-			license=ucstr(license_str),
+	def get_license(self) -> str | None:
+		self.poke_pypi()
+		license_str = (
+			meta_get(self.raw_data, "license_expression")
+			or from_classifiers(self.raw_data.get("classifiers", []))
+			or meta_get(self.raw_data, "license")
 		)
 
-	@staticmethod
-	def get_size(data: dict[str, Any]) -> int:
+		return license_str
+
+	def get_name(self) -> str | None:
+		self.poke_pypi()
+		return meta_get(self.raw_data, "name")
+
+	def get_version(self) -> str | None:
+		self.poke_pypi()
+		return meta_get(self.raw_data, "version")
+
+	def get_homePage(self) -> str | None:
+		self.poke_pypi()
+		return meta_get(self.raw_data, "home_page")
+
+	def get_author(self) -> str | None:
+		self.poke_pypi()
+		return meta_get(self.raw_data, "author")
+
+	def get_size(self) -> int:
 		"""Retrieve package size from PyPI metadata.
 
 		:param dict[str, Any] data: PyPI response JSON.
 
 		:return int: Package size in bytes.
 		"""
-		urls = data.get("urls", [])
-		return int(urls[-1]["size"]) if urls else -1
+		self.poke_pypi()
+		if self.raw_data is None:
+			return -1
+		urls = self.raw_data.get("urls", [])
+		return int(urls[-1]["size"]) if len(urls) > 0 else -1
 
 
-def meta_get(metadata_obj: metadata.PackageMetadata | dict[str, Any], key: str) -> str:
+def meta_get(meta: Message | dict[str, Any], key: str) -> str | None:
 	"""Retrieve metadata value safely.
 
-	:param metadata.PackageMetadata | dict[str, Any] metadata_obj: Metadata source.
+	:param Message | dict[str, Any] self.meta: Metadata source.
 	:param str key: Metadata key.
 	:return str: Retrieved metadata value.
 	"""
-	value = metadata_obj.get(key, UNKNOWN)
+	value = meta.get(key)
 	if isinstance(value, Iterable) and not isinstance(value, str):
 		return RAW_JOINS.join(str(x) for x in value)
-	return str(value) if value else UNKNOWN
+	return str(value) if value else None
 
 
-def from_classifiers(classifiers: list[str] | None) -> ucstr:
+def from_classifiers(classifiers: list[str] | None) -> str | None:
 	"""Extract license from classifiers.
 
 	:param list[str] | None classifiers: list of classifiers
 	:return ucstr: licenses as a ucstr
 	"""
 	if not classifiers:
-		return UNKNOWN
+		return None
 
 	licenses: list[str] = []
 	for _val in classifiers:
@@ -188,7 +277,7 @@ def from_classifiers(classifiers: list[str] | None) -> ucstr:
 			lice = val.split(" :: ")[-1]
 			if lice != "OSI Approved":
 				licenses.append(lice)
-	return ucstr(RAW_JOINS.join(licenses) if len(licenses) > 0 else UNKNOWN)
+	return RAW_JOINS.join(licenses) if len(licenses) > 0 else None
 
 
 class ProjectMetadata:
@@ -228,8 +317,8 @@ class ProjectMetadata:
 		metadata = ProjectMetadata.get_metadata()
 		license_str = from_classifiers(metadata.get("classifiers", []))
 
-		if license_str != UNKNOWN:
-			return license_str
+		if license_str is not None:
+			return ucstr(license_str)
 
 		if isinstance(metadata.get("license"), dict):
 			return ucstr(metadata["license"].get("text", UNKNOWN))

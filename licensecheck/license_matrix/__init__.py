@@ -199,4 +199,8 @@ def liceCompat(
 	licenses = list(L)
 	row, col = licenses.index(myLicense) + 1, licenses.index(lice) + 1
 
-	return LICENSE_MATRIX[row][col] == "1"
+	try:
+		return LICENSE_MATRIX[row][col] == "1"
+	except KeyError:
+		logger.warning(f"Licenses {myLicense} and {lice} cannot be compared")
+		return False

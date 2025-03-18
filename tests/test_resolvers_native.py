@@ -14,7 +14,10 @@ def test_doGetReqs_PEP631() -> None:
 	requirementsPaths = [(THISDIR / "data/pep631_socks.toml")]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	assert get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject) == {
+	deps = get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject)
+	reqs = {d.name.upper() for d in deps}
+
+	assert reqs == {
 		"DOCKERPTY",
 		"PACKAGING",
 		"ATTRS",
@@ -56,7 +59,9 @@ def test_doGetReqs_requirements() -> None:
 	skipDependencies = [types.ucstr("TOSKIP")]
 
 	deps = get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject)
-	assert deps == {
+	reqs = {d.name.upper() for d in deps}
+
+	assert reqs == {
 		"NUMPY",
 		"ODFPY",
 		"OPENPYXL",
@@ -69,9 +74,9 @@ def test_doGetReqs_requirements() -> None:
 		"XLRD",
 		"XLSXWRITER",
 	}
-	assert "OPENPYXL" in deps
+	assert "OPENPYXL" in reqs
 	assert (
-		"XARRAY" not in deps
+		"XARRAY" not in reqs
 	)  # xarray is an optional dependency of pandas associated with 'computation' key that is not
 	# tracked in test_requirements.txt
 
@@ -83,8 +88,9 @@ def test_doGetReqs_requirements_with_hashes() -> None:
 	skipDependencies = [types.ucstr("TOSKIP")]
 
 	deps = get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject)
-	assert deps == {"PACKAGING"}
-	assert "TOSKIP" not in deps
+	reqs = {d.name.upper() for d in deps}
+	assert reqs == {"PACKAGING"}
+	assert "TOSKIP" not in reqs
 
 
 def test_issue_81() -> None:
@@ -94,7 +100,8 @@ def test_issue_81() -> None:
 	skipDependencies = []
 
 	deps = get_deps.get_reqs(skipDependencies, extras, requirementsPaths, pyproject)
-	assert deps == {
+	reqs = {d.name.upper() for d in deps}
+	assert reqs == {
 		"DATACLASSES",
 		"LANGSMITH",
 		"MURMURHASH",

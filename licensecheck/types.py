@@ -5,15 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from enum import Enum
 
-from typing_extensions import Self
-
 
 class ucstr(str):
 	"""Uppercase string."""
 
 	__slots__ = ()
 
-	def __new__(cls, v: str | None) -> Self:
+	def __new__(cls, v: str | None):
 		"""Create a new ucstr from a str.
 
 		:param str v: string to cast
@@ -33,18 +31,18 @@ class PackageInfo:
 	"""PackageInfo type."""
 
 	name: str
-	version: str = UNKNOWN
+	version: str | None = None
 	namever: str = field(init=False)
 	size: int = -1
-	homePage: str = UNKNOWN
-	author: str = UNKNOWN
-	license: ucstr = UNKNOWN
+	homePage: str | None = None
+	author: str | None = None
+	license: ucstr | None = None
 	licenseCompat: bool = False
 	errorCode: int = 0
 
 	def __post_init__(self) -> None:
 		"""Set the namever once the object is initialised."""
-		self.namever = f"{self.name}-{self.version}"
+		self.namever = f"{self.name}-{self.version or UNKNOWN}"
 
 	def get_filtered_dict(self, hide_output_parameters: list[ucstr]) -> dict:
 		"""Return a filtered dictionary of the object.
@@ -52,7 +50,11 @@ class PackageInfo:
 		:param list[ucstr] hide_output_parameters: list of parameters to ignore
 		:return dict: filtered dictionary
 		"""
-		return {k: v for k, v in self.__dict__.items() if k.upper() not in hide_output_parameters}
+		return {
+			k: (v if v is not None else UNKNOWN)
+			for k, v in self.__dict__.items()
+			if k.upper() not in hide_output_parameters
+		}
 
 
 class License(Enum):

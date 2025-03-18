@@ -25,7 +25,7 @@ test_data = [
 	(
 		{
 			"license": "MIT",
-			"pypi_api": "https://pypi.org/pypi/",
+			"pypi_api": "https://pypi.org/",
 			"file": aux_file("test_main_tc1.txt"),
 			"requirements_paths": ["pyproject.toml"],
 		},
@@ -34,7 +34,7 @@ test_data = [
 	(
 		{
 			"license": "BSD",
-			"pypi_api": "https://pypi.org/pypi/",
+			"pypi_api": "https://pypi.org/",
 			"file": aux_file("test_main_tc3.txt"),
 			"requirements_paths": ["pyproject.toml"],
 			"ignore_packages": ["requests"],
@@ -45,7 +45,7 @@ test_data = [
 	(
 		{
 			"license": "GPL",
-			"pypi_api": "https://pypi.org/pypi/",
+			"pypi_api": "https://pypi.org/",
 			"file": aux_file("test_main_tc4.json"),
 			"requirements_paths": ["pyproject.toml"],
 			"format": "json",

@@ -11,7 +11,7 @@ from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
 from licensecheck.session import session
-from licensecheck.types import ucstr
+from licensecheck.types import ucstr, PackageInfo
 
 
 def get_reqs(
@@ -19,7 +19,7 @@ def get_reqs(
 	extras: list[str],
 	requirementsPaths: list[Path],
 	pyproject: dict[str, Any],
-) -> set[ucstr]:
+) -> set[PackageInfo]:
 	using = "[unknown]"
 
 	# determine using based on file type
@@ -49,7 +49,7 @@ def do_get_reqs(
 	extras: list[str],
 	pyproject: dict[str, Any],
 	requirementsPaths: list[Path],
-) -> set[ucstr]:
+) -> set[PackageInfo]:
 	"""Underlying machineary to get requirements.
 
 	Args:
@@ -164,4 +164,4 @@ def do_get_reqs(
 			for dependency in requires_dist:
 				update_dependencies(dependency)
 
-	return {r.split("[")[0] for r in requirementsWithDeps}
+	return {PackageInfo(name=r.split("[")[0]) for r in requirementsWithDeps}

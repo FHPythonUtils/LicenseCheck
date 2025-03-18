@@ -13,11 +13,9 @@
 ┏━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Compatible ┃ Package             ┃ License(s)                            ┃
 ┡━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
-│ ✔          │ Markdown            │ BSD LICENSE                           │
-│ ✔          │ Pygments            │ BSD LICENSE                           │
 │ ✔          │ appdirs             │ MIT LICENSE                           │
 │ ✔          │ attrs               │ MIT LICENSE                           │
-│ ✔          │ boolean.py          │ BSD-2-CLAUSE                          │
+│ ✔          │ boolean-py          │ BSD-2-CLAUSE                          │
 │ ✔          │ cattrs              │ MIT LICENSE                           │
 │ ✔          │ certifi             │ MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_  │
 │ ✔          │ charset-normalizer  │ MIT LICENSE                           │
@@ -26,10 +24,12 @@
 │ ✔          │ idna                │ BSD LICENSE                           │
 │ ✔          │ license-expression  │ APACHE-2.0                            │
 │ ✔          │ loguru              │ MIT LICENSE                           │
+│ ✔          │ markdown            │ BSD LICENSE                           │
 │ ✔          │ markdown-it-py      │ MIT LICENSE                           │
 │ ✔          │ mdurl               │ MIT LICENSE                           │
 │ ✔          │ packaging           │ APACHE SOFTWARE LICENSE;; BSD LICENSE │
 │ ✔          │ platformdirs        │ MIT LICENSE                           │
+│ ✔          │ pygments            │ BSD LICENSE                           │
 │ ✔          │ requests            │ APACHE SOFTWARE LICENSE               │
 │ ✔          │ requests-cache      │ BSD LICENSE                           │
 │ ✔          │ requirements-parser │ APACHE SOFTWARE LICENSE               │
@@ -41,6 +41,6 @@
 │ ✔          │ url-normalize       │ MIT LICENSE                           │
 │ ✔          │ urllib3             │ MIT LICENSE                           │
 │ ✔          │ uv                  │ APACHE SOFTWARE LICENSE;; MIT LICENSE │
-│ ✔          │ win32_setctime      │ MIT LICENSE                           │
+│ ✔          │ win32-setctime      │ MIT LICENSE                           │
 └────────────┴─────────────────────┴───────────────────────────────────────┘
 

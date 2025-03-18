@@ -1,5 +1,5 @@
-
-               Info
+                                  
+               Info               
 ┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
 ┃ Item            ┃ Value        ┃
 ┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
@@ -8,16 +8,16 @@
 │ license         │ MIT LICENSE  │
 │ project_license │ MIT LICENSE  │
 └─────────────────┴──────────────┘
-
-  List Of
-   Errors
+            
+  List Of   
+   Errors   
 ┏━━━━━━━━━━┓
 ┃ Package  ┃
 ┡━━━━━━━━━━┩
 │ example1 │
 └──────────┘
-
-           List Of Packages
+                                      
+           List Of Packages           
 ┏━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━┓
 ┃ Compatible ┃ Package  ┃ License(s) ┃
 ┡━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━┩

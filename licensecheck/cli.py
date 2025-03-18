@@ -40,7 +40,13 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--groups",
 		"-g",
-		help="Select groups/extras from supported files",
+		help="Select groups from supported files",
+		nargs="+",
+	)
+	parser.add_argument(
+		"--extras",
+		"-e",
+		help="Select extras from supported files",
 		nargs="+",
 	)
 	parser.add_argument(
@@ -159,6 +165,7 @@ def main(args: dict) -> int:
 	incompatible, depsWithLicenses = checker.check(
 		requirements_paths=requirements_paths,
 		groups=simpleConf.get("groups", []),
+		extras=simpleConf.get("extras", []),
 		this_license=this_license,
 		package_info_manager=package_info_manager,
 		ignore_packages=getFromConfig("ignore_packages"),
