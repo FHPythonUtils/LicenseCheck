@@ -37,11 +37,12 @@ def do_get_reqs(
     extras: list[str],
     pyproject: dict[str, Any],
     requirementsPaths: list[Path],
-) -> set[ucstr]: ...
+) -> set[PackageInfo]: ...
 ```
 
 #### See also
 
+- [PackageInfo](../types.md#packageinfo)
 - [ucstr](../types.md#ucstr)
 
 
@@ -58,9 +59,10 @@ def get_reqs(
     extras: list[str],
     requirementsPaths: list[Path],
     pyproject: dict[str, Any],
-) -> set[ucstr]: ...
+) -> set[PackageInfo]: ...
 ```
 
 #### See also
 
+- [PackageInfo](../types.md#packageinfo)
 - [ucstr](../types.md#ucstr)

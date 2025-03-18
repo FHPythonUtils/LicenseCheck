@@ -16,12 +16,14 @@
 ```python
 def get_reqs(
     skipDependencies: list[ucstr],
+    groups: list[str],
     extras: list[str],
     requirementsPaths: list[str],
-    index_url: str = "https://pypi.org",
-) -> set[ucstr]: ...
+    index_url: str = "https://pypi.org/simple",
+) -> set[PackageInfo]: ...
 ```
 
 #### See also
 
+- [PackageInfo](../types.md#packageinfo)
 - [ucstr](../types.md#ucstr)

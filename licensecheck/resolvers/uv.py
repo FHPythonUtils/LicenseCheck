@@ -9,7 +9,7 @@ from pathlib import Path
 
 import requirements
 
-from licensecheck.types import ucstr, PackageInfo
+from licensecheck.types import PackageInfo, ucstr
 
 
 def get_reqs(

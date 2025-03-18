@@ -4,11 +4,9 @@ from __future__ import annotations
 
 from fnmatch import fnmatch
 
-
 from licensecheck import license_matrix
 from licensecheck.packageinfo import PackageInfoManager
 from licensecheck.types import JOINS, License, PackageInfo, ucstr
-
 
 
 def check(

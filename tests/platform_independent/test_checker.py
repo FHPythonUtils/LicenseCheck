@@ -33,7 +33,7 @@ def test_check(
 	fail_packages: list | None,
 	fail_licenses: list | None,
 	expected_incompatible: bool,
-):
+) -> None:
 	"""Parametrized test for different license check scenarios."""
 	mock_packages = {
 		PackageInfo(name="PACKAGE_A", license=ucstr("MIT"), licenseCompat=True),

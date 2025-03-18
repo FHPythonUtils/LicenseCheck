@@ -6,11 +6,10 @@
 
 - [Checker](#checker)
   - [check](#check)
-  - [resolve_requirements](#resolve_requirements)
 
 ## check
 
-[Show source in checker.py:47](../../../licensecheck/checker.py#L47)
+[Show source in checker.py:12](../../../licensecheck/checker.py#L12)
 
 #### Signature
 
@@ -18,6 +17,7 @@
 def check(
     requirements_paths: list[str],
     groups: list[str],
+    extras: list[str],
     this_license: License,
     package_info_manager: PackageInfoManager,
     ignore_packages: list[ucstr] | None = None,
@@ -34,24 +34,3 @@ def check(
 - [License](./types.md#license)
 - [PackageInfoManager](./packageinfo.md#packageinfomanager)
 - [PackageInfo](./types.md#packageinfo)
-
-
-
-## resolve_requirements
-
-[Show source in checker.py:18](../../../licensecheck/checker.py#L18)
-
-#### Signature
-
-```python
-def resolve_requirements(
-    requirements_paths: list[str],
-    groups: list[str],
-    skip_dependencies: list[ucstr],
-    index_url: str,
-) -> set[ucstr]: ...
-```
-
-#### See also
-
-- [ucstr](./types.md#ucstr)

@@ -9,7 +9,6 @@
   - [liceCompat](#licecompat)
   - [licenseLookup](#licenselookup)
   - [licenseType](#licensetype)
-  - [Modules](#modules)
 
 ## depCompatWMyLice
 
@@ -143,9 +142,3 @@ def licenseType(lice: ucstr, ignoreLicenses: list[ucstr] | None = None) -> list[
 
 - [License](../types.md#license)
 - [ucstr](../types.md#ucstr)
-
-
-
-## Modules
-
-- [Spdx](./spdx.md)

@@ -10,7 +10,6 @@ A full list of `Licensecheck` project modules.
     - [Cli](licensecheck/cli.md#cli)
     - [Fmt](licensecheck/fmt.md#fmt)
     - [License Matrix](licensecheck/license_matrix/index.md#license-matrix)
-        - [Spdx](licensecheck/license_matrix/spdx.md#spdx)
     - [Packageinfo](licensecheck/packageinfo.md#packageinfo)
     - [Resolvers](licensecheck/resolvers/index.md#resolvers)
         - [Native](licensecheck/resolvers/native.md#native)

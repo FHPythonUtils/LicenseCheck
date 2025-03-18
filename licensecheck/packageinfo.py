@@ -6,23 +6,21 @@ import configparser
 import contextlib
 import re
 from collections.abc import Iterable
+from email.message import Message
 from importlib import metadata
 from pathlib import Path
 from typing import Any
 
 import license_expression
-import tomli
-from license_expression import Licensing
-
-from licensecheck.session import session
-from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
-from licensecheck.resolvers import native as res_native
-from licensecheck.resolvers import uv as res_uv
-from pathlib import Path
-from email.message import Message
 import requests
 import tomli
+from license_expression import Licensing
 from loguru import logger
+
+from licensecheck.resolvers import native as res_native
+from licensecheck.resolvers import uv as res_uv
+from licensecheck.session import session
+from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
 RAW_JOINS = " AND "
 
@@ -46,7 +44,7 @@ class PackageInfoManager:
 		groups: list[str],
 		extras: list[str],
 		skip_dependencies: list[ucstr],
-	):
+	) -> None:
 		try:
 			self.reqs = res_uv.get_reqs(
 				skipDependencies=skip_dependencies,
@@ -132,18 +130,16 @@ class LocalPackageInfo:
 		self.package = package
 		try:
 			self.meta = metadata.metadata(package.name)
-		except metadata.PackageNotFoundError as error:
+		except metadata.PackageNotFoundError:
 			# In the event of an error create an empty dict like object
 			self.meta = Message()
 
 	def get_license(self) -> str | None:
-		license_str = (
+		return (
 			meta_get(self.meta, "License_Expression")
 			or from_classifiers(self.meta.get_all("Classifier"))
 			or meta_get(self.meta, "License")
 		)
-
-		return license_str
 
 	def get_name(self) -> str | None:
 		return meta_get(self.meta, "Name")
@@ -179,7 +175,7 @@ class RemotePackageInfo:
 		self.raw_data: dict = None  # type: ignore # Becuase we lateinit this
 		self.error_state = None
 
-	def poke_pypi(self):
+	def poke_pypi(self) -> None:
 		if self.raw_data is None:
 			# Attempt to get versioned data first
 			data = (
@@ -210,13 +206,11 @@ class RemotePackageInfo:
 
 	def get_license(self) -> str | None:
 		self.poke_pypi()
-		license_str = (
+		return (
 			meta_get(self.raw_data, "license_expression")
 			or from_classifiers(self.raw_data.get("classifiers", []))
 			or meta_get(self.raw_data, "license")
 		)
-
-		return license_str
 
 	def get_name(self) -> str | None:
 		self.poke_pypi()

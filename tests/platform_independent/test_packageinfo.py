@@ -1,21 +1,26 @@
 from __future__ import annotations
 
-import importlib
 from pathlib import Path
 from typing import Any
 
 import pytest
 
-from licensecheck.packageinfo import LocalPackageInfo, RemotePackageInfo,PackageInfoManager, from_classifiers, meta_get
-from licensecheck.types import PackageInfo, UNKNOWN
+from licensecheck.packageinfo import (
+	LocalPackageInfo,
+	PackageInfoManager,
+	RemotePackageInfo,
+	from_classifiers,
+	meta_get,
+)
+from licensecheck.types import UNKNOWN, PackageInfo
 
 THISDIR = str(Path(__file__).resolve().parent)
 
 
 @pytest.fixture
 def package_info_manager():
-    """Fixture to provide a PackageInfoManager instance."""
-    return PackageInfoManager("https://pypi.org/pypi/")
+	"""Fixture to provide a PackageInfoManager instance."""
+	return PackageInfoManager("https://pypi.org/pypi/")
 
 
 @pytest.fixture
@@ -28,9 +33,9 @@ def remote_package_info():
 	return RemotePackageInfo("https://pypi.org/pypi/", requests_package)
 
 
-
-def aux_packageinfo(package_name: str)-> PackageInfo:
+def aux_packageinfo(package_name: str) -> PackageInfo:
 	return PackageInfo(name=package_name)
+
 
 requests_package = aux_packageinfo("requests")
 
@@ -44,7 +49,6 @@ def test_getPackageInfoLocal(local_package_info: LocalPackageInfo) -> None:
 
 
 def test_getPackageInfoPypi(remote_package_info: RemotePackageInfo) -> None:
-
 	pkg = remote_package_info
 
 	assert pkg.get_name() == "requests"
@@ -59,11 +63,10 @@ def test_getPackageInfoLocalNotFound() -> None:
 
 
 def test_getPackagePypiLocalNotFound() -> None:
-	pkg = RemotePackageInfo("https://pypi.org/pypi/",
-			aux_packageinfo("this_package_does_not_exist")
-		)
+	pkg = RemotePackageInfo(
+		"https://pypi.org/pypi/", aux_packageinfo("this_package_does_not_exist")
+	)
 	assert pkg.get_size() == -1
-
 
 
 def test_getPackages(package_info_manager: PackageInfoManager) -> None:
@@ -108,7 +111,6 @@ def test_licenseFromEmptyClassifierlist() -> None:
 def test_getModuleSize() -> None:
 	local_package_info = LocalPackageInfo(aux_packageinfo("this_package_does_not_exist"))
 	local_package_info.get_size()
-
 
 
 # Define test cases

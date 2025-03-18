@@ -12,7 +12,12 @@ def test_PEP631() -> None:
 	requirementsPaths = [f"{THISDIR}/data/pep631_socks.toml"]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = req_uv.get_reqs(skipDependencies=skipDependencies, extras=extras, groups=[], requirementsPaths=requirementsPaths)
+	deps = req_uv.get_reqs(
+		skipDependencies=skipDependencies,
+		extras=extras,
+		groups=[],
+		requirementsPaths=requirementsPaths,
+	)
 	reqs = {d.name.upper() for d in deps}
 
 	assert reqs == {
@@ -52,7 +57,9 @@ def test_requirements() -> None:
 	requirementsPaths = [f"{THISDIR}/data/test_requirements.txt"]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = req_uv.get_reqs(skipDependencies, extras=[], groups=[], requirementsPaths=requirementsPaths)
+	deps = req_uv.get_reqs(
+		skipDependencies, extras=[], groups=[], requirementsPaths=requirementsPaths
+	)
 	reqs = {d.name.upper() for d in deps}
 
 	assert reqs == {
@@ -81,7 +88,9 @@ def test_requirements_with_hashes() -> None:
 	requirementsPaths = [f"{THISDIR}/data/test_requirements_hash.txt"]
 	skipDependencies = [types.ucstr("TOSKIP")]
 
-	deps = req_uv.get_reqs(skipDependencies, extras=[], groups=[], requirementsPaths=requirementsPaths)
+	deps = req_uv.get_reqs(
+		skipDependencies, extras=[], groups=[], requirementsPaths=requirementsPaths
+	)
 	reqs = {d.name.upper() for d in deps}
 	assert reqs == {"PACKAGING"}
 	assert "TOSKIP" not in reqs
@@ -90,7 +99,9 @@ def test_requirements_with_hashes() -> None:
 def test_issue_62() -> None:
 	requirementsPaths = [f"{THISDIR}/data/issue_62.toml"]
 
-	deps = req_uv.get_reqs(skipDependencies = [], extras=[], groups=[], requirementsPaths=requirementsPaths)
+	deps = req_uv.get_reqs(
+		skipDependencies=[], extras=[], groups=[], requirementsPaths=requirementsPaths
+	)
 	reqs = {d.name.upper() for d in deps}
 	assert "PYQT5" not in reqs
 
@@ -133,7 +144,9 @@ def test_issue_62() -> None:
 def test_issue_81() -> None:
 	requirementsPaths = [f"{THISDIR}/data/issue_81.txt"]
 	with contextlib.suppress(Exception):
-		_deps = req_uv.get_reqs(skipDependencies = [], extras=[], groups=[], requirementsPaths=requirementsPaths)
+		_deps = req_uv.get_reqs(
+			skipDependencies=[], extras=[], groups=[], requirementsPaths=requirementsPaths
+		)
 
 	#     RuntimeError:    No solution found when resolving dependencies:
 	#        Because nvidia-cudnn-cu12==8.9.2.26 has no wheels with a matching
@@ -144,7 +157,9 @@ def test_issue_81() -> None:
 def test_issue_84() -> None:
 	requirementsPaths = [f"{THISDIR}/data/issue_84.txt"]
 
-	deps = req_uv.get_reqs(skipDependencies = [], extras=[], groups=[], requirementsPaths=requirementsPaths)
+	deps = req_uv.get_reqs(
+		skipDependencies=[], extras=[], groups=[], requirementsPaths=requirementsPaths
+	)
 	assert {d.name.upper() for d in deps} == {
 		"AMQP",
 		"BILLIARD",

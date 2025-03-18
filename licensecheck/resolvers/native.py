@@ -11,7 +11,7 @@ from packaging.requirements import Requirement
 from packaging.utils import canonicalize_name
 
 from licensecheck.session import session
-from licensecheck.types import ucstr, PackageInfo
+from licensecheck.types import PackageInfo, ucstr
 
 
 def get_reqs(
