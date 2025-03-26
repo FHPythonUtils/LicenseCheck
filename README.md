@@ -35,7 +35,6 @@ the project license
 - [Configuration Example](#configuration-example)
 	- [Example 1: pyproject.toml](#example-1-pyprojecttoml)
 	- [Example 2: licensecheck.json](#example-2-licensecheckjson)
-	- [Example 3: licensecheck.ini](#example-3-licensecheckini)
 - [Documentation](#documentation)
 - [Install With PIP](#install-with-pip)
 - [Language information](#language-information)
@@ -215,49 +214,61 @@ in the DOCS
 
 ## Configuration Example
 
-Configuration files are parsed in the following order: `pyproject.toml`,
-`setup.cfg`, `licensecheck.toml`, `licensecheck.json`, `licensecheck.ini`,
-`~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`
+Configuration files are parsed in the following order: `pyproject.toml`, `setup.cfg`,
+ `licensecheck.toml`, `licensecheck.json`, `~/licensecheck.toml`, `~/licensecheck.json`,
 
 - ⚠ All config files are parsed, however configuration defined in previous files takes precedent
 
-Add optional path to requirements.txt as outlined in
-https://github.com/FHPythonUtils/LicenseCheck/issues/9#issuecomment-898878228
-for example: `licensecheck --using requirements:c:/path/to/reqs.txt;path/to/other/reqs.txt`
 
 ### Example 1: pyproject.toml
 
-The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
-
 ```toml
+
 [tool.licensecheck]
-using = "requirements:requirements.txt;requirements_optional.txt"
-format = "json"
+license = "mit"               # Specify the project license explicitly
+format = "simple"             # Output format (e.g., "json", "csv", etc.)
+requirements_paths = []       # List of filenames to read from
+groups = []                   # List of selected groups
+extras = []                   # List of selected extras
+file = ""                     # Output file (leave empty for stdout)
+ignore_packages = []          # Packages/dependencies to ignore
+fail_packages = []            # Packages/dependencies that cause failure
+ignore_licenses = []          # Licenses to ignore
+fail_licenses = []            # Licenses that cause failure
+only_licenses = []            # Allowed licenses (all others will fail)
+skip_dependencies = []        # Dependencies to skip (compatibility = True)
+hide_output_parameters = []   # Parameters to hide from output
+show_only_failing = false     # Show only incompatible/failing packages
+pypi_api = "https://pypi.org" # Custom PyPI API endpoint
+zero = false                  # Return non-zero exit code for incompatible licenses (for CI/CD)
+
 ```
 
 ### Example 2: licensecheck.json
 
-The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
-
 ```json
 {
-	"tool": {
-		"licensecheck": {
-			"using": "requirements:requirements.txt;requirements_optional.txt",
-			"format": "json"
-		}
-	}
+  "tool": {
+    "licensecheck": {
+      "extras": [],
+      "fail_licenses": [],
+      "fail_packages": [],
+      "file": "",
+      "format": "simple",
+      "groups": [],
+      "hide_output_parameters": [],
+      "ignore_licenses": [],
+      "ignore_packages": [],
+      "license": "mit",
+      "only_licenses": [],
+      "pypi_api": "https://pypi.org",
+      "requirements_paths": [],
+      "show_only_failing": false,
+      "skip_dependencies": [],
+      "zero": false
+    }
+  }
 }
-```
-
-### Example 3: licensecheck.ini
-
-The following config is equivalent to `licensecheck -u 'requirements:requirements.txt;requirements_optional.txt' -f json`
-
-```ini
-[licensecheck]
-using = "requirements:requirements.txt;requirements_optional.txt"
-format = "json"
 ```
 
 ## Documentation

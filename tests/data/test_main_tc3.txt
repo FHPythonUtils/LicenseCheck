@@ -20,7 +20,7 @@
 │ ✔          │ certifi             │ MOZILLA PUBLIC LICENSE 2.0 _MPL 2.0_  │
 │ ✔          │ charset-normalizer  │ MIT LICENSE                           │
 │ ✔          │ colorama            │ BSD LICENSE                           │
-│ ✔          │ fhconfparser        │ MIT LICENSE                           │
+│ ✔          │ configurator        │ MIT LICENSE                           │
 │ ✔          │ idna                │ BSD LICENSE                           │
 │ ✔          │ license-expression  │ APACHE-2.0                            │
 │ ✔          │ loguru              │ MIT LICENSE                           │

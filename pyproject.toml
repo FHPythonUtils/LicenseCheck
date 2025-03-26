@@ -21,18 +21,18 @@ classifiers = [
 	"Topic :: Utilities",
 ]
 dependencies = [
-    "appdirs>=1.4.4",
-    "fhconfparser>=2024.1",
-    "license-expression>=30.4.1",
-    "loguru>=0.7.3",
-    "markdown>=3.7",
-    "packaging>=24.2",
-    "requests>=2.32.3",
-    "requests-cache>=1.2.1",
-    "requirements-parser>=0.11.0",
-    "rich>=13.9.4",
-    "tomli>=2.2.1",
-    "uv>=0.6.8",
+	"appdirs>=1.4.4",
+	"configurator>=3.2.0",
+	"license-expression>=30.4.1",
+	"loguru>=0.7.3",
+	"markdown>=3.7",
+	"packaging>=24.2",
+	"requests>=2.32.3",
+	"requests-cache>=1.2.1",
+	"requirements-parser>=0.11.0",
+	"rich>=13.9.4",
+	"tomli>=2.2.1",
+	"uv>=0.6.8",
 ]
 
 [project.urls]
@@ -45,13 +45,13 @@ licensecheck = "licensecheck:cli"
 
 [dependency-groups]
 dev = [
-    "coverage>=7.6.12",
-    "handsdown>=2.1.0",
-    "pyright>=1.1.396",
-    "pytest>=8.3.5",
-    "pytest-loguru>=0.4.0",
-    "ruff>=0.11.0",
-    "safety>=3.3.1",
+	"coverage>=7.6.12",
+	"handsdown>=2.1.0",
+	"pyright>=1.1.396",
+	"pytest>=8.3.5",
+	"pytest-loguru>=0.4.0",
+	"ruff>=0.11.0",
+	"safety>=3.3.1",
 ]
 
 [tool.ruff]
@@ -62,13 +62,13 @@ target-version = "py38"
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
-	"COM812",  # enforce trailing comma
-	"D2",  # pydocstyle formatting
+	"COM812", # enforce trailing comma
+	"D2",     # pydocstyle formatting
 	"ISC001",
-	"N",  # pep8 naming
+	"N",      # pep8 naming
 	"PLR09",  # pylint refactor too many
-	"TCH",  # type check blocks
-	"W191"  # ignore this to allow tabs
+	"TCH",    # type check blocks
+	"W191",   # ignore this to allow tabs
 ]
 fixable = ["ALL"]
 
@@ -88,15 +88,32 @@ venvPath = "."
 venv = ".venv"
 
 [tool.licensecheck]
+license = "mit"               # Specify the project license explicitly
+format = "simple"             # Output format (e.g., "json", "csv", etc.)
+requirements_paths = []       # List of filenames to read from
+groups = []                   # List of selected groups
+extras = []                   # List of selected extras
+file = ""                     # Output file (leave empty for stdout)
+ignore_packages = []          # Packages/dependencies to ignore
+fail_packages = []            # Packages/dependencies that cause failure
+ignore_licenses = []          # Licenses to ignore
+fail_licenses = []            # Licenses that cause failure
+only_licenses = []            # Allowed licenses (all others will fail)
+skip_dependencies = []        # Dependencies to skip (compatibility = True)
+hide_output_parameters = []   # Parameters to hide from output
+show_only_failing = false     # Show only incompatible/failing packages
+pypi_api = "https://pypi.org" # Custom PyPI API endpoint
+zero = false                  # Return non-zero exit code for incompatible licenses (for CI/CD)
+
 
 [tool.tox]
 legacy_tox_ini = """
 [tox]
 env_list =
-	py311
+	py313
+	py312
 	py310
 	py39
-	py38
 
 [testenv]
 deps = pytest

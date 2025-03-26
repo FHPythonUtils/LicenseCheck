@@ -63,9 +63,9 @@
 			"errorCode": 0
 		},
 		{
-			"name": "fhconfparser",
-			"homePage": "https://github.com/FHPythonUtils/FHConfParser",
-			"author": "FredHappyface",
+			"name": "configurator",
+			"homePage": "https://github.com/Simplistix/configurator",
+			"author": "Chris Withers",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0

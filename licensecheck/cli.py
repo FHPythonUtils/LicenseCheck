@@ -9,8 +9,9 @@ from dataclasses import fields
 from pathlib import Path
 from sys import exit as sysexit
 from sys import stdin, stdout
-
-from fhconfparser import FHConfParser, SimpleConf
+from configurator import Config
+from configurator.node import ConfigNode
+from pathlib import Path
 
 from licensecheck import checker, fmt, license_matrix, packageinfo, types
 
@@ -129,26 +130,29 @@ def main(args: dict) -> int:
 	"""
 	exitCode = 0
 
-	configparser = FHConfParser()
-	namespace = ["tool"]
-	configparser.parseConfigList(
-		[("pyproject.toml", "toml"), ("setup.cfg", "ini")]
-		+ [
-			(f"{directory}/licensecheck.{ext}", ext)
-			for ext in ("toml", "json", "ini")
-			for directory in [".", str(Path.home())]
-		],
-		namespace,
-		namespace,
-	)
-	simpleConf = SimpleConf(configparser, "licensecheck", args)
+	config: ConfigNode = Config()
+
+	config_files = [
+		"~/licensecheck.json",
+		"~/licensecheck.toml",
+		"licensecheck.json",
+		"licensecheck.toml",
+		"setup.cfg",
+		"pyproject.toml",
+	]
+
+	for file in config_files:
+		config += Config.from_path(file, optional=True)
+
+	scopedData: ConfigNode = config.get("tool", default={}).get("licensecheck", default=ConfigNode())
+	scopedConfig = {**scopedData.data, **args}
 
 	# File
-	requirements_paths = simpleConf.get("requirements_paths") or ["__stdin__"]
+	requirements_paths = scopedConfig.get("requirements_paths") or ["__stdin__"]
 	output_file = (
 		stdout
-		if simpleConf.get("file") is None
-		else Path(simpleConf.get("file")).open("w", encoding="utf-8")
+		if scopedConfig.get("file") in [None, ""]
+		else Path(scopedConfig.get("file")).open("w", encoding="utf-8")
 	)
 
 	# Get my license
@@ -158,14 +162,14 @@ def main(args: dict) -> int:
 	this_license = license_matrix.licenseType(this_license_text)[0]
 
 	def getFromConfig(key: str) -> list[types.ucstr]:
-		return list(map(types.ucstr, simpleConf.get(key, [])))
+		return list(map(types.ucstr, scopedConfig.get(key, [])))
 
-	package_info_manager = packageinfo.PackageInfoManager(simpleConf.get("pypi_api"))
+	package_info_manager = packageinfo.PackageInfoManager(scopedConfig.get("pypi_api"))
 
 	incompatible, depsWithLicenses = checker.check(
 		requirements_paths=requirements_paths,
-		groups=simpleConf.get("groups", []),
-		extras=simpleConf.get("extras", []),
+		groups=scopedConfig.get("groups", []),
+		extras=scopedConfig.get("extras", []),
 		this_license=this_license,
 		package_info_manager=package_info_manager,
 		ignore_packages=getFromConfig("ignore_packages"),
@@ -177,7 +181,9 @@ def main(args: dict) -> int:
 	)
 
 	# Format the results
-	hide_output_parameters = [types.ucstr(x) for x in simpleConf.get("hide_output_parameters", [])]
+	hide_output_parameters = [
+		types.ucstr(x) for x in scopedConfig.get("hide_output_parameters", [])
+	]
 	available_params = [param.name.upper() for param in fields(types.PackageInfo)]
 	if not all(hop in available_params for hop in hide_output_parameters):
 		msg = (
@@ -185,10 +191,10 @@ def main(args: dict) -> int:
 			f"Valid parameters are: {', '.join(available_params)}"
 		)
 		raise ValueError(msg)
-	if simpleConf.get("format", "simple") in fmt.formatMap:
+	if scopedConfig.get("format", "simple") in fmt.formatMap:
 		print(
 			fmt.fmt(
-				simpleConf.get("format", "simple"),
+				scopedConfig.get("format", "simple"),
 				this_license,
 				sorted(depsWithLicenses),
 				hide_output_parameters,
@@ -200,10 +206,10 @@ def main(args: dict) -> int:
 		exitCode = 2
 
 	# Exit code of 1 if args.zero
-	if simpleConf.get("zero", False) and incompatible:
+	if scopedConfig.get("zero", False) and incompatible:
 		exitCode = 1
 
 	# Cleanup + exit
-	if simpleConf.get("file") is not None:
+	if scopedConfig.get("file") not in [None, ""]:
 		output_file.close()
 	return exitCode
