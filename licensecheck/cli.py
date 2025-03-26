@@ -9,9 +9,9 @@ from dataclasses import fields
 from pathlib import Path
 from sys import exit as sysexit
 from sys import stdin, stdout
+
 from configurator import Config
 from configurator.node import ConfigNode
-from pathlib import Path
 
 from licensecheck import checker, fmt, license_matrix, packageinfo, types
 
@@ -144,7 +144,9 @@ def main(args: dict) -> int:
 	for file in config_files:
 		config += Config.from_path(file, optional=True)
 
-	scopedData: ConfigNode = config.get("tool", default={}).get("licensecheck", default=ConfigNode())
+	scopedData: ConfigNode = config.get("tool", default={}).get(
+		"licensecheck", default=ConfigNode()
+	)
 	scopedConfig = {**scopedData.data, **args}
 
 	# File
