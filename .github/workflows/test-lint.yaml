@@ -39,7 +39,7 @@ jobs:
         run: uv sync
 
       - name: Run pytest
-        run: uv run pytest
+        run: uv run pytest tests/platform_independent
 
       - name: Run ruff
         run: uv run ruff check --output-format=github
