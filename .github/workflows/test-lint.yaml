@@ -41,6 +41,12 @@ jobs:
       - name: Run pytest
         run: uv run pytest tests/platform_independent
 
+      - name: Run on self
+        run: |
+          uv run licensecheck
+          uv run licensecheck --only-licenses mit apache --show-only-failing -g dev
+          uv run licensecheck --only-licenses mit apache --show-only-failing -f csv
+
       - name: Run ruff
         run: uv run ruff check --output-format=github
         continue-on-error: true

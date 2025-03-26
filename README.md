@@ -125,8 +125,6 @@ See below for the output if you run `licensecheck` in this directory. More examp
 
 ```
 
-
-
 ### Use csv format
 
 ```csv
@@ -140,7 +138,6 @@ colorama,0.4.6,76299,UNKNOWN,UNKNOWN,BSD LICENSE,False,0,colorama-0.4.6
 idna,3.10,349141,UNKNOWN,UNKNOWN,BSD LICENSE,False,0,idna-3.10
 requests-cache,1.2.1,174099,https://github.com/requests-cache/requests-cache,Roman Haritonov,BSD LICENSE,False,0,requests-cache-1.2.1
 ```
-
 
 ### Groups
 
