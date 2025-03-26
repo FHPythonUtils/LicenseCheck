@@ -53,6 +53,14 @@ test_data = [
 		},
 		0,
 	),
+	(
+		{
+			"pypi_api": "https://pypi.org/",
+			"file": aux_file("test_issue_112.txt"),
+			"requirements_paths": ["pyproject.toml"],
+		},
+		0,
+	),
 ]
 
 
