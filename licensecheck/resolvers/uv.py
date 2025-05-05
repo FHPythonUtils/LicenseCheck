@@ -33,7 +33,7 @@ def get_reqs(
 	groups_cmd = [f"--group {group}" for group in groups]
 	extras_cmd = [f"--extra {extra}" for extra in extras]
 	command = (
-		f"uv pip compile --index {index_url}"
+		f"uv pip compile --color never --index {index_url}"
 		f" {' '.join(requirementsPaths)} {' '.join(extras_cmd)} {' '.join(groups_cmd)}"
 	)
 
