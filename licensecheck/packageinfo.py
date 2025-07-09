@@ -137,6 +137,7 @@ class LocalPackageInfo:
 	def get_license(self) -> str | None:
 		return (
 			meta_get(self.meta, "License_Expression")
+			or meta_get(self.meta, "License-Expression")
 			or from_classifiers(self.meta.get_all("Classifier"))
 			or meta_get(self.meta, "License")
 		)
