@@ -70,6 +70,7 @@ class License(Enum):
 	ISC = 13
 	NCSA = 14
 	PSFL = 15
+	UPL_1 = 16
 	# Other permissive
 	APACHE = 20
 	ECLIPSE = 21

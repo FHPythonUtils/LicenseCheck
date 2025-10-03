@@ -3,6 +3,11 @@
 All major and minor version changes will be documented in this file. Details of
 patch-level version changes can be found in [commit messages](../../commits/master).
 
+## 2025.1.1 - 2025/10/03
+
+- Fixed GNU Library (old alternative license name) not being recognized as LGPL 2.0.
+- Added UPL-1.0 license to license types and updated the matrix (similar to MIT).
+
 ## 2025.1.0 - 2025/03/26
 
 - Updated internal machineary
