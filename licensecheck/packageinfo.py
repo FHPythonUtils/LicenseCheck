@@ -135,8 +135,10 @@ class LocalPackageInfo:
 			self.meta = Message()
 
 	def get_license(self) -> str | None:
+		# ref: https://packaging.python.org/en/latest/specifications/core-metadata/#license-expression
 		return (
-			meta_get(self.meta, "License_Expression")
+			meta_get(self.meta, "License-Expression")
+			or meta_get(self.meta, "License_Expression")
 			or from_classifiers(self.meta.get_all("Classifier"))
 			or meta_get(self.meta, "License")
 		)
@@ -147,11 +149,18 @@ class LocalPackageInfo:
 	def get_version(self) -> str | None:
 		return meta_get(self.meta, "Version")
 
+	def _get_homepage_from_project_urls(self) -> str | None:
+		project_urls = self.meta.get_all("Project-URL") or []
+		for line in project_urls:
+			if line.lower().startswith("homepage, "):
+				return line[10:] # no removeprefix to be case insensitive
+		return None
+
 	def get_homePage(self) -> str | None:
-		return meta_get(self.meta, "Home-page")
+		return meta_get(self.meta, "Home-page") or self._get_homepage_from_project_urls()
 
 	def get_author(self) -> str | None:
-		return meta_get(self.meta, "Author")
+		return meta_get(self.meta, "Author") or meta_get(self.meta, "Author-email")
 
 	def get_size(self) -> int:
 		"""Retrieve installed package size.
