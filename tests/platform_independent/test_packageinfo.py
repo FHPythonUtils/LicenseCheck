@@ -59,14 +59,14 @@ def test_getPackageInfoPypi(remote_package_info: RemotePackageInfo) -> None:
 
 def test_getPackageInfoLocalNotFound() -> None:
 	pkg = LocalPackageInfo(aux_packageinfo("this_package_does_not_exist"))
-	assert pkg.get_size() == 0
+	assert pkg.get_size() is None
 
 
 def test_getPackagePypiLocalNotFound() -> None:
 	pkg = RemotePackageInfo(
 		"https://pypi.org/pypi/", aux_packageinfo("this_package_does_not_exist")
 	)
-	assert pkg.get_size() == -1
+	assert pkg.get_size() is None
 
 
 def test_getPackages(package_info_manager: PackageInfoManager) -> None:

@@ -9,7 +9,7 @@ from collections.abc import Iterable
 from email.message import Message
 from importlib import metadata
 from pathlib import Path
-from typing import Any
+from typing import Any, TypeVar
 
 import license_expression
 import requests
@@ -24,19 +24,28 @@ from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
 RAW_JOINS = " AND "
 
+VT = TypeVar("VT")
+
+
+def get_first_not_null(gen: Iterable[VT | None]) -> VT | None:
+	try:
+		return next(iter(v for v in gen if v is not None))
+	except StopIteration:
+		return None
+
 
 class PackageInfoManager:
 	"""Manages retrieval of local and remote package information."""
 
-	def __init__(self, base_pypi_url: str = "https://pypi.org") -> None:
-		"""Manage retrieval of local and remote package information.
+	def __init__(self, base_pypi_url: str | None = "https://pypi.org") -> None:
+		"""Manage retrieval of local, and remote package information (unless no base_pypi_url).
 
 		:param str pypi_api: url of pypi server. Typically the public instance, defaults
 		to "https://pypi.org"
 		"""
 		self.base_pypi_url = base_pypi_url
-		self.pypi_api = base_pypi_url + "/pypi/"
-		self.pypi_search = base_pypi_url + "/simple/"
+		self.pypi_api = base_pypi_url + "/pypi/" if base_pypi_url else None
+		self.pypi_search = base_pypi_url + "/simple/" if base_pypi_url else None
 
 	def resolve_requirements(
 		self,
@@ -57,6 +66,11 @@ class PackageInfoManager:
 
 		except RuntimeError as e:
 			logger.warning(e)
+
+			if self.base_pypi_url != "https://pypi.org":
+				msg = "Custom --pypi-api is not implemented for fallback resolver"
+				raise NotImplementedError(msg) from e
+
 			pyproject = {}
 			if "pyproject.toml" in requirements_paths:
 				pyproject = tomli.loads(Path("pyproject.toml").read_text("utf-8"))
@@ -92,19 +106,24 @@ class PackageInfoManager:
 		"""
 		pkg_info = PackageInfo(name=package.name, version=package.version, errorCode=1)
 
-		lpi = LocalPackageInfo(package=package)
-		rpi = RemotePackageInfo(pypi_api=self.pypi_api, package=package)
+		pkg_info_getters: list[LocalPackageInfo | RemotePackageInfo] = [
+			LocalPackageInfo(package=package),
+		]
+		rpi: RemotePackageInfo | None = None
+		if self.pypi_api is not None:
+			rpi = RemotePackageInfo(pypi_api=self.pypi_api, package=package)
+			pkg_info_getters.append(rpi)
 
 		pkg_info = PackageInfo(
 			name=package.name,
-			version=lpi.get_version() or rpi.get_version(),
-			size=lpi.get_size() or rpi.get_size(),
-			homePage=lpi.get_homePage() or rpi.get_homePage(),
-			author=lpi.get_author() or rpi.get_author(),
-			license=ucstr(lpi.get_license() or rpi.get_license()),
+			version=get_first_not_null(pi.get_version() for pi in pkg_info_getters),
+			size=get_first_not_null(pi.get_size() for pi in pkg_info_getters) or -1,
+			homePage=get_first_not_null(pi.get_homePage() for pi in pkg_info_getters),
+			author=get_first_not_null(pi.get_author() for pi in pkg_info_getters),
+			license=ucstr(get_first_not_null(pi.get_license() for pi in pkg_info_getters)),
 		)
 
-		if rpi.error_state:
+		if rpi is not None and rpi.error_state:
 			pkg_info.errorCode = 1
 
 		if pkg_info.license:
@@ -135,8 +154,10 @@ class LocalPackageInfo:
 			self.meta = Message()
 
 	def get_license(self) -> str | None:
+		# ref: https://packaging.python.org/en/latest/specifications/core-metadata/#license-expression
 		return (
-			meta_get(self.meta, "License_Expression")
+			meta_get(self.meta, "License-Expression")
+			or meta_get(self.meta, "License_Expression")
 			or from_classifiers(self.meta.get_all("Classifier"))
 			or meta_get(self.meta, "License")
 		)
@@ -147,23 +168,30 @@ class LocalPackageInfo:
 	def get_version(self) -> str | None:
 		return meta_get(self.meta, "Version")
 
+	def _get_homepage_from_project_urls(self) -> str | None:
+		project_urls = self.meta.get_all("Project-URL") or []
+		for line in project_urls:
+			if line.lower().startswith("homepage, "):
+				return line[10:] # no removeprefix to be case insensitive
+		return None
+
 	def get_homePage(self) -> str | None:
-		return meta_get(self.meta, "Home-page")
+		return meta_get(self.meta, "Home-page") or self._get_homepage_from_project_urls()
 
 	def get_author(self) -> str | None:
-		return meta_get(self.meta, "Author")
+		return meta_get(self.meta, "Author") or meta_get(self.meta, "Author-email")
 
-	def get_size(self) -> int:
+	def get_size(self) -> int | None:
 		"""Retrieve installed package size.
 
 		:param ucstr package: Package name.
-		:return int: Size in bytes.
+		:return int: Size in bytes (or None if not found).
 		"""
 		try:
 			package_files = metadata.Distribution.from_name(self.package.name).files
 			return sum(f.size for f in package_files if f.size) if package_files else 0
 		except metadata.PackageNotFoundError:
-			return 0  # Package not found
+			return None  # Package not found
 
 
 class RemotePackageInfo:
@@ -228,18 +256,18 @@ class RemotePackageInfo:
 		self.poke_pypi()
 		return meta_get(self.raw_data, "author")
 
-	def get_size(self) -> int:
+	def get_size(self) -> int | None:
 		"""Retrieve package size from PyPI metadata.
 
 		:param dict[str, Any] data: PyPI response JSON.
 
-		:return int: Package size in bytes.
+		:return int: Package size in bytes (or None if not found).
 		"""
 		self.poke_pypi()
 		if self.raw_data is None:
-			return -1
+			return None
 		urls = self.raw_data.get("urls", [])
-		return int(urls[-1]["size"]) if len(urls) > 0 else -1
+		return int(urls[-1]["size"]) if urls else None
 
 
 def meta_get(meta: Message | dict[str, Any], key: str) -> str | None:

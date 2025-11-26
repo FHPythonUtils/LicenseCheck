@@ -97,7 +97,11 @@ def cli() -> None:  # pragma: no cover
 	)
 	parser.add_argument(
 		"--pypi-api",
-		help="Specify a custom pypi api endpoint, for example if using a custom pypi server",
+		help=(
+			"Specify a custom PyPI server URL "
+			"(it must implement PyPI /json details API, in addition to the /simple search API); "
+			"if set to empty string, metadata will only be obtained from local packages"
+		),
 		default="https://pypi.org",
 	)
 	parser.add_argument(

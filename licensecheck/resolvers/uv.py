@@ -17,7 +17,7 @@ def get_reqs(
 	groups: list[str],
 	extras: list[str],
 	requirementsPaths: list[str],
-	index_url: str = "https://pypi.org/simple",
+	index_url: str | None = "https://pypi.org/simple",
 ) -> set[PackageInfo]:
 	for idx, requirement in enumerate(requirementsPaths):
 		if not Path(requirement).exists():
@@ -30,14 +30,12 @@ def get_reqs(
 			shutil.copy(requirement, destination_file)
 			requirementsPaths[idx] = destination_file.as_posix()
 
-	groups_cmd = [f"--group {group}" for group in groups]
-	extras_cmd = [f"--extra {extra}" for extra in extras]
-	command = (
-		f"uv pip compile --index {index_url}"
-		f" {' '.join(requirementsPaths)} {' '.join(extras_cmd)} {' '.join(groups_cmd)}"
-	)
+	groups_cmd = sum([("--group", group) for group in groups], ())
+	extras_cmd = sum([("--extra", extra) for extra in extras], ())
+	index_param = ("--index", index_url) if index_url else ()
+	command = ["uv", "pip", "compile", *index_param, *requirementsPaths, *extras_cmd, *groups_cmd]
 
-	result = subprocess.run(command, shell=True, capture_output=True, text=True, check=False)
+	result = subprocess.run(command, capture_output=True, text=True, check=False)
 
 	if result.returncode != 0:
 		raise RuntimeError(result.stderr, result.stdout)
