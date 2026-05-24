@@ -200,7 +200,7 @@ def main(args: dict) -> int:
 				this_license,
 				sorted(depsWithLicenses),
 				hide_output_parameters,
-				show_only_failing=args.get("show_only_failing", False),
+				show_only_failing=scopedConfig.get.get("show_only_failing", False),
 			),
 			file=output_file,
 		)
