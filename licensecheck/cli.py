@@ -145,8 +145,8 @@ def main(args: dict[str, Any]) -> int:
 	for file in config_files:
 		config += Config.from_path(file, optional=True)
 
-	scopedData: ConfigNode = config.get("tool", default={}).get(
-		"licensecheck", default=ConfigNode()
+	scopedData: ConfigNode = config.get("tool", {}).get(
+		"licensecheck", ConfigNode()
 	)
 	scopedConfig = {**scopedData.data, **args}
 
