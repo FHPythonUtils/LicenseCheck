@@ -160,7 +160,7 @@ def main(args: dict[str, Any]) -> int:
 
 	# Get my license
 	this_license_text = (
-		args["license"] if args.get("license") else packageinfo.ProjectMetadata.get_license()
+		scopedConfig.get("license") or  packageinfo.ProjectMetadata.get_license()
 	)
 	this_license = license_matrix.licenseType(this_license_text).pop()
 
@@ -201,7 +201,7 @@ def main(args: dict[str, Any]) -> int:
 				this_license,
 				sorted(depsWithLicenses),
 				hide_output_parameters,
-				show_only_failing=args.get("show_only_failing", False),
+				show_only_failing=scopedConfig.get("show_only_failing", False),
 			),
 			file=output_file,
 		)
