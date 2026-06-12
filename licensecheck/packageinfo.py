@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import configparser
-from concurrent.futures import ThreadPoolExecutor
 import contextlib
 import re
 from collections.abc import Iterable
+from concurrent.futures import ThreadPoolExecutor
 from email.message import Message
 from importlib import metadata
 from pathlib import Path
@@ -62,7 +62,7 @@ class PackageInfoManager:
 		:return set[PackageInfo]: A set of package information objects.
 		"""
 		with ThreadPoolExecutor() as executor:
-			return set(executor.map(self.get_package_info, self.reqs))
+			return set(executor.map(self._get_package_info, self.reqs))
 
 	def _get_package_info(self, package: Requirement) -> PackageInfo:
 		"""Retrieve package information, preferring local data.

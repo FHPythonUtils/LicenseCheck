@@ -145,10 +145,8 @@ def main(args: dict[str, Any]) -> int:
 	for file in config_files:
 		config += Config.from_path(file, optional=True)
 
-	scopedData: ConfigNode = config.get("tool", {}).get(
-		"licensecheck", ConfigNode()
-	)
-	scopedConfig = {**scopedData.data, **args}
+	scopedData: ConfigNode = config.get("tool", {}).get("licensecheck", ConfigNode())
+	scopedConfig: dict[str, Any] = {**scopedData.data, **args}
 
 	# File
 	requirements_paths = scopedConfig.get("requirements_paths") or ["__stdin__"]
@@ -159,9 +157,7 @@ def main(args: dict[str, Any]) -> int:
 	)
 
 	# Get my license
-	this_license_text = (
-		scopedConfig.get("license") or  packageinfo.ProjectMetadata.get_license()
-	)
+	this_license_text = scopedConfig.get("license") or packageinfo.ProjectMetadata.get_license()
 	this_license = license_matrix.licenseType(this_license_text).pop()
 
 	def getFromConfig(key: str) -> set[types.ucstr]:

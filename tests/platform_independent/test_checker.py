@@ -32,7 +32,8 @@ def test_check(
 	ignore_packages: set[str] | None,
 	fail_packages: set[str] | None,
 	fail_licenses: set[str] | None,
-	*, expected_incompatible: bool,
+	*,
+	expected_incompatible: bool,
 ) -> None:
 	"""Parametrized test for different license check scenarios."""
 	mock_packages = {

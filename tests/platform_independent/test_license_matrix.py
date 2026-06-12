@@ -23,11 +23,14 @@ def test_licenseLookup() -> None:
 		licenses.append(licenseName)
 
 	licenses.append("NO_LICENSE")
+	msgs = []
 	for x in types.License._member_names_:
 		if x not in licenses:
-			msg = f"{x} not in licenses"
-			logger.error(msg)
-			raise AssertionError(msg)
+			msgs.append( f"{x} not in licenses")
+
+	if len(msgs):
+		logger.error(msgs)
+		raise AssertionError(msgs)
 
 	cmp_file = Path(f"{THISDIR}/data/licenseCheckLicenses.txt")
 
@@ -52,7 +55,7 @@ def test_licenseType_unknown() -> None:
 
 def test_licenseType_empty() -> None:
 	no_licenses = {
-		all(x == types.L.NO_LICENSE for x in license_matrix.licenseType(y)) for y in {"", None}
+		all(x == types.L.NO_LICENSE for x in license_matrix.licenseType(y)) for y in ("", None)
 	}
 	assert all(no_licenses)
 

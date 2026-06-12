@@ -14,7 +14,7 @@ def test_gnu_library_and_upl_1_is_recognized_without_warnings(
 		# Correct license where found.
 		license_type = licenseType(license_string)
 		assert len(license_type) == 1
-		assert isinstance(license_type[0], L)
+		assert isinstance(license_type.pop(), L)
 		assert L.UNKNOWN not in license_type
 		# No warnings were emitted.
 		if len(caplog.records):

@@ -43,7 +43,7 @@ from pathlib import Path
 
 from loguru import logger
 
-from licensecheck.types import JOINS, ucstr
+from licensecheck.types import JOINS, License, ucstr
 from licensecheck.types import License as L
 
 THISDIR = Path(__file__).resolve().parent
@@ -52,7 +52,7 @@ with Path(THISDIR / "matrix.csv").open(mode="r", newline="", encoding="utf-8") a
 	LICENSE_MATRIX: list[list[str]] = list[list[str]](csv.reader(csv_file))
 
 
-termToLicense = {
+termToLicenseData = {
 	"UNKNOWN": L.UNKNOWN,
 	"PUBLIC DOMAIN": L.PUBLIC,
 	"CC-PDDC": L.PUBLIC,
@@ -64,7 +64,8 @@ termToLicense = {
 	"MIT": L.MIT,
 	"BSD": L.BSD,
 	"ISC": L.ISC,
-	"UPL-1.0": L.UPL_1,
+	"EUPL": L.EU,
+	"UPL": L.UPL_1,
 	"NCSA": L.NCSA,
 	"PYTHON": L.PSFL,
 	"PSF-2.0": L.PSFL,
@@ -79,7 +80,7 @@ termToLicense = {
 	"LGPL-3.0-OR-LATER": L.LGPL_3_PLUS,
 	"LGPL-2.0-ONLY": L.LGPL_2,
 	"LGPLV2": L.LGPL_2,
-	"GNU LIBRARY": L.LGPL_2,
+	"GNU LIBRARY": L.LGPL_X,
 	"LGPL-3.0-ONLY": L.LGPL_3,
 	"LGPLV3": L.LGPL_3,
 	"LGPL": L.LGPL_X,
@@ -95,9 +96,16 @@ termToLicense = {
 	"GPL-3.0": L.GPL_3,
 	"GPL": L.GPL_X,
 	"MPL": L.MPL,
-	"EUPL": L.EU,
 	"PROPRIETARY": L.PROPRIETARY,
 }
+
+termToLicense: dict[str, License] = dict(
+    sorted(
+        termToLicenseData.items(),
+        key=lambda item: len(item[0]),
+        reverse=True,
+    )
+)
 
 
 def licenseLookup(licenseStr: ucstr, ignoreLicenses: set[ucstr] | None = None) -> L:
