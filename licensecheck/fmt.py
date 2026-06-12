@@ -284,6 +284,9 @@ def rawCsv(
 	:return str: string to send to specified output in csv format
 	"""
 
+	if len(packages) == 0:
+		return ""
+
 	_ = myLice
 	string = StringIO()
 	writer = csv.DictWriter(string, fieldnames=list(packages[0]), lineterminator="\n")

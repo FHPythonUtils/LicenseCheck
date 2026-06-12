@@ -15,11 +15,10 @@ from typing import Any
 import license_expression
 import requests
 import tomli
+from depgather.parse import gather
 from license_expression import Licensing
-from loguru import logger
+from packaging.requirements import Requirement
 
-from licensecheck.resolvers import native as res_native
-from licensecheck.resolvers import uv as res_uv
 from licensecheck.session import session
 from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
@@ -36,40 +35,25 @@ class PackageInfoManager:
 		to "https://pypi.org"
 		"""
 		self.base_pypi_url = base_pypi_url
-		self.pypi_api = base_pypi_url + "/pypi/"
-		self.pypi_search = base_pypi_url + "/simple/"
+		self.reqs: set[Requirement] = set()
 
 	def resolve_requirements(
 		self,
-		requirements_paths: list[str],
-		groups: list[str],
-		extras: list[str],
-		skip_dependencies: list[ucstr],
+		requirements_paths: set[str],
+		groups: set[str],
+		extras: set[str],
+		skip_dependencies: set[str],
 	) -> None:
-		try:
-			self.reqs = res_uv.get_reqs(
-				skipDependencies=skip_dependencies,
-				groups=groups,
-				extras=extras,
-				requirementsPaths=requirements_paths,
-				index_url=self.pypi_search,
+		for requirements_path in requirements_paths:
+			self.reqs.update(
+				gather(
+					skipDependencies=skip_dependencies,
+					groups=groups,
+					extras=extras,
+					requirementsPath=Path(requirements_path),
+					base_index_url=self.base_pypi_url,
+				)
 			)
-			return
-
-		except RuntimeError as e:
-			logger.warning(e)
-			pyproject = {}
-			if "pyproject.toml" in requirements_paths:
-				pyproject = tomli.loads(Path("pyproject.toml").read_text("utf-8"))
-
-			# Fallback to the old resolver (hopefully we can deprecate this asap!)
-			self.reqs = res_native.get_reqs(
-				skipDependencies=skip_dependencies,
-				extras=groups,
-				pyproject=pyproject,
-				requirementsPaths=[Path(x) for x in requirements_paths],
-			)
-			return
 
 	def getPackages(self) -> set[PackageInfo]:
 		"""Retrieve package information from local installation or PyPI.
@@ -80,16 +64,26 @@ class PackageInfoManager:
 		with ThreadPoolExecutor() as executor:
 			return set(executor.map(self.get_package_info, self.reqs))
 
-	def get_package_info(self, package: PackageInfo) -> PackageInfo:
+	def _get_package_info(self, package: Requirement) -> PackageInfo:
 		"""Retrieve package information, preferring local data.
 
-		:param ucstr pacage: Package name.
+		:param Requirement package: package info to unpack
 		:return PackageInfo: Information about the package.
 		"""
-		pkg_info = PackageInfo(name=package.name, version=package.version, errorCode=1)
 
-		lpi = LocalPackageInfo(package=package)
-		rpi = RemotePackageInfo(pypi_api=self.pypi_api, package=package)
+		versions = {None}
+		try:
+			requirement_specs = package.specifier._specs
+			versions = {x._spec[1] for x in requirement_specs}
+		except AttributeError:
+			pass
+
+		base_pkg_info: PackageInfo = PackageInfo(
+			name=package.name, version=versions.pop(), errorCode=1
+		)
+
+		lpi = LocalPackageInfo(package=base_pkg_info)
+		rpi = RemotePackageInfo(pypi_api=self.base_pypi_url + "/pypi", package=base_pkg_info)
 
 		pkg_info = PackageInfo(
 			name=package.name,
@@ -168,28 +162,30 @@ class RemotePackageInfo:
 	def __init__(self, pypi_api: str, package: PackageInfo) -> None:
 		self.pypi_api = pypi_api
 		self.package = package
-		self.raw_data: dict = None  # type: ignore # Becuase we lateinit this
+		self.raw_data: dict[str, Any] = None  # type: ignore # Becuase we lateinit this
 		self.error_state = None
 
 	def poke_pypi(self) -> None:
 		if self.raw_data is None:
 			# Attempt to get versioned data first
 			data = (
-				self.make_req(url=f"{self.pypi_api}{self.package.name}/{self.package.version}/json")
+				self.make_req(
+					url=f"{self.pypi_api}/{self.package.name}/{self.package.version}/json"
+				)
 				if self.package.version
 				else None
 			)
 			# Otherwise just get the latest
 			if not data:
-				data = self.make_req(url=f"{self.pypi_api}{self.package.name}/json")
+				data = self.make_req(url=f"{self.pypi_api}/{self.package.name}/json")
 			self.raw_data = data
 
-	def make_req(self, url: str) -> dict:
+	def make_req(self, url: str) -> dict[str, Any]:
 		try:
 			response = session.get(url, timeout=60)
 
 			if response.status_code != 200:
-				self.error_state = f"Non-200 when contacting {url}"
+				self.error_state = f"{response.status_code} when contacting {url}"
 				return {}
 
 			return response.json().get("info", {})
@@ -222,7 +218,10 @@ class RemotePackageInfo:
 
 	def get_author(self) -> str | None:
 		self.poke_pypi()
-		return meta_get(self.raw_data, "author")
+		author = meta_get(self.raw_data, "author")
+		author_email = meta_get(self.raw_data, "author_email") or ""
+
+		return author or author_email.split("<")[0].strip()
 
 	def get_size(self) -> int:
 		"""Retrieve package size from PyPI metadata.

@@ -19,7 +19,7 @@ should not be construed as legal advice. I am not a lawyer and there is no guara
 information provided here is complete or correct. Any reliance on the information provided by this
 software is at your own risk.**
 
-See also: https://en.wikipedia.org/wiki/IANAL, [project license (MIT)](/LICENSE.md)
+See also: <https://en.wikipedia.org/wiki/IANAL>, [project license (MIT)](/LICENSE.md)
 
 Output the licences used by dependencies and check if these are compatible with
 the project license
@@ -28,44 +28,24 @@ the project license
 ## Table of Contents
 
 - [Examples from the command-line](#examples-from-the-command-line)
-	- [Using pyproject.toml (default if not piping input)](#using-pyprojecttoml-default-if-not-piping-input)
-	- [Use csv format](#use-csv-format)
-	- [Groups](#groups)
+  - [Using pyproject.toml (default if not piping input)](#using-pyprojecttoml-default-if-not-piping-input)
+  - [Use csv format](#use-csv-format)
+  - [Groups](#groups)
 - [Help](#help)
 - [Configuration Example](#configuration-example)
-	- [Example 1: pyproject.toml](#example-1-pyprojecttoml)
-	- [Example 2: licensecheck.json](#example-2-licensecheckjson)
+  - [Example 1: pyproject.toml](#example-1-pyprojecttoml)
+  - [Example 2: licensecheck.json](#example-2-licensecheckjson)
 - [Documentation](#documentation)
 - [Install With PIP](#install-with-pip)
 - [Language information](#language-information)
-	- [Built for](#built-for)
-- [Install Python on Windows](#install-python-on-windows)
-	- [Chocolatey](#chocolatey)
-	- [Windows - Python.org](#windows---pythonorg)
-- [Install Python on Linux](#install-python-on-linux)
-	- [Apt](#apt)
-	- [Dnf](#dnf)
-- [Install Python on MacOS](#install-python-on-macos)
-	- [Homebrew](#homebrew)
-	- [MacOS - Python.org](#macos---pythonorg)
-- [How to run](#how-to-run)
-	- [Windows](#windows)
-	- [Linux/ MacOS](#linux-macos)
-- [Building](#building)
-- [Testing](#testing)
-- [Download Project](#download-project)
-	- [Clone](#clone)
-		- [Using The Command Line](#using-the-command-line)
-		- [Using GitHub Desktop](#using-github-desktop)
-	- [Download Zip File](#download-zip-file)
+- [Working with the repo](#working-with-the-repo)
 - [Community Files](#community-files)
-	- [Licence](#licence)
-	- [Changelog](#changelog)
-	- [Code of Conduct](#code-of-conduct)
-	- [Contributing](#contributing)
-	- [Security](#security)
-	- [Support](#support)
-	- [Rationale](#rationale)
+  - [Licence](#licence)
+  - [Changelog](#changelog)
+  - [Code of Conduct](#code-of-conduct)
+  - [Contributing](#contributing)
+  - [Security](#security)
+  - [Support](#support)
 
 ## Examples from the command-line
 
@@ -219,7 +199,6 @@ Configuration files are parsed in the following order: `pyproject.toml`, `setup.
 
 - ⚠ All config files are parsed, however configuration defined in previous files takes precedent
 
-
 ### Example 1: pyproject.toml
 
 ```toml
@@ -294,135 +273,44 @@ where to look for certain things:
 pip install licensecheck
 ```
 
-Head to https://pypi.org/project/licensecheck/ for more info
+Head to <https://pypi.org/project/licensecheck/> for more info
 
 ## Language information
 
-### Built for
+Using python 3.12, to 3.14
 
-This program has been written for Python versions 3.8 - 3.11 and has been tested with both 3.8 and
-3.11
+## Working with the repo
 
-## Install Python on Windows
-
-### Chocolatey
-
-```powershell
-choco install python
-```
-
-### Windows - Python.org
-
-To install Python, go to https://www.python.org/downloads/windows/ and download the latest
-version.
-
-## Install Python on Linux
-
-### Apt
+Clone, the repo with
 
 ```bash
-sudo apt install python3.x
+git clone https://github.com/FHPythonUtils/DepGather
 ```
 
-### Dnf
-
-```bash
-sudo dnf install python3.x
-```
-
-## Install Python on MacOS
-
-### Homebrew
-
-```bash
-brew install python@3.x
-```
-
-### MacOS - Python.org
-
-To install Python, go to https://www.python.org/downloads/macos/ and download the latest
-version.
-
-## How to run
-
-### Windows
-
-- Module
-	`py -3.x -m [module]` or `[module]` (if module installs a script)
-
-- File
-	`py -3.x [file]` or `./[file]`
-
-### Linux/ MacOS
-
-- Module
-	`python3.x -m [module]` or `[module]` (if module installs a script)
-
-- File
-	`python3.x [file]` or `./[file]`
-
-## Building
-
-This project uses https://github.com/FHPythonUtils/FHMake to automate most of the building. This
-command generates the documentation, updates the requirements.txt and builds the library artefacts
-
-Note the functionality provided by fhmake can be approximated by the following
+Format
 
 ```sh
-handsdown  --cleanup -o documentation/reference
-poetry export -f requirements.txt --output requirements.txt
-poetry export -f requirements.txt --with dev --output requirements_optional.txt
-poetry build
+uv run ruff format
 ```
 
-`fhmake audit` can be run to perform additional checks
-
-## Testing
-
-For testing with the version of python used by poetry use
+Linting
 
 ```sh
-poetry run pytest
+uv run ruff check
+uv run python3 -m basedpyright -p .
 ```
 
-Alternatively use `tox` to run tests over python 3.8 - 3.11
+Testing
+
+```sh
+uv run python3 -m pytest
+```
+
+Alternatively use `tox` to run tests over a range of python versions
 
 ```sh
 tox
 ```
-
-## Download Project
-
-### Clone
-
-#### Using The Command Line
-
-1. Press the Clone or download button in the top right
-2. Copy the URL (link)
-3. Open the command line and change directory to where you wish to
-clone to
-4. Type 'git clone' followed by URL in step 2
-	```bash
-	git clone https://github.com/FHPythonUtils/LicenseCheck
-	```
-
-More information can be found at
-https://help.github.com/en/articles/cloning-a-repository
-
-#### Using GitHub Desktop
-
-1. Press the Clone or download button in the top right
-2. Click open in desktop
-3. Choose the path for where you want and click Clone
-
-More information can be found at
-https://help.github.com/en/desktop/contributing-to-projects/cloning-a-repository-from-github-to-github-desktop
-
-### Download Zip File
-
-1. Download this GitHub repository
-2. Extract the zip archive
-3. Copy/ move to the desired location
 
 ## Community Files
 
@@ -462,11 +350,4 @@ Thank you for using this project, I hope it is of use to you. Please be aware th
 those involved with the project often do so for fun along with other commitments
 (such as work, family, etc). Please see the
 [Support Policy](https://github.com/FHPythonUtils/.github/blob/master/SUPPORT.md)
-for more information.
-
-### Rationale
-
-The rationale acts as a guide to various processes regarding projects such as
-the versioning scheme and the programming styles used. Please see the
-[Rationale](https://github.com/FHPythonUtils/.github/blob/master/RATIONALE.md)
 for more information.

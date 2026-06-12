@@ -1,9 +1,9 @@
 [project]
 name = "licensecheck"
-version = "2025.1.0"
+version = "2026.0.0"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = [{ name = "FredHappyface" }]
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 readme = "README.md"
 license = "mit"
 classifiers = [
@@ -23,16 +23,14 @@ classifiers = [
 dependencies = [
 	"appdirs>=1.4.4",
 	"configurator>=3.2.0",
-	"license-expression>=30.4.1",
+	"depgather>=0.2.0",
+	"license-expression>=30.4.4",
 	"loguru>=0.7.3",
-	"markdown>=3.7",
-	"packaging>=24.2",
-	"requests>=2.32.3",
-	"requests-cache>=1.2.1",
-	"requirements-parser>=0.11.0",
-	"rich>=13.9.4",
+	"markdown>=3.10.2",
+	"requests>=2.32.5",
+	"requests-cache>=1.3.2",
+	"rich>=15.0.0",
 	"tomli>=2.2.1",
-	"uv>=0.6.8",
 ]
 
 [project.urls]
@@ -45,19 +43,18 @@ licensecheck = "licensecheck:cli"
 
 [dependency-groups]
 dev = [
-	"coverage>=7.6.12",
-	"handsdown>=2.1.0",
-	"pyright>=1.1.396",
-	"pytest>=8.3.5",
-	"pytest-loguru>=0.4.0",
-	"ruff>=0.11.0",
-	"safety>=3.3.1",
+    "basedpyright>=1.39.7",
+    "coverage>=7.6.12",
+    "pyright>=1.1.396",
+    "pytest>=8.3.5",
+    "ruff>=0.11.0",
 ]
 
 [tool.ruff]
 line-length = 100
 indent-width = 4
-target-version = "py38"
+target-version = "py312"
+exclude = [".venv"]
 
 [tool.ruff.lint]
 select = ["ALL"]
@@ -69,11 +66,18 @@ ignore = [
 	"PLR09",  # pylint refactor too many
 	"TCH",    # type check blocks
 	"W191",   # ignore this to allow tabs
+	"EXE002", # The file is executable but no shebang is present	
 ]
 fixable = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
-"**/{tests,docs,tools}/*" = ["D", "S101", "E402", "ERA001"]
+"**/{tests,docs,tools}/*" = [
+	"D",
+	"S101",
+	"E402",
+	"ERA001",
+	"PLR2004", # Magic value used in comparison,
+]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all" # Disallow all relative imports.
@@ -83,9 +87,10 @@ indent-style = "tab"
 docstring-code-format = true
 line-ending = "lf"
 
-[tool.pyright]
+[tool.basedpyright]
 venvPath = "."
 venv = ".venv"
+typeCheckingMode = "standard"
 
 [tool.licensecheck]
 license = "mit"               # Specify the project license explicitly
@@ -110,10 +115,10 @@ zero = false                  # Return non-zero exit code for incompatible licen
 legacy_tox_ini = """
 [tox]
 env_list =
+	py314
 	py313
 	py312
-	py310
-	py39
+
 
 [testenv]
 deps = pytest
