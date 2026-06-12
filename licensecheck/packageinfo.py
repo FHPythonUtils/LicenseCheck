@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import configparser
+from concurrent.futures import ThreadPoolExecutor
 import contextlib
 import re
 from collections.abc import Iterable
@@ -60,13 +61,8 @@ class PackageInfoManager:
 		:param set[ucstr] reqs: Set of dependency names to retrieve information for.
 		:return set[PackageInfo]: A set of package information objects.
 		"""
-		package_info_set = set()
-
-		for package in self.reqs:
-			package_info = self._get_package_info(package)
-			package_info_set.add(package_info)
-
-		return package_info_set
+		with ThreadPoolExecutor() as executor:
+			return set(executor.map(self.get_package_info, self.reqs))
 
 	def _get_package_info(self, package: Requirement) -> PackageInfo:
 		"""Retrieve package information, preferring local data.
