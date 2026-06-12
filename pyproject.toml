@@ -115,10 +115,10 @@ zero = false                  # Return non-zero exit code for incompatible licen
 legacy_tox_ini = """
 [tox]
 env_list =
+	py314
 	py313
 	py312
-	py310
-	py39
+
 
 [testenv]
 deps = pytest
