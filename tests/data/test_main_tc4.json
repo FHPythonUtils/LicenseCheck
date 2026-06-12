@@ -17,8 +17,8 @@
 		{
 			"name": "attrs",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "MIT LICENSE",
+			"author": "Hynek Schlawack",
+			"license": "MIT",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
@@ -33,7 +33,7 @@
 		{
 			"name": "cattrs",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
+			"author": "Tin Tvrtkovic",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -49,16 +49,8 @@
 		{
 			"name": "charset-normalizer",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "MIT LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "colorama",
-			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "BSD LICENSE",
+			"author": "\"Ahmed R. TAHRI\"",
+			"license": "MIT",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
@@ -71,10 +63,18 @@
 			"errorCode": 0
 		},
 		{
+			"name": "depgather",
+			"homePage": "UNKNOWN",
+			"author": "FredHappyface",
+			"license": "MIT",
+			"licenseCompat": true,
+			"errorCode": 0
+		},
+		{
 			"name": "idna",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "BSD LICENSE",
+			"author": "Kim Davies",
+			"license": "BSD-3-CLAUSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
@@ -89,7 +89,7 @@
 		{
 			"name": "loguru",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
+			"author": "Delgan",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -98,14 +98,14 @@
 			"name": "markdown",
 			"homePage": "UNKNOWN",
 			"author": "Manfred Stienstra, Yuri Takhteyev",
-			"license": "BSD LICENSE",
+			"license": "BSD-3-CLAUSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
 		{
 			"name": "markdown-it-py",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
+			"author": "Chris Sewell",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -113,7 +113,7 @@
 		{
 			"name": "mdurl",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
+			"author": "Taneli Hukkinen",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -121,7 +121,7 @@
 		{
 			"name": "packaging",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
+			"author": "Donald Stufft",
 			"license": "APACHE SOFTWARE LICENSE;; BSD LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -129,7 +129,7 @@
 		{
 			"name": "platformdirs",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
+			"author": "",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -137,14 +137,14 @@
 		{
 			"name": "pygments",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "BSD LICENSE",
+			"author": "Georg Brandl",
+			"license": "BSD-2-CLAUSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
 		{
 			"name": "requests",
-			"homePage": "https://requests.readthedocs.io",
+			"homePage": "UNKNOWN",
 			"author": "Kenneth Reitz",
 			"license": "APACHE SOFTWARE LICENSE",
 			"licenseCompat": false,
@@ -152,15 +152,15 @@
 		},
 		{
 			"name": "requests-cache",
-			"homePage": "https://github.com/requests-cache/requests-cache",
-			"author": "Roman Haritonov",
-			"license": "BSD LICENSE",
+			"homePage": "UNKNOWN",
+			"author": "Jordan Cook, Roman Haritonov",
+			"license": "BSD-2-CLAUSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
 		{
 			"name": "requirements-parser",
-			"homePage": "https://github.com/madpah/requirements-parser/#readme",
+			"homePage": "UNKNOWN",
 			"author": "Paul Horton",
 			"license": "APACHE SOFTWARE LICENSE",
 			"licenseCompat": false,
@@ -168,24 +168,8 @@
 		},
 		{
 			"name": "rich",
-			"homePage": "https://github.com/Textualize/rich",
-			"author": "Will McGugan",
-			"license": "MIT LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "setuptools",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "MIT LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "six",
-			"homePage": "https://github.com/benjaminp/six",
-			"author": "Benjamin Peterson",
+			"author": "Will McGugan",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
@@ -193,48 +177,32 @@
 		{
 			"name": "tomli",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
+			"author": "Taneli Hukkinen",
 			"license": "MIT LICENSE",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
 		{
-			"name": "types-setuptools",
-			"homePage": "https://github.com/python/typeshed",
-			"author": "UNKNOWN",
-			"license": "APACHE SOFTWARE LICENSE",
-			"licenseCompat": false,
+			"name": "typing-extensions",
+			"homePage": "UNKNOWN",
+			"author": "\"Guido van Rossum, Jukka Lehtosalo, \u0141ukasz Langa, Michael Lee\"",
+			"license": "PSF-2.0",
+			"licenseCompat": true,
 			"errorCode": 0
 		},
 		{
 			"name": "url-normalize",
-			"homePage": "https://github.com/niksite/url-normalize",
+			"homePage": "UNKNOWN",
 			"author": "Nikolay Panov",
-			"license": "MIT LICENSE",
+			"license": "MIT",
 			"licenseCompat": true,
 			"errorCode": 0
 		},
 		{
 			"name": "urllib3",
 			"homePage": "UNKNOWN",
-			"author": "UNKNOWN",
-			"license": "MIT LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "uv",
-			"homePage": "https://pypi.org/project/uv/",
-			"author": "uv",
-			"license": "APACHE SOFTWARE LICENSE;; MIT LICENSE",
-			"licenseCompat": true,
-			"errorCode": 0
-		},
-		{
-			"name": "win32-setctime",
-			"homePage": "https://github.com/Delgan/win32-setctime",
-			"author": "Delgan",
-			"license": "MIT LICENSE",
+			"author": "Andrey Petrov",
+			"license": "MIT",
 			"licenseCompat": true,
 			"errorCode": 0
 		}

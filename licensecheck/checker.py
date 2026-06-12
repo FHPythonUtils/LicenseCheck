@@ -1,4 +1,4 @@
-"""Get a list of packages with package compatibility."""
+"""Get a set of packages with package compatibility."""
 
 from __future__ import annotations
 
@@ -10,25 +10,25 @@ from licensecheck.types import JOINS, License, PackageInfo, ucstr
 
 
 def check(
-	requirements_paths: list[str],
-	groups: list[str],
-	extras: list[str],
+	requirements_paths: set[str],
+	groups: set[str],
+	extras: set[str],
 	this_license: License,
 	package_info_manager: PackageInfoManager,
-	ignore_packages: list[ucstr] | None = None,
-	fail_packages: list[ucstr] | None = None,
-	ignore_licenses: list[ucstr] | None = None,
-	fail_licenses: list[ucstr] | None = None,
-	only_licenses: list[ucstr] | None = None,
-	skip_dependencies: list[ucstr] | None = None,
+	ignore_packages: set[ucstr] | None = None,
+	fail_packages: set[ucstr] | None = None,
+	ignore_licenses: set[ucstr] | None = None,
+	fail_licenses: set[ucstr] | None = None,
+	only_licenses: set[ucstr] | None = None,
+	skip_dependencies: set[ucstr] | None = None,
 ) -> tuple[bool, set[PackageInfo]]:
 	# Def values
-	ignore_packages = ignore_packages or []
-	fail_packages = fail_packages or []
-	ignore_licenses = ignore_licenses or []
-	fail_licenses = fail_licenses or []
-	only_licenses = only_licenses or []
-	skip_dependencies = skip_dependencies or []
+	ignore_packages = ignore_packages or set()
+	fail_packages = fail_packages or set()
+	ignore_licenses = ignore_licenses or set()
+	fail_licenses = fail_licenses or set()
+	only_licenses = only_licenses or set()
+	skip_dependencies = skip_dependencies or set()
 
 	package_info_manager.resolve_requirements(
 		requirements_paths=requirements_paths,

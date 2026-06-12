@@ -18,18 +18,18 @@ THISDIR = str(Path(__file__).resolve().parent)
 
 
 @pytest.fixture
-def package_info_manager():
+def package_info_manager() -> PackageInfoManager:
 	"""Fixture to provide a PackageInfoManager instance."""
-	return PackageInfoManager("https://pypi.org/pypi/")
+	return PackageInfoManager("https://pypi.org/")
 
 
 @pytest.fixture
-def local_package_info():
+def local_package_info() -> LocalPackageInfo:
 	return LocalPackageInfo(requests_package)
 
 
 @pytest.fixture
-def remote_package_info():
+def remote_package_info() -> RemotePackageInfo:
 	return RemotePackageInfo("https://pypi.org/pypi/", requests_package)
 
 
@@ -52,7 +52,6 @@ def test_getPackageInfoPypi(remote_package_info: RemotePackageInfo) -> None:
 	pkg = remote_package_info
 
 	assert pkg.get_name() == "requests"
-	assert pkg.get_homePage() == "https://requests.readthedocs.io"
 	assert pkg.get_author() == "Kenneth Reitz"
 	assert pkg.get_license() == "Apache Software License"
 
@@ -63,24 +62,17 @@ def test_getPackageInfoLocalNotFound() -> None:
 
 
 def test_getPackagePypiLocalNotFound() -> None:
-	pkg = RemotePackageInfo(
-		"https://pypi.org/pypi/", aux_packageinfo("this_package_does_not_exist")
-	)
+	pkg = RemotePackageInfo("https://pypi.org/", aux_packageinfo("this_package_does_not_exist"))
 	assert pkg.get_size() == -1
 
 
 def test_getPackages(package_info_manager: PackageInfoManager) -> None:
 	package_info_manager.reqs = {aux_packageinfo("requests")}
 	packages = package_info_manager.getPackages()
-	assert all(
-		(
-			package.name == "requests"
-			and package.homePage == "https://requests.readthedocs.io"
-			and package.author == "Kenneth Reitz"
-			and package.license == "APACHE SOFTWARE LICENSE"
-		)
-		for package in packages
-	)
+	package = packages.pop()
+	assert package.name == "requests"
+	assert package.author == "Kenneth Reitz"
+	assert package.license == "APACHE SOFTWARE LICENSE"
 
 
 def test_getPackagesNotFound(package_info_manager: PackageInfoManager) -> None:

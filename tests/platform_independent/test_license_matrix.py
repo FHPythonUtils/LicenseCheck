@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from _pytest.logging import LogCaptureFixture  # pyright: ignore [reportMissingImports]
+from _pytest.logging import LogCaptureFixture  # pyright: ignore {reportMissingImports}
 from loguru import logger
 
 from licensecheck import license_matrix, types
@@ -37,7 +37,7 @@ def test_licenseLookup() -> None:
 
 def test_licenseType() -> None:
 	licenses = Path(f"{THISDIR}/data/rawLicenses.txt").read_text("utf-8").replace("\n", types.JOINS)
-	licenseNames = [x._name_ for x in license_matrix.licenseType(types.ucstr(licenses))]
+	licenseNames = [x._name_ for x in license_matrix._lst_licenseType(types.ucstr(licenses))]
 	cmp_file = Path(f"{THISDIR}/data/licenseCheckLicenses.txt")
 
 	# cmp_file.write_text("\n".join(licenses), "utf-8")
@@ -51,34 +51,34 @@ def test_licenseType_unknown() -> None:
 
 
 def test_licenseType_empty() -> None:
-	no_licenses = [
-		all(x == types.L.NO_LICENSE for x in license_matrix.licenseType(y)) for y in ["", None]
-	]
+	no_licenses = {
+		all(x == types.L.NO_LICENSE for x in license_matrix.licenseType(y)) for y in {"", None}
+	}
 	assert all(no_licenses)
 
 
 def test_apacheCompatWithLGPL3() -> None:
-	assert license_matrix.depCompatWMyLice(types.L.LGPL_3, [types.L.APACHE])
+	assert license_matrix.depCompatWMyLice(types.L.LGPL_3, {types.L.APACHE})
 
 
 def test_dualLicenseCompat() -> None:
-	assert license_matrix.depCompatWMyLice(types.L.MIT, [types.L.GPL_2, types.L.MIT])
+	assert license_matrix.depCompatWMyLice(types.L.MIT, {types.L.GPL_2, types.L.MIT})
 
 
 def test_whitelistedLicenseCompat() -> None:
-	assert license_matrix.depCompatWMyLice(types.L.MIT, [types.L.MIT], onlyLicenses=[types.L.MIT])
-	assert license_matrix.depCompatWMyLice(types.L.MPL, [types.L.MIT], onlyLicenses=[types.L.MIT])
+	assert license_matrix.depCompatWMyLice(types.L.MIT, {types.L.MIT}, onlyLicenses={types.L.MIT})
+	assert license_matrix.depCompatWMyLice(types.L.MPL, {types.L.MIT}, onlyLicenses={types.L.MIT})
 	assert not license_matrix.depCompatWMyLice(
-		types.L.MIT, [types.L.MIT], onlyLicenses=[types.L.MPL]
+		types.L.MIT, {types.L.MIT}, onlyLicenses={types.L.MPL}
 	)
 	assert not license_matrix.depCompatWMyLice(
-		types.L.MPL, [types.L.MIT], onlyLicenses=[types.L.MPL]
+		types.L.MPL, {types.L.MIT}, onlyLicenses={types.L.MPL}
 	)
 
 
 def test_warningsForIgnoredLicense(caplog: LogCaptureFixture) -> None:
 	zope = types.ucstr("ZOPE PUBLIC LICENSE")
-	license_matrix.licenseLookup(zope, [])
+	license_matrix.licenseLookup(zope, set())
 	assert any(
 		record.levelname == "WARNING"
 		and f"'{zope}' License not identified so falling back to UNKNOWN" in record.message
@@ -88,5 +88,5 @@ def test_warningsForIgnoredLicense(caplog: LogCaptureFixture) -> None:
 
 def test_warningsForIgnoredLicenseIgnored(caplog: LogCaptureFixture) -> None:
 	zope = types.ucstr("ZOPE PUBLIC LICENSE")
-	license_matrix.licenseLookup(zope, [zope])
+	license_matrix.licenseLookup(zope, {zope})
 	assert caplog.text == ""

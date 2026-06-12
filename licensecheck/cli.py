@@ -9,6 +9,7 @@ from dataclasses import fields
 from pathlib import Path
 from sys import exit as sysexit
 from sys import stdin, stdout
+from typing import Any
 
 from configurator import Config
 from configurator.node import ConfigNode
@@ -30,7 +31,7 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--format",
 		"-f",
-		help=f"Output format. one of: {', '.join(list(fmt.formatMap))}. default=simple",
+		help=f"Output format. one of: {', '.join(set(fmt.formatMap))}. default=simple",
 	)
 	parser.add_argument(
 		"--requirements-paths",
@@ -57,42 +58,42 @@ def cli() -> None:  # pragma: no cover
 	)
 	parser.add_argument(
 		"--ignore-packages",
-		help="List of packages/dependencies to ignore (compat=True), globs are supported",
+		help="set of packages/dependencies to ignore (compat=True), globs are supported",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--fail-packages",
-		help="List of packages/dependencies to fail (compat=False), globs are supported",
+		help="set of packages/dependencies to fail (compat=False), globs are supported",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--ignore-licenses",
-		help="List of licenses to ignore (skipped, compat may still be False)",
+		help="set of licenses to ignore (skipped, compat may still be False)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--fail-licenses",
-		help="List of licenses to fail (compat=False)",
+		help="set of licenses to fail (compat=False)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--only-licenses",
-		help="List of allowed licenses (packages/dependencies with any other license will fail)",
+		help="set of allowed licenses (packages/dependencies with any other license will fail)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--skip-dependencies",
-		help="List of packages/dependencies to skip (this sets the 'compatability' to True)",
+		help="set of packages/dependencies to skip (this sets the 'compatability' to True)",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--hide-output-parameters",
-		help="List of parameters to hide from the produced output",
+		help="set of parameters to hide from the produced output",
 		nargs="+",
 	)
 	parser.add_argument(
 		"--show-only-failing",
-		help="Only output a list of incompatible/ failing packages from this lib",
+		help="Only output a set of incompatible/ failing packages from this lib",
 		action="store_true",
 	)
 	parser.add_argument(
@@ -121,7 +122,7 @@ def cli() -> None:  # pragma: no cover
 	sysexit(ec)
 
 
-def main(args: dict) -> int:
+def main(args: dict[str, Any]) -> int:
 	"""Test entry point.
 
 	Note: FHConfParser (Parses in the following order: `pyproject.toml`,
@@ -161,17 +162,17 @@ def main(args: dict) -> int:
 	this_license_text = (
 		args["license"] if args.get("license") else packageinfo.ProjectMetadata.get_license()
 	)
-	this_license = license_matrix.licenseType(this_license_text)[0]
+	this_license = license_matrix.licenseType(this_license_text).pop()
 
-	def getFromConfig(key: str) -> list[types.ucstr]:
-		return list(map(types.ucstr, scopedConfig.get(key, [])))
+	def getFromConfig(key: str) -> set[types.ucstr]:
+		return set(map(types.ucstr, scopedConfig.get(key, [])))
 
 	package_info_manager = packageinfo.PackageInfoManager(scopedConfig.get("pypi_api"))
 
 	incompatible, depsWithLicenses = checker.check(
-		requirements_paths=requirements_paths,
-		groups=scopedConfig.get("groups", []),
-		extras=scopedConfig.get("extras", []),
+		requirements_paths=set(requirements_paths),
+		groups=set(scopedConfig.get("groups", [])),
+		extras=set(scopedConfig.get("extras", [])),
 		this_license=this_license,
 		package_info_manager=package_info_manager,
 		ignore_packages=getFromConfig("ignore_packages"),
