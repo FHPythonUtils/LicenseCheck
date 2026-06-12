@@ -108,7 +108,7 @@ class PackageInfoManager:
 				return pkg_info
 
 			tokens = sorted(parsed.literals)
-			pkg_info.license = ucstr(JOINS.join(x.key for x in tokens))
+			pkg_info.license = ucstr(JOINS.join(getattr(x, "key", str(x)) for x in tokens))
 
 		return pkg_info
 
