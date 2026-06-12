@@ -42,7 +42,7 @@ def check(
 	)
 	failLicensesType = license_matrix.licenseType(ucstr(JOINS.join(fail_licenses)), ignore_licenses)
 	onlyLicensesType = license_matrix.licenseType(ucstr(JOINS.join(only_licenses)), ignore_licenses)
-	# licenseType will always return NO_LICENSE when onlyLicenses is empty          # noqa: ERA001
+	# licenseType will always return NO_LICENSE when onlyLicenses is empty
 	if License.NO_LICENSE in onlyLicensesType:
 		onlyLicensesType.remove(License.NO_LICENSE)
 

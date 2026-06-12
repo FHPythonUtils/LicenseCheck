@@ -99,7 +99,6 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--pypi-api",
 		help="Specify a custom pypi api endpoint, for example if using a custom pypi server",
-		default="https://pypi.org",
 	)
 	parser.add_argument(
 		"--zero",
@@ -153,7 +152,7 @@ def main(args: dict[str, Any]) -> int:
 	output_file = (
 		stdout
 		if scopedConfig.get("file") in [None, ""]
-		else Path(scopedConfig.get("file")).open("w", encoding="utf-8")
+		else Path(scopedConfig.get("file", "")).open("w", encoding="utf-8")
 	)
 
 	# Get my license
@@ -163,7 +162,9 @@ def main(args: dict[str, Any]) -> int:
 	def getFromConfig(key: str) -> set[types.ucstr]:
 		return set(map(types.ucstr, scopedConfig.get(key, [])))
 
-	package_info_manager = packageinfo.PackageInfoManager(scopedConfig.get("pypi_api"))
+	package_info_manager = packageinfo.PackageInfoManager(
+		scopedConfig.get("pypi_api", "https://pypi.org")
+	)
 
 	incompatible, depsWithLicenses = checker.check(
 		requirements_paths=set(requirements_paths),

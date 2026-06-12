@@ -100,11 +100,11 @@ termToLicenseData = {
 }
 
 termToLicense: dict[str, License] = dict(
-    sorted(
-        termToLicenseData.items(),
-        key=lambda item: len(item[0]),
-        reverse=True,
-    )
+	sorted(
+		termToLicenseData.items(),
+		key=lambda item: len(item[0]),
+		reverse=True,
+	)
 )
 
 

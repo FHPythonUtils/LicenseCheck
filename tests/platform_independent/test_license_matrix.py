@@ -26,9 +26,9 @@ def test_licenseLookup() -> None:
 	msgs = []
 	for x in types.License._member_names_:
 		if x not in licenses:
-			msgs.append( f"{x} not in licenses")
+			msgs.append(f"{x} not in licenses")
 
-	if len(msgs):
+	if msgs:
 		logger.error(msgs)
 		raise AssertionError(msgs)
 
