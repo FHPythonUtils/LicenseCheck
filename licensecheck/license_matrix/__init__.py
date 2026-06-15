@@ -41,6 +41,7 @@ from __future__ import annotations
 
 import csv
 from pathlib import Path
+from typing import Any
 
 from loguru import logger
 
@@ -109,7 +110,7 @@ termToLicense: dict[str, L] = dict(
 )
 
 
-def licenseLookup(licenseStr: str, ignoreLicenses: set[str] | None = None) -> L:
+def _licenseLookup(licenseStr: str, ignoreLicenses: set[str] | None = None) -> L:
 	"""
 	Identify a license from an uppercase string representation of a license.
 
@@ -118,6 +119,7 @@ def licenseLookup(licenseStr: str, ignoreLicenses: set[str] | None = None) -> L:
 	:return L: License represented by licenseStr
 	"""
 	licenseStr = licenseStr.upper()
+	ignoreLicenses_: set[str] = {x.upper() for x in ignoreLicenses or {}}
 	if len(licenseStr or "") < 1:
 		return L.NO_LICENSE
 
@@ -125,7 +127,7 @@ def licenseLookup(licenseStr: str, ignoreLicenses: set[str] | None = None) -> L:
 		if liceStr.strip() in licenseStr:
 			return lice
 
-	if licenseStr not in (ignoreLicenses or ""):
+	if licenseStr not in (ignoreLicenses_ or ""):
 		logger.warning(f"'{licenseStr}' License not identified so falling back to UNKNOWN")
 	return L.UNKNOWN
 
@@ -133,7 +135,7 @@ def licenseLookup(licenseStr: str, ignoreLicenses: set[str] | None = None) -> L:
 def _lst_licenseType(lice: str, ignoreLicenses: set[str] | None = None) -> list[L]:
 	if len(lice or "") < 1:
 		return [L.NO_LICENSE]
-	return [licenseLookup(str(x), ignoreLicenses) for x in lice.split(JOINS)]
+	return [_licenseLookup(str(x), ignoreLicenses) for x in lice.split(JOINS)]
 
 
 def licenseType(lice: str, ignoreLicenses: set[str] | None = None) -> set[L]:

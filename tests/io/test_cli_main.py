@@ -1,7 +1,7 @@
 import pytest
 
-from licensecheck.models.config import LC_Config
 from licensecheck.io.cli import main
+from licensecheck.models.config import LC_Config
 
 
 @pytest.fixture
@@ -51,7 +51,7 @@ def test_main_success(
 def test_main_invalid_format(
 	config: LC_Config,
 	monkeypatch,
-):
+) -> None:
 	config.format = "does-not-exist"
 
 	monkeypatch.setattr(
@@ -106,7 +106,7 @@ def test_main_exit_code_zero_mode(
 def test_main_invalid_hidden_parameter(
 	config: LC_Config,
 	monkeypatch,
-):
+) -> None:
 	config.hide_output_parameters = {"NOT_A_FIELD"}
 
 	monkeypatch.setattr(
@@ -133,7 +133,7 @@ def test_main_valid_hidden_parameters(
 	config: LC_Config,
 	monkeypatch,
 	hidden: list[str],
-):
+) -> None:
 	config.hide_output_parameters = hidden
 
 	monkeypatch.setattr(
@@ -157,7 +157,7 @@ def test_main_valid_hidden_parameters(
 def test_main_passes_args_to_checker(
 	config: LC_Config,
 	monkeypatch,
-):
+) -> None:
 	called = {}
 
 	def fake_check(**kwargs):
@@ -190,7 +190,7 @@ def test_main_closes_output_file(
 	config: LC_Config,
 	monkeypatch,
 	tmp_path,
-):
+) -> None:
 	output = tmp_path / "out.txt"
 
 	config.file = str(output)

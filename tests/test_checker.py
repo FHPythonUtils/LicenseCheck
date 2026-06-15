@@ -26,6 +26,12 @@ def mock_package_info_manager() -> PackageInfoManager:
 		(None, {"PACKAGE*"}, None, True),  # Globs are supported in fail_packages
 		(None, None, {"GPL-3.0"}, True),  # GPL-3.0 should be marked as incompatible
 		(None, None, {"GPL*"}, False),  # Globs are not supported on licenses!
+		({"package_b"}, None, None, False),  # Ignored package should not cause failure
+		({"package*"}, None, None, False),  # Globs are supported in ignore_packages
+		(None, {"package_a"}, None, True),  # PACKAGE_A in fail_packages should fail
+		(None, {"package*"}, None, True),  # Globs are supported in fail_packages
+		(None, None, {"gpl-3.0"}, True),  # GPL-3.0 should be marked as incompatible
+		(None, None, {"gpl*"}, False),  # Globs are not supported on licenses!
 	],
 )
 def test_check(

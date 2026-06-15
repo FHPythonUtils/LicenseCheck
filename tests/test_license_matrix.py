@@ -43,7 +43,7 @@ def test_licenseLookup() -> None:
 	"""
 	licenses = []
 	for rawLicense in Path(f"{THISDIR}/data/rawLicenses.txt").read_text("utf-8").splitlines():
-		licenseName = license_matrix.licenseLookup(rawLicense)._name_
+		licenseName = license_matrix._licenseLookup(rawLicense)._name_
 		licenses.append(licenseName)
 
 	licenses.append("NO_LICENSE")
@@ -99,7 +99,7 @@ def test_whitelistedLicenseCompat() -> None:
 
 def test_warningsForIgnoredLicense(caplog: LogCaptureFixture) -> None:
 	zope = "ZOPE PUBLIC LICENSE"
-	license_matrix.licenseLookup(zope, set())
+	license_matrix._licenseLookup(zope, set())
 	assert any(
 		record.levelname == "WARNING"
 		and f"'{zope}' License not identified so falling back to UNKNOWN" in record.message
@@ -109,5 +109,11 @@ def test_warningsForIgnoredLicense(caplog: LogCaptureFixture) -> None:
 
 def test_warningsForIgnoredLicenseIgnored(caplog: LogCaptureFixture) -> None:
 	zope = "ZOPE PUBLIC LICENSE"
-	license_matrix.licenseLookup(zope, {zope})
+	license_matrix._licenseLookup(zope, {zope})
+	assert caplog.text == ""
+
+
+def test_warningsForIgnoredLicenseIgnored_lc(caplog: LogCaptureFixture) -> None:
+	zope = "ZOPE PUBLIC LICENSE"
+	license_matrix._licenseLookup(zope, {zope.lower()})
 	assert caplog.text == ""
