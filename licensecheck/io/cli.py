@@ -133,7 +133,7 @@ def cli() -> None:  # pragma: no cover
 		config += Config.from_path(file, optional=True)
 
 	scopedData: ConfigNode = config.get("tool", {}).get("licensecheck", ConfigNode())
-	licensecheckConf: LC_Config = LC_Config.from_mapping(**scopedData.data, **args)
+	licensecheckConf: LC_Config = LC_Config.from_mapping(**{**scopedData.data, **args})
 
 	ec = main(licensecheckConf)
 	stdin_path.unlink(missing_ok=True)
