@@ -36,8 +36,12 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
+      - name: Run ruff
+        run: uv run ruff check --output-format=github
+        continue-on-error: true
+
       - name: Run pytest
-        run: uv run pytest tests/platform_independent
+        run: uv run pytest tests/
 
       - name: Run on self
         run: |
@@ -45,6 +49,3 @@ jobs:
           uv run licensecheck --only-licenses mit apache --show-only-failing -g dev -r pyproject.toml
           uv run licensecheck --only-licenses mit apache --show-only-failing -f csv -r pyproject.toml
 
-      - name: Run ruff
-        run: uv run ruff check --output-format=github
-        continue-on-error: true
