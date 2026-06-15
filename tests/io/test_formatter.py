@@ -52,6 +52,12 @@ myLice = License.MIT
 			"advanced_ignore_params.json",
 			["HOMEPAGE", "AUTHOR"],
 		),
+		(
+			"json",
+			complexPackages,
+			"advanced_ignore_params2.json",
+			["homepage", "author"],
+		),
 		("csv", simplePackages, "simple.csv", None),
 		("csv", complexPackages, "advanced.csv", None),
 		("ansi", simplePackages, "simple.ansi", None),

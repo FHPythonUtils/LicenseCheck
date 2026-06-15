@@ -30,7 +30,7 @@ class PackageInfo:
 		:param set[str] hide_output_parameters: set of parameters to ignore
 		:return dict: filtered dictionary
 		"""
-		hide_output_parameters_upper = {x.upper for x in hide_output_parameters}
+		hide_output_parameters_upper = {x.upper() for x in hide_output_parameters}
 		return {
 			k: (v if v is not None else UNKNOWN)
 			for k, v in self.__dict__.items()
