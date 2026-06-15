@@ -5,6 +5,8 @@ from typing import Any
 
 import pytest
 
+from licensecheck.models.constants import UNKNOWN
+from licensecheck.models.packageinfo import PackageInfo
 from licensecheck.packageinfo import (
 	LocalPackageInfo,
 	PackageInfoManager,
@@ -12,7 +14,6 @@ from licensecheck.packageinfo import (
 	from_classifiers,
 	meta_get,
 )
-from licensecheck.types import UNKNOWN, PackageInfo
 
 THISDIR = str(Path(__file__).resolve().parent)
 
@@ -58,12 +59,12 @@ def test_getPackageInfoPypi(remote_package_info: RemotePackageInfo) -> None:
 
 def test_getPackageInfoLocalNotFound() -> None:
 	pkg = LocalPackageInfo(aux_packageinfo("this_package_does_not_exist"))
-	assert pkg.get_size() == 0
+	assert pkg.get_size() is None
 
 
 def test_getPackagePypiLocalNotFound() -> None:
 	pkg = RemotePackageInfo("https://pypi.org/", aux_packageinfo("this_package_does_not_exist"))
-	assert pkg.get_size() == -1
+	assert pkg.get_size() is None
 
 
 def test_getPackages(package_info_manager: PackageInfoManager) -> None:
@@ -72,24 +73,22 @@ def test_getPackages(package_info_manager: PackageInfoManager) -> None:
 	package = packages.pop()
 	assert package.name == "requests"
 	assert package.author == "Kenneth Reitz"
-	assert package.license == "APACHE SOFTWARE LICENSE"
+	assert package.license == "Apache Software License"
 
 
 def test_getPackagesNotFound(package_info_manager: PackageInfoManager) -> None:
 	package_info_manager.reqs = {aux_packageinfo("this_package_does_not_exist")}
 
 	packages = package_info_manager.getPackages()
+	package = packages.pop()
 
-	assert all(
-		(package.name.upper() == "THIS_PACKAGE_DOES_NOT_EXIST" and package.errorCode == 1)
-		for package in packages
-	)
+	assert package.name == "this-package-does-not-exist"
+	assert package.errorCode == 1
 
 
 def test_from_classifiers() -> None:
-	licenses = []
-	for rawLicense in Path(f"{THISDIR}/data/pypiClassifiers.txt").read_text("utf-8").splitlines():
-		licenses.append(from_classifiers([rawLicense]) or UNKNOWN)
+	lines = Path(f"{THISDIR}/data/pypiClassifiers.txt").read_text("utf-8").splitlines()
+	licenses = [from_classifiers([rawLicense]) or UNKNOWN for rawLicense in lines]
 	# Path(f"{THISDIR}/data/licenses.txt").write_text("\n".join(licenses), "utf-8")
 	assert "\n".join(licenses) == Path(f"{THISDIR}/data/licenses.txt").read_text("utf-8")
 

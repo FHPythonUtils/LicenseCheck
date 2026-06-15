@@ -5,8 +5,10 @@ from __future__ import annotations
 from fnmatch import fnmatch
 
 from licensecheck import license_matrix
+from licensecheck.models.constants import JOINS
+from licensecheck.models.license import License
+from licensecheck.models.packageinfo import PackageInfo
 from licensecheck.packageinfo import PackageInfoManager
-from licensecheck.types import JOINS, License, PackageInfo, ucstr
 
 
 def check(
@@ -15,12 +17,12 @@ def check(
 	extras: set[str],
 	this_license: License,
 	package_info_manager: PackageInfoManager,
-	ignore_packages: set[ucstr] | None = None,
-	fail_packages: set[ucstr] | None = None,
-	ignore_licenses: set[ucstr] | None = None,
-	fail_licenses: set[ucstr] | None = None,
-	only_licenses: set[ucstr] | None = None,
-	skip_dependencies: set[ucstr] | None = None,
+	ignore_packages: set[str] | None = None,
+	fail_packages: set[str] | None = None,
+	ignore_licenses: set[str] | None = None,
+	fail_licenses: set[str] | None = None,
+	only_licenses: set[str] | None = None,
+	skip_dependencies: set[str] | None = None,
 ) -> tuple[bool, set[PackageInfo]]:
 	# Def values
 	ignore_packages = ignore_packages or set()
@@ -38,10 +40,10 @@ def check(
 	)
 
 	ignoreLicensesType = license_matrix.licenseType(
-		ucstr(JOINS.join(ignore_licenses)), ignore_licenses
+		str(JOINS.join(ignore_licenses)), ignore_licenses
 	)
-	failLicensesType = license_matrix.licenseType(ucstr(JOINS.join(fail_licenses)), ignore_licenses)
-	onlyLicensesType = license_matrix.licenseType(ucstr(JOINS.join(only_licenses)), ignore_licenses)
+	failLicensesType = license_matrix.licenseType(str(JOINS.join(fail_licenses)), ignore_licenses)
+	onlyLicensesType = license_matrix.licenseType(str(JOINS.join(only_licenses)), ignore_licenses)
 	# licenseType will always return NO_LICENSE when onlyLicenses is empty
 	if License.NO_LICENSE in onlyLicensesType:
 		onlyLicensesType.remove(License.NO_LICENSE)
@@ -60,7 +62,7 @@ def check(
 		else:
 			package.licenseCompat = license_matrix.depCompatWMyLice(
 				this_license,
-				license_matrix.licenseType(ucstr(package.license), ignore_licenses),
+				license_matrix.licenseType(str(package.license), ignore_licenses),
 				ignoreLicensesType,
 				failLicensesType,
 				onlyLicensesType,

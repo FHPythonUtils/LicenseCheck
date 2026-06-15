@@ -4,14 +4,14 @@ from pathlib import Path
 
 import pytest
 
-from licensecheck import fmt
-from licensecheck.types import License, PackageInfo, ucstr
+from licensecheck.io import fmt
+from licensecheck.models.license import License
+from licensecheck.models.packageinfo import PackageInfo
 
 fmt.INFO = {"program": "licensecheck", "version": "dev", "license": "MIT LICENSE"}
 
 THISDIR = str(Path(__file__).resolve().parent)
 
-# ruff: noqa: ERA001
 
 simplePackages = [PackageInfo(name="example")]
 complexPackages = [
@@ -21,7 +21,7 @@ complexPackages = [
 		size=10,
 		homePage="https://example.com",
 		author="example_author",
-		license=ucstr("mit"),
+		license="mit",
 		licenseCompat=True,
 		errorCode=0,
 	),
@@ -30,7 +30,7 @@ complexPackages = [
 		size=10,
 		homePage="https://example.com",
 		author="example_author",
-		license=ucstr("gpl3"),
+		license="gpl3",
 		licenseCompat=False,
 		errorCode=1,
 	),
@@ -50,7 +50,7 @@ myLice = License.MIT
 			"json",
 			complexPackages,
 			"advanced_ignore_params.json",
-			[ucstr("HOMEPAGE"), ucstr("AUTHOR")],
+			["HOMEPAGE", "AUTHOR"],
 		),
 		("csv", simplePackages, "simple.csv", None),
 		("csv", complexPackages, "advanced.csv", None),
@@ -59,17 +59,17 @@ myLice = License.MIT
 		("ansi", complexPackages, "advanced.ansi", []),
 		("simple", simplePackages, "simple.txt", None),
 		("simple", complexPackages, "advanced.txt", None),
-		("simple", complexPackages, "advanced.txt", [ucstr("WRONG_PARAMETER")]),
+		("simple", complexPackages, "advanced.txt", ["WRONG_PARAMETER"]),
 	],
 )
 def test_output__fmt(
 	_fmt: str,
 	packages: list[PackageInfo],
 	expected_output_file: str,
-	hide_params: list[ucstr] | None,
+	hide_params: list[str] | None,
 ) -> None:
 	actual_output = fmt.fmt(_fmt, myLice, packages, hide_parameters=hide_params)
-	expected_output = Path(f"{THISDIR}/data/{expected_output_file}")
+	expected_output = Path(f"{THISDIR}/data/fmt/{expected_output_file}")
 	# expected_output.write_text(actual_output, "utf-8")
 	assert assert_eq(actual_output, expected_output.read_text("utf-8"))
 

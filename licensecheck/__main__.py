@@ -2,6 +2,6 @@
 
 from __future__ import annotations
 
-from licensecheck import cli
+from licensecheck.io.cli import cli
 
 cli()

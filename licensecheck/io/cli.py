@@ -1,6 +1,4 @@
-"""Output the licenses used by dependencies and check if these are compatible with the project
-license.
-"""
+"""Output the licenses used by dependencies and check if these are compatible with the project license."""
 
 from __future__ import annotations
 
@@ -9,12 +7,14 @@ from dataclasses import fields
 from pathlib import Path
 from sys import exit as sysexit
 from sys import stdin, stdout
-from typing import Any
 
 from configurator import Config
 from configurator.node import ConfigNode
 
-from licensecheck import checker, fmt, license_matrix, packageinfo, types
+from licensecheck import checker, license_matrix, packageinfo
+from licensecheck.io import fmt
+from licensecheck.models.config import LC_Config
+from licensecheck.models.packageinfo import PackageInfo
 
 stdout.reconfigure(encoding="utf-8")  # type: ignore[general-type-issues]
 
@@ -115,23 +115,11 @@ def cli() -> None:  # pragma: no cover
 		else:
 			stdin_path.write_text("\n".join(stdin.readlines()), encoding="utf-8")
 
-	ec = main(args)
-	stdin_path.unlink(missing_ok=True)
-
-	sysexit(ec)
-
-
-def main(args: dict[str, Any]) -> int:
-	"""Test entry point.
-
-	Note: FHConfParser (Parses in the following order: `pyproject.toml`,
-	`setup.cfg`, `licensecheck.toml`, `licensecheck.json`,
-	`licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`)
-	"""
-	exitCode = 0
-
 	config: ConfigNode = Config()
 
+	# (Parses in the following order: `pyproject.toml`,
+	# `setup.cfg`, `licensecheck.toml`, `licensecheck.json`,
+	# `licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`)
 	config_files = [
 		"~/licensecheck.json",
 		"~/licensecheck.toml",
@@ -145,60 +133,68 @@ def main(args: dict[str, Any]) -> int:
 		config += Config.from_path(file, optional=True)
 
 	scopedData: ConfigNode = config.get("tool", {}).get("licensecheck", ConfigNode())
-	scopedConfig: dict[str, Any] = {**scopedData.data, **args}
+	licensecheckConf: LC_Config = LC_Config.from_mapping(**scopedData.data, **args)
+
+	ec = main(licensecheckConf)
+	stdin_path.unlink(missing_ok=True)
+
+	sysexit(ec)
+
+
+def main(licensecheckConf: LC_Config) -> int:
+	"""Test entry point."""
+	exitCode = 0
 
 	# File
-	requirements_paths = scopedConfig.get("requirements_paths") or ["__stdin__"]
+	requirements_paths = licensecheckConf.requirements_paths or {"__stdin__"}
 	output_file = (
 		stdout
-		if scopedConfig.get("file") in [None, ""]
-		else Path(scopedConfig.get("file", "")).open("w", encoding="utf-8")
+		if licensecheckConf.file in [None, ""]
+		else Path(licensecheckConf.file or "").open("w", encoding="utf-8")
 	)
 
 	# Get my license
-	this_license_text = scopedConfig.get("license") or packageinfo.ProjectMetadata.get_license()
+	this_license_text = licensecheckConf.license or packageinfo.ProjectMetadata.get_license()
 	this_license = license_matrix.licenseType(this_license_text).pop()
 
-	def getFromConfig(key: str) -> set[types.ucstr]:
-		return set(map(types.ucstr, scopedConfig.get(key, [])))
-
 	package_info_manager = packageinfo.PackageInfoManager(
-		scopedConfig.get("pypi_api", "https://pypi.org")
+		licensecheckConf.pypi_api or "https://pypi.org"
 	)
 
 	incompatible, depsWithLicenses = checker.check(
 		requirements_paths=set(requirements_paths),
-		groups=set(scopedConfig.get("groups", [])),
-		extras=set(scopedConfig.get("extras", [])),
+		groups=licensecheckConf.groups,
+		extras=licensecheckConf.extras,
 		this_license=this_license,
 		package_info_manager=package_info_manager,
-		ignore_packages=getFromConfig("ignore_packages"),
-		fail_packages=getFromConfig("fail_packages"),
-		ignore_licenses=getFromConfig("ignore_licenses"),
-		fail_licenses=getFromConfig("fail_licenses"),
-		only_licenses=getFromConfig("only_licenses"),
-		skip_dependencies=getFromConfig("skip_dependencies"),
+		ignore_packages=licensecheckConf.ignore_packages,
+		fail_packages=licensecheckConf.fail_packages,
+		ignore_licenses=licensecheckConf.ignore_licenses,
+		fail_licenses=licensecheckConf.fail_licenses,
+		only_licenses=licensecheckConf.only_licenses,
+		skip_dependencies=licensecheckConf.skip_dependencies,
 	)
 
 	# Format the results
-	hide_output_parameters = [
-		types.ucstr(x) for x in scopedConfig.get("hide_output_parameters", [])
-	]
-	available_params = [param.name.upper() for param in fields(types.PackageInfo)]
+	hide_output_parameters = licensecheckConf.hide_output_parameters
+
+	available_params = [param.name.upper() for param in fields(PackageInfo)]
 	if not all(hop in available_params for hop in hide_output_parameters):
 		msg = (
 			f"Invalid parameter(s) in `hide_output_parameters`. "
 			f"Valid parameters are: {', '.join(available_params)}"
 		)
 		raise ValueError(msg)
-	if scopedConfig.get("format", "simple") in fmt.formatMap:
+
+	format_ = licensecheckConf.format or "simple"
+	if licensecheckConf.format in fmt.formatMap:
 		print(
 			fmt.fmt(
-				scopedConfig.get("format", "simple"),
+				format_,
 				this_license,
 				sorted(depsWithLicenses),
 				hide_output_parameters,
-				show_only_failing=scopedConfig.get("show_only_failing", False),
+				show_only_failing=licensecheckConf.show_only_failing,
 			),
 			file=output_file,
 		)
@@ -206,10 +202,10 @@ def main(args: dict[str, Any]) -> int:
 		exitCode = 2
 
 	# Exit code of 1 if args.zero
-	if scopedConfig.get("zero", False) and incompatible:
+	if licensecheckConf.zero and incompatible:
 		exitCode = 1
 
 	# Cleanup + exit
-	if scopedConfig.get("file") not in [None, ""]:
+	if licensecheckConf.file not in [None, ""]:
 		output_file.close()
 	return exitCode

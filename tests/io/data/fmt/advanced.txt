@@ -1,0 +1,26 @@
+                                  
+               Info               
+┏━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━┓
+┃ Item            ┃ Value        ┃
+┡━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━┩
+│ program         │ licensecheck │
+│ version         │ dev          │
+│ license         │ MIT LICENSE  │
+│ project_license │ MIT LICENSE  │
+└─────────────────┴──────────────┘
+            
+  List Of   
+   Errors   
+┏━━━━━━━━━━┓
+┃ Package  ┃
+┡━━━━━━━━━━┩
+│ example1 │
+└──────────┘
+                                      
+           List Of Packages           
+┏━━━━━━━━━━━━┳━━━━━━━━━━┳━━━━━━━━━━━━┓
+┃ Compatible ┃ Package  ┃ License(s) ┃
+┡━━━━━━━━━━━━╇━━━━━━━━━━╇━━━━━━━━━━━━┩
+│ ✔          │ example0 │ mit        │
+│ ✖          │ example1 │ gpl3       │
+└────────────┴──────────┴────────────┘

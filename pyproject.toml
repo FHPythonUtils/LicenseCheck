@@ -1,6 +1,6 @@
 [project]
 name = "licensecheck"
-version = "2026.0.1"
+version = "2026.0.2"
 description = "Output the licenses used by dependencies and check if these are compatible with the project license"
 authors = [{ name = "FredHappyface" }]
 requires-python = ">=3.12"
@@ -23,7 +23,7 @@ classifiers = [
 dependencies = [
 	"appdirs>=1.4.4",
 	"configurator>=3.2.0",
-	"depgather>=0.2.0",
+	"depgather>=0.4.0",
 	"license-expression>=30.4.4",
 	"loguru>=0.7.3",
 	"markdown>=3.10.2",
@@ -60,7 +60,11 @@ exclude = [".venv"]
 select = ["ALL"]
 ignore = [
 	"COM812", # enforce trailing comma
-	"D2",     # pydocstyle formatting
+	"D203",     # 
+	"D212",     #  
+	"D206",     # i want tabs 
+	"D401",     # imperative mood
+	"D1",     # temporarily ignore docstrings
 	"ISC001",
 	"N",      # pep8 naming
 	"PLR09",  # pylint refactor too many
@@ -76,6 +80,7 @@ fixable = ["ALL"]
 	"S101",
 	"E402",
 	"ERA001",
+	"SLF001",  # Private method access is fine for tests
 	"PLR2004", # Magic value used in comparison,
 ]
 

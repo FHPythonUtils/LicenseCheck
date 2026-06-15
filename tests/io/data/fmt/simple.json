@@ -1,0 +1,21 @@
+{
+	"info": {
+		"program": "licensecheck",
+		"version": "dev",
+		"license": "MIT LICENSE"
+	},
+	"project_license": "MIT LICENSE",
+	"packages": [
+		{
+			"name": "example",
+			"version": "UNKNOWN",
+			"size": "UNKNOWN",
+			"homePage": "UNKNOWN",
+			"author": "UNKNOWN",
+			"license": "UNKNOWN",
+			"licenseCompat": false,
+			"errorCode": 0,
+			"namever": "example-UNKNOWN"
+		}
+	]
+}

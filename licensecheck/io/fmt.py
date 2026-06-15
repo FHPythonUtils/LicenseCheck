@@ -1,4 +1,5 @@
-"""The formatter is reponsible for outputting the list of PackageInfo[s].
+"""
+The formatter is reponsible for outputting the list of PackageInfo[s].
 
 Note the PackageInfo has the following attributes, that we can use to build each output format:
 - name: str
@@ -7,7 +8,7 @@ Note the PackageInfo has the following attributes, that we can use to build each
 - size: int = -1
 - homePage: str
 - author: str
-- license: ucstr
+- license: str
 - licenseCompat: bool
 - errorCode: int = 0
 
@@ -51,7 +52,8 @@ import markdown as markdownlib
 from rich.console import Console
 from rich.table import Table
 
-from licensecheck.types import License, PackageInfo, ucstr
+from licensecheck.models.license import License
+from licensecheck.models.packageinfo import PackageInfo
 
 THISDIR = Path(__file__).resolve().parent
 
@@ -63,12 +65,12 @@ INFO = {"program": "licensecheck", "version": VERSION, "license": "MIT LICENSE"}
 
 
 def _printLicense(licenseEnum: License) -> str:
-	"""Output a license as plain text.
+	"""
+	Output a license as plain text.
 
 	:param License licenseEnum: License
 	:return str: license of plain text
 	"""
-
 	licenseMap = {
 		License.PUBLIC: "PUBLIC DOMAIN/ CC-PDDC/ CC0-1.0",
 		License.UNLICENSE: "UNLICENSE/ WTFPL",
@@ -105,7 +107,8 @@ def _printLicense(licenseEnum: License) -> str:
 
 
 def stripAnsi(string: str) -> str:
-	"""Strip ansi codes from a given string.
+	"""
+	Strip ansi codes from a given string.
 
 	Args:
 	----
@@ -123,13 +126,13 @@ def ansi(
 	myLice: License,
 	packages: list[dict[str, Any]],
 ) -> str:
-	"""Format to ansi.
+	"""
+	Format to ansi.
 
 	:param License myLice: project license
 	:param list[dict[str, Any]] packages: list of PackageCompats to format.
 	:return str: string to send to specified output in ansi format
 	"""
-
 	string = StringIO()
 
 	console = Console(file=string, color_system="truecolor", safe_box=False)
@@ -181,7 +184,8 @@ def plainText(
 	myLice: License,
 	packages: list[dict[str, Any]],
 ) -> str:
-	"""Format to plain text.
+	"""
+	Format to plain text.
 
 	:param License myLice: project license
 	:param list[dict[str, Any]] packages: list of PackageCompats to format.
@@ -195,13 +199,13 @@ def markdown(
 	myLice: License,
 	packages: list[dict[str, Any]],
 ) -> str:
-	"""Format to markdown.
+	"""
+	Format to markdown.
 
 	:param License myLice: project license
 	:param list[dict[str, Any]] packages: list of PackageCompats to format.
 	:return str: string to send to specified output in markdown format
 	"""
-
 	info = "\n".join(f"- {k}: {v}" for k, v in INFO.items())
 	strBuf = [f"## Info\n\n{info}\n\n## Project License\n\n{_printLicense(myLice)}\n"]
 
@@ -242,7 +246,8 @@ def html(
 	myLice: License,
 	packages: list[dict[str, Any]],
 ) -> str:
-	"""Format to html.
+	"""
+	Format to html.
 
 	:param License myLice: project license
 	:param list[dict[str, Any]] packages: list of PackageCompats to format.
@@ -256,13 +261,13 @@ def html(
 
 
 def raw(myLice: License, packages: list[dict[str, Any]]) -> str:
-	"""Format to json.
+	"""
+	Format to json.
 
 	:param License myLice: project license
 	:param list[dict[str, Any]] packages: list of PackageCompats to format.
 	:return str: string to send to specified output in json format
 	"""
-
 	return json.dumps(
 		{
 			"info": INFO,
@@ -277,13 +282,13 @@ def rawCsv(
 	myLice: License,
 	packages: list[dict[str, Any]],
 ) -> str:
-	"""Format to csv.
+	"""
+	Format to csv.
 
 	:param License myLice: project license
 	:param list[dict[str, Any]] packages: list of PackageCompats to format.
 	:return str: string to send to specified output in csv format
 	"""
-
 	if len(packages) == 0:
 		return ""
 
@@ -299,19 +304,20 @@ def fmt(
 	format_: str,
 	myLice: License,
 	packages: list[PackageInfo],
-	hide_parameters: list[ucstr] | None = None,
+	hide_parameters: set[str] | None = None,
 	*,
 	show_only_failing: bool = False,
 ) -> str:
-	"""Format to a given format by `format_`.
+	"""
+	Format to a given format by `format_`.
 
 	:param License myLice: project license
 	:param list[PackageInfo] packages: list of PackageCompats to format.
-	:param list[ucstr] hide_parameters: list of parameters to ignore in the output.
+	:param set[str] hide_parameters: set of parameters to ignore in the output.
 	:param bool show_only_failing: output only failing packages, defaults to False.
 	:return str: string to send to specified output in ansi format
 	"""
-	hide_parameters = hide_parameters or []
+	hide_parameters = hide_parameters or set()
 	if show_only_failing:
 		packages = [x for x in packages if not x.licenseCompat]
 

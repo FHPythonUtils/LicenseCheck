@@ -18,9 +18,11 @@ import tomli
 from depgather.parse import gather
 from license_expression import Licensing
 from packaging.requirements import Requirement
+from packaging.utils import canonicalize_name
 
+from licensecheck.models.constants import JOINS, UNKNOWN
+from licensecheck.models.packageinfo import PackageInfo
 from licensecheck.session import session
-from licensecheck.types import JOINS, UNKNOWN, PackageInfo, ucstr
 
 RAW_JOINS = " AND "
 
@@ -29,7 +31,8 @@ class PackageInfoManager:
 	"""Manages retrieval of local and remote package information."""
 
 	def __init__(self, base_pypi_url: str = "https://pypi.org") -> None:
-		"""Manage retrieval of local and remote package information.
+		"""
+		Manage retrieval of local and remote package information.
 
 		:param str pypi_api: url of pypi server. Typically the public instance, defaults
 		to "https://pypi.org"
@@ -56,21 +59,22 @@ class PackageInfoManager:
 			)
 
 	def getPackages(self) -> set[PackageInfo]:
-		"""Retrieve package information from local installation or PyPI.
+		"""
+		Retrieve package information from local installation or PyPI.
 
-		:param set[ucstr] reqs: Set of dependency names to retrieve information for.
+		:param set[str] reqs: Set of dependency names to retrieve information for.
 		:return set[PackageInfo]: A set of package information objects.
 		"""
 		with ThreadPoolExecutor() as executor:
 			return set(executor.map(self._get_package_info, self.reqs))
 
 	def _get_package_info(self, package: Requirement) -> PackageInfo:
-		"""Retrieve package information, preferring local data.
+		"""
+		Retrieve package information, preferring local data.
 
 		:param Requirement package: package info to unpack
 		:return PackageInfo: Information about the package.
 		"""
-
 		versions = {None}
 		try:
 			requirement_specs = package.specifier._specs
@@ -78,6 +82,8 @@ class PackageInfoManager:
 		except AttributeError:
 			pass
 
+		# current version of depgather does not c14n names on its output
+		package.name = canonicalize_name(package.name)
 		base_pkg_info: PackageInfo = PackageInfo(
 			name=package.name, version=versions.pop(), errorCode=1
 		)
@@ -91,7 +97,7 @@ class PackageInfoManager:
 			size=lpi.get_size() or rpi.get_size(),
 			homePage=lpi.get_homePage() or rpi.get_homePage(),
 			author=lpi.get_author() or rpi.get_author(),
-			license=ucstr(lpi.get_license() or rpi.get_license()),
+			license=str(lpi.get_license() or rpi.get_license()),
 		)
 
 		if rpi.error_state:
@@ -108,7 +114,7 @@ class PackageInfoManager:
 				return pkg_info
 
 			tokens = sorted(parsed.literals)
-			pkg_info.license = ucstr(JOINS.join(x.key for x in tokens))
+			pkg_info.license = str(JOINS.join(x.key for x in tokens))
 
 		return pkg_info
 
@@ -143,17 +149,18 @@ class LocalPackageInfo:
 	def get_author(self) -> str | None:
 		return meta_get(self.meta, "Author")
 
-	def get_size(self) -> int:
-		"""Retrieve installed package size.
+	def get_size(self) -> int | None:
+		"""
+		Retrieve installed package size.
 
-		:param ucstr package: Package name.
+		:param str package: Package name.
 		:return int: Size in bytes.
 		"""
 		try:
 			package_files = metadata.Distribution.from_name(self.package.name).files
 			return sum(f.size for f in package_files if f.size) if package_files else 0
 		except metadata.PackageNotFoundError:
-			return 0  # Package not found
+			return None  # Package not found
 
 
 class RemotePackageInfo:
@@ -223,8 +230,9 @@ class RemotePackageInfo:
 
 		return author or author_email.split("<")[0].strip()
 
-	def get_size(self) -> int:
-		"""Retrieve package size from PyPI metadata.
+	def get_size(self) -> int | None:
+		"""
+		Retrieve package size from PyPI metadata.
 
 		:param dict[str, Any] data: PyPI response JSON.
 
@@ -232,13 +240,14 @@ class RemotePackageInfo:
 		"""
 		self.poke_pypi()
 		if self.raw_data is None:
-			return -1
+			return None
 		urls = self.raw_data.get("urls", [])
-		return int(urls[-1]["size"]) if len(urls) > 0 else -1
+		return int(urls[-1]["size"]) if len(urls) > 0 else None
 
 
 def meta_get(meta: Message | dict[str, Any], key: str) -> str | None:
-	"""Retrieve metadata value safely.
+	"""
+	Retrieve metadata value safely.
 
 	:param Message | dict[str, Any] self.meta: Metadata source.
 	:param str key: Metadata key.
@@ -251,10 +260,11 @@ def meta_get(meta: Message | dict[str, Any], key: str) -> str | None:
 
 
 def from_classifiers(classifiers: list[str] | None) -> str | None:
-	"""Extract license from classifiers.
+	"""
+	Extract license from classifiers.
 
 	:param list[str] | None classifiers: list of classifiers
-	:return ucstr: licenses as a ucstr
+	:return str: licenses as a str
 	"""
 	if not classifiers:
 		return None
@@ -263,7 +273,7 @@ def from_classifiers(classifiers: list[str] | None) -> str | None:
 	for _val in classifiers:
 		val = str(_val)
 		if val.startswith("License"):
-			lice = val.split(" :: ")[-1]
+			lice = val.rsplit(" :: ", maxsplit=1)[-1]
 			if lice != "OSI Approved":
 				licenses.append(lice)
 	return RAW_JOINS.join(licenses) if len(licenses) > 0 else None
@@ -274,7 +284,8 @@ class ProjectMetadata:
 
 	@staticmethod
 	def get_metadata() -> dict[str, Any]:
-		"""Extract project metadata from setup.cfg or pyproject.toml.
+		"""
+		Extract project metadata from setup.cfg or pyproject.toml.
 
 		:return dict[str, Any]: Extracted metadata.
 		"""
@@ -283,7 +294,7 @@ class ProjectMetadata:
 			config.read("setup.cfg")
 			if "metadata" in config:
 				classifiers = config.get("metadata", "classifier", fallback="").strip().splitlines()
-				license_str = ucstr(config.get("metadata", "license", fallback=""))
+				license_str = str(config.get("metadata", "license", fallback=""))
 				return {"classifiers": classifiers, "license": license_str}
 
 		if Path("pyproject.toml").exists():
@@ -298,18 +309,19 @@ class ProjectMetadata:
 		return {"classifiers": [], "license": UNKNOWN}
 
 	@staticmethod
-	def get_license() -> ucstr:
-		"""Extract license from project metadata.
+	def get_license() -> str:
+		"""
+		Extract license from project metadata.
 
-		:return ucstr: License string.
+		:return str: License string.
 		"""
 		metadata = ProjectMetadata.get_metadata()
 		license_str = from_classifiers(metadata.get("classifiers", []))
 
 		if license_str is not None:
-			return ucstr(license_str)
+			return str(license_str)
 
 		if isinstance(metadata.get("license"), dict):
-			return ucstr(metadata["license"].get("text", UNKNOWN))
+			return str(metadata["license"].get("text", UNKNOWN))
 
-		return ucstr(metadata.get("license", UNKNOWN))
+		return str(metadata.get("license", UNKNOWN))

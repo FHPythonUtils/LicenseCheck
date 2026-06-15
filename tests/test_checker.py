@@ -5,8 +5,9 @@ from unittest.mock import MagicMock
 import pytest
 
 from licensecheck.checker import check
+from licensecheck.models.license import License
+from licensecheck.models.packageinfo import PackageInfo
 from licensecheck.packageinfo import PackageInfoManager
-from licensecheck.types import License, PackageInfo, ucstr
 
 
 @pytest.fixture
@@ -37,8 +38,8 @@ def test_check(
 ) -> None:
 	"""Parametrized test for different license check scenarios."""
 	mock_packages = {
-		PackageInfo(name="PACKAGE_A", license=ucstr("MIT"), licenseCompat=True),
-		PackageInfo(name="PACKAGE_B", license=ucstr("GPL-3.0"), licenseCompat=False),
+		PackageInfo(name="PACKAGE_A", license="MIT", licenseCompat=True),
+		PackageInfo(name="PACKAGE_B", license="GPL-3.0", licenseCompat=False),
 	}
 	mock_package_info_manager.getPackages.return_value = mock_packages
 	mock_package_info_manager.base_pypi_url = "https://pypi.org"

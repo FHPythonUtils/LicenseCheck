@@ -1,4 +1,5 @@
-"""Define a foss compatability license_matrix.
+"""
+Define a foss compatability license_matrix.
 
 Standard disclaimer:: I am not a lawyer and there is no guarantee that the
 information provided here is complete or correct. Do not take this as legal
@@ -43,8 +44,8 @@ from pathlib import Path
 
 from loguru import logger
 
-from licensecheck.types import JOINS, License, ucstr
-from licensecheck.types import License as L
+from licensecheck.models.constants import JOINS
+from licensecheck.models.license import License as L
 
 THISDIR = Path(__file__).resolve().parent
 
@@ -99,7 +100,7 @@ termToLicenseData = {
 	"PROPRIETARY": L.PROPRIETARY,
 }
 
-termToLicense: dict[str, License] = dict(
+termToLicense: dict[str, L] = dict(
 	sorted(
 		termToLicenseData.items(),
 		key=lambda item: len(item[0]),
@@ -108,13 +109,15 @@ termToLicense: dict[str, License] = dict(
 )
 
 
-def licenseLookup(licenseStr: ucstr, ignoreLicenses: set[ucstr] | None = None) -> L:
-	"""Identify a license from an uppercase string representation of a license.
+def licenseLookup(licenseStr: str, ignoreLicenses: set[str] | None = None) -> L:
+	"""
+	Identify a license from an uppercase string representation of a license.
 
-	:param ucstr licenseStr: uppercase string representation of a license
-	:param set[ucstr] | None ignoreLicenses: licenses to ignore, defaults to None
+	:param str licenseStr: uppercase string representation of a license
+	:param set[str] | None ignoreLicenses: licenses to ignore, defaults to None
 	:return L: License represented by licenseStr
 	"""
+	licenseStr = licenseStr.upper()
 	if len(licenseStr or "") < 1:
 		return L.NO_LICENSE
 
@@ -127,19 +130,20 @@ def licenseLookup(licenseStr: ucstr, ignoreLicenses: set[ucstr] | None = None) -
 	return L.UNKNOWN
 
 
-def _lst_licenseType(lice: ucstr, ignoreLicenses: set[ucstr] | None = None) -> list[L]:
+def _lst_licenseType(lice: str, ignoreLicenses: set[str] | None = None) -> list[L]:
 	if len(lice or "") < 1:
 		return [L.NO_LICENSE]
-	return [licenseLookup(ucstr(x), ignoreLicenses) for x in lice.split(JOINS)]
+	return [licenseLookup(str(x), ignoreLicenses) for x in lice.split(JOINS)]
 
 
-def licenseType(lice: ucstr, ignoreLicenses: set[ucstr] | None = None) -> set[L]:
-	"""Return a set of license types from a license string.
+def licenseType(lice: str, ignoreLicenses: set[str] | None = None) -> set[L]:
+	"""
+	Return a set of license types from a license string.
 
 	Args:
 	----
-		lice (ucstr): license name
-		ignoreLicenses (set[ucstr]): a set of licenses to ignore (skipped, compat may still be
+		lice (str): license name
+		ignoreLicenses (set[str]): a set of licenses to ignore (skipped, compat may still be
 		False)
 
 	Returns:
@@ -157,7 +161,8 @@ def depCompatWMyLice(
 	failLicenses: set[L] | None = None,
 	onlyLicenses: set[L] | None = None,
 ) -> bool:
-	"""Identify if the end user license is compatible with the dependency license(s).
+	"""
+	Identify if the end user license is compatible with the dependency license(s).
 
 	Args:
 	----
@@ -172,7 +177,6 @@ def depCompatWMyLice(
 		bool: True if compatible, otherwise False
 
 	"""
-
 	# Protect against None
 	failLicenses = failLicenses or set()
 	ignoreLicenses = ignoreLicenses or set()
@@ -197,7 +201,8 @@ def liceCompat(
 	failLicenses: set[L],
 	onlyLicenses: set[L],
 ) -> bool:
-	"""Identify if the end user license is compatible with the dependency license.
+	"""
+	Identify if the end user license is compatible with the dependency license.
 
 	:param L myLicense: end user license
 	:param L lice: dependency license
