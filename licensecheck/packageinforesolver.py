@@ -5,10 +5,10 @@ from __future__ import annotations
 import configparser
 import contextlib
 import re
-from collections.abc import Iterable
 from concurrent.futures import ThreadPoolExecutor
 from email.message import Message
 from importlib import metadata
+from importlib.metadata._meta import PackageMetadata
 from pathlib import Path
 from typing import Any
 
@@ -22,9 +22,11 @@ from packaging.utils import canonicalize_name
 
 from licensecheck.models.constants import JOINS, UNKNOWN
 from licensecheck.models.packageinfo import PackageInfo
+from licensecheck.models.pypijson import ProjectResponse
 from licensecheck.session import session
 
 RAW_JOINS = " AND "
+HTTP_OK = 200
 
 
 class PackageInfoManager:
@@ -70,7 +72,7 @@ class PackageInfoManager:
 
 	def _get_package_info(self, package: Requirement) -> PackageInfo:
 		"""
-		Retrieve package information, preferring local data.
+		Retrieve package information, preferring local info.
 
 		:param Requirement package: package info to unpack
 		:return PackageInfo: Information about the package.
@@ -82,14 +84,14 @@ class PackageInfoManager:
 		except AttributeError:
 			pass
 
-		# current version of depgather does not c14n names on its output
 		package.name = canonicalize_name(package.name)
+
 		base_pkg_info: PackageInfo = PackageInfo(
 			name=package.name, version=versions.pop(), errorCode=1
 		)
 
 		lpi = LocalPackageInfo(package=base_pkg_info)
-		rpi = RemotePackageInfo(pypi_api=self.base_pypi_url + "/pypi", package=base_pkg_info)
+		rpi = RemotePackageInfo(pypi_api=self.base_pypi_url, package=base_pkg_info)
 
 		pkg_info = PackageInfo(
 			name=package.name,
@@ -98,10 +100,8 @@ class PackageInfoManager:
 			homePage=lpi.get_homePage() or rpi.get_homePage(),
 			author=lpi.get_author() or rpi.get_author(),
 			license=str(lpi.get_license() or rpi.get_license()),
+			errorCode=rpi.http_code if rpi.http_code != HTTP_OK else 0,
 		)
-
-		if rpi.error_state:
-			pkg_info.errorCode = 1
 
 		if pkg_info.license:
 			licensing = Licensing()
@@ -123,31 +123,30 @@ class LocalPackageInfo:
 	"""Handles retrieval of package info from local installation."""
 
 	def __init__(self, package: PackageInfo) -> None:
-		self.package = package
-		try:
+		self.package: PackageInfo = package
+		# email message appears to mostly conform to the protocol
+		self.meta: PackageMetadata = Message()
+		with contextlib.suppress(metadata.PackageNotFoundError):
 			self.meta = metadata.metadata(package.name)
-		except metadata.PackageNotFoundError:
-			# In the event of an error create an empty dict like object
-			self.meta = Message()
 
 	def get_license(self) -> str | None:
 		return (
-			meta_get(self.meta, "License_Expression")
+			self.meta.get("License_Expression")
 			or from_classifiers(self.meta.get_all("Classifier"))
-			or meta_get(self.meta, "License")
+			or self.meta.get("License")
 		)
 
 	def get_name(self) -> str | None:
-		return meta_get(self.meta, "Name")
+		return self.meta.get("Name")
 
 	def get_version(self) -> str | None:
-		return meta_get(self.meta, "Version")
+		return self.meta.get("Version")
 
 	def get_homePage(self) -> str | None:
-		return meta_get(self.meta, "Home-page")
+		return self.meta.get("Home-page")
 
 	def get_author(self) -> str | None:
-		return meta_get(self.meta, "Author")
+		return self.meta.get("Author")
 
 	def get_size(self) -> int | None:
 		"""
@@ -167,96 +166,67 @@ class RemotePackageInfo:
 	"""Handles retrieval of package info from PyPI."""
 
 	def __init__(self, pypi_api: str, package: PackageInfo) -> None:
-		self.pypi_api = pypi_api
+		self.pypi_api_pypi = pypi_api + "/pypi"
+		self.pypi_api_integrity = pypi_api + "/integrity"
 		self.package = package
-		self.raw_data: dict[str, Any] = None  # type: ignore # Becuase we lateinit this
-		self.error_state = None
+		self.http_code: int = 0
+		self.resp: ProjectResponse = None
 
-	def poke_pypi(self) -> None:
-		if self.raw_data is None:
-			# Attempt to get versioned data first
-			data = (
-				self.make_req(
-					url=f"{self.pypi_api}/{self.package.name}/{self.package.version}/json"
-				)
-				if self.package.version
-				else None
+	def lazy_fetch(self) -> None:
+		if self.resp is None:
+			# Attempt to get versioned info first
+			rc, raw_resp = self.make_req(
+				url=f"{self.pypi_api_pypi}{self.package.name}/{self.package.version}/json"
 			)
 			# Otherwise just get the latest
-			if not data:
-				data = self.make_req(url=f"{self.pypi_api}/{self.package.name}/json")
-			self.raw_data = data
+			if rc != HTTP_OK:
+				rc, raw_resp = self.make_req(url=f"{self.pypi_api_pypi}/{self.package.name}/json")
 
-	def make_req(self, url: str) -> dict[str, Any]:
+			self.http_code = rc
+			self.resp = ProjectResponse.model_validate(raw_resp)
+
+	def make_req(
+		self, url: str, headers: dict[str, str] | None = None
+	) -> tuple[int, dict[str, Any]]:
+		headers = headers or {}
 		try:
-			response = session.get(url, timeout=60)
+			r = session.get(url, headers=headers, timeout=60)
 
-			if response.status_code != 200:
-				self.error_state = f"{response.status_code} when contacting {url}"
-				return {}
-
-			return response.json().get("info", {})
+			return r.status_code, r.json()
 		except requests.exceptions.JSONDecodeError:
-			self.error_state = f"Unable to decode package info from {url}"
-			return {}
+			return -1, {}
 		except requests.exceptions.RequestException:
-			self.error_state = f"Some exception when contacting {url}"
-			return {}
+			return -2, {}
 
-	def get_license(self) -> str | None:
-		self.poke_pypi()
+	def get_name(self) -> str:
+		self.lazy_fetch()
+		return self.resp.info.name
+
+	def get_version(self) -> str:
+		self.lazy_fetch()
+		return self.resp.info.version
+
+	def get_homePage(self) -> str:
+		self.lazy_fetch()
+		return self.resp.info.home_page
+
+	def get_author(self) -> str:
+		self.lazy_fetch()
+		author_email = self.resp.info.author_email or ""
+		return self.resp.info.author or author_email.split("<")[0].strip()
+
+	def get_license(self) -> str:
+		self.lazy_fetch()
 		return (
-			meta_get(self.raw_data, "license_expression")
-			or from_classifiers(self.raw_data.get("classifiers", []))
-			or meta_get(self.raw_data, "license")
+			self.resp.info.license_expression
+			or from_classifiers(self.resp.info.classifiers)
+			or self.resp.info.license
 		)
 
-	def get_name(self) -> str | None:
-		self.poke_pypi()
-		return meta_get(self.raw_data, "name")
-
-	def get_version(self) -> str | None:
-		self.poke_pypi()
-		return meta_get(self.raw_data, "version")
-
-	def get_homePage(self) -> str | None:
-		self.poke_pypi()
-		return meta_get(self.raw_data, "home_page")
-
-	def get_author(self) -> str | None:
-		self.poke_pypi()
-		author = meta_get(self.raw_data, "author")
-		author_email = meta_get(self.raw_data, "author_email") or ""
-
-		return author or author_email.split("<")[0].strip()
-
 	def get_size(self) -> int | None:
-		"""
-		Retrieve package size from PyPI metadata.
-
-		:param dict[str, Any] data: PyPI response JSON.
-
-		:return int: Package size in bytes.
-		"""
-		self.poke_pypi()
-		if self.raw_data is None:
-			return None
-		urls = self.raw_data.get("urls", [])
-		return int(urls[-1]["size"]) if len(urls) > 0 else None
-
-
-def meta_get(meta: Message | dict[str, Any], key: str) -> str | None:
-	"""
-	Retrieve metadata value safely.
-
-	:param Message | dict[str, Any] self.meta: Metadata source.
-	:param str key: Metadata key.
-	:return str: Retrieved metadata value.
-	"""
-	value = meta.get(key)
-	if isinstance(value, Iterable) and not isinstance(value, str):
-		return RAW_JOINS.join(str(x) for x in value)
-	return str(value) if value else None
+		self.lazy_fetch()
+		urls = self.resp.urls
+		return urls[-1].size if len(urls) > 0 else None
 
 
 def from_classifiers(classifiers: list[str] | None) -> str | None:

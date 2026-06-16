@@ -1,18 +1,16 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any
 
 import pytest
 
 from licensecheck.models.constants import UNKNOWN
 from licensecheck.models.packageinfo import PackageInfo
-from licensecheck.packageinfo import (
+from licensecheck.packageinforesolver import (
 	LocalPackageInfo,
 	PackageInfoManager,
 	RemotePackageInfo,
 	from_classifiers,
-	meta_get,
 )
 
 THISDIR = str(Path(__file__).resolve().parent)
@@ -31,7 +29,7 @@ def local_package_info() -> LocalPackageInfo:
 
 @pytest.fixture
 def remote_package_info() -> RemotePackageInfo:
-	return RemotePackageInfo("https://pypi.org/pypi/", requests_package)
+	return RemotePackageInfo("https://pypi.org/", requests_package)
 
 
 def aux_packageinfo(package_name: str) -> PackageInfo:
@@ -83,7 +81,7 @@ def test_getPackagesNotFound(package_info_manager: PackageInfoManager) -> None:
 	package = packages.pop()
 
 	assert package.name == "this-package-does-not-exist"
-	assert package.errorCode == 1
+	assert package.errorCode == 404
 
 
 def test_from_classifiers() -> None:
@@ -102,21 +100,3 @@ def test_licenseFromEmptyClassifierlist() -> None:
 def test_getModuleSize() -> None:
 	local_package_info = LocalPackageInfo(aux_packageinfo("this_package_does_not_exist"))
 	local_package_info.get_size()
-
-
-# Define test cases
-@pytest.mark.parametrize(
-	("pkg_metadata", "key", "expected"),
-	[
-		({"name": "Package Name", "version": "1.0"}, "name", "Package Name"),
-		({"name": ["Package Name"], "version": "1.0"}, "name", "Package Name"),
-		({"name": [1], "version": "1.0"}, "name", "1"),
-		({"name": 1, "version": "1.0"}, "name", "1"),
-		({"name": None, "version": "1.0"}, "name", None),
-		({"name": ["Package", "Name"], "version": "1.0"}, "name", "Package AND Name"),
-		({}, "name", None),
-		({"name": "Package Name", "version": "1.0"}, "description", None),
-	],
-)
-def test_get_metadata(pkg_metadata: dict[str, Any], key: str, expected: str) -> None:
-	assert meta_get(pkg_metadata, key) == expected

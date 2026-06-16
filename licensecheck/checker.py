@@ -8,7 +8,7 @@ from licensecheck import license_matrix
 from licensecheck.models.constants import JOINS
 from licensecheck.models.license import License
 from licensecheck.models.packageinfo import PackageInfo
-from licensecheck.packageinfo import PackageInfoManager
+from licensecheck.packageinforesolver import PackageInfoManager
 
 
 def check(

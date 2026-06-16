@@ -7,7 +7,7 @@ import pytest
 from licensecheck.checker import check
 from licensecheck.models.license import License
 from licensecheck.models.packageinfo import PackageInfo
-from licensecheck.packageinfo import PackageInfoManager
+from licensecheck.packageinforesolver import PackageInfoManager
 
 
 @pytest.fixture

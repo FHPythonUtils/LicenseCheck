@@ -11,10 +11,11 @@ from sys import stdin, stdout
 from configurator import Config
 from configurator.node import ConfigNode
 
-from licensecheck import checker, license_matrix, packageinfo
+from licensecheck import checker, license_matrix
 from licensecheck.io import fmt
 from licensecheck.models.config import LC_Config
 from licensecheck.models.packageinfo import PackageInfo
+from licensecheck.packageinforesolver import PackageInfoManager, ProjectMetadata
 
 stdout.reconfigure(encoding="utf-8")  # type: ignore[general-type-issues]
 
@@ -117,15 +118,12 @@ def cli() -> None:  # pragma: no cover
 
 	config: ConfigNode = Config()
 
-	# (Parses in the following order: `pyproject.toml`,
-	# `setup.cfg`, `licensecheck.toml`, `licensecheck.json`,
-	# `licensecheck.ini`, `~/licensecheck.toml`, `~/licensecheck.json`, `~/licensecheck.ini`)
+	# (Parses in the following order:
 	config_files = [
 		"~/licensecheck.json",
 		"~/licensecheck.toml",
 		"licensecheck.json",
 		"licensecheck.toml",
-		"setup.cfg",
 		"pyproject.toml",
 	]
 
@@ -133,7 +131,7 @@ def cli() -> None:  # pragma: no cover
 		config += Config.from_path(file, optional=True)
 
 	scopedData: ConfigNode = config.get("tool", {}).get("licensecheck", ConfigNode())
-	licensecheckConf: LC_Config = LC_Config.from_mapping(**{**scopedData.data, **args})
+	licensecheckConf: LC_Config = LC_Config.model_validate({**scopedData.data, **args})
 
 	ec = main(licensecheckConf)
 	stdin_path.unlink(missing_ok=True)
@@ -149,17 +147,15 @@ def main(licensecheckConf: LC_Config) -> int:
 	requirements_paths = licensecheckConf.requirements_paths or {"__stdin__"}
 	output_file = (
 		stdout
-		if licensecheckConf.file in [None, ""]
+		if licensecheckConf.file == ""
 		else Path(licensecheckConf.file or "").open("w", encoding="utf-8")
 	)
 
 	# Get my license
-	this_license_text = licensecheckConf.license or packageinfo.ProjectMetadata.get_license()
+	this_license_text = licensecheckConf.license or ProjectMetadata.get_license()
 	this_license = license_matrix.licenseType(this_license_text).pop()
 
-	package_info_manager = packageinfo.PackageInfoManager(
-		licensecheckConf.pypi_api or "https://pypi.org"
-	)
+	package_info_manager = PackageInfoManager(licensecheckConf.pypi_api or "https://pypi.org")
 
 	incompatible, depsWithLicenses = checker.check(
 		requirements_paths=set(requirements_paths),
@@ -206,6 +202,6 @@ def main(licensecheckConf: LC_Config) -> int:
 		exitCode = 1
 
 	# Cleanup + exit
-	if licensecheckConf.file not in [None, ""]:
+	if licensecheckConf.file != "":
 		output_file.close()
 	return exitCode

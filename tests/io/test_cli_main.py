@@ -1,3 +1,6 @@
+from pathlib import Path
+from typing import Any, Literal
+
 import pytest
 
 from licensecheck.io.cli import main
@@ -42,7 +45,7 @@ def test_main_success(
 
 	monkeypatch.setattr(
 		"licensecheck.io.cli.fmt.fmt",
-		lambda *args, **kwargs: "output",
+		lambda *_args, **_kwargs: "output",
 	)
 
 	assert main(config) == 0
@@ -79,6 +82,7 @@ def test_main_invalid_format(
 def test_main_exit_code_zero_mode(
 	config: LC_Config,
 	monkeypatch,
+	*,
 	zero: bool,
 	incompatible: bool,
 	expected: int,
@@ -97,7 +101,7 @@ def test_main_exit_code_zero_mode(
 
 	monkeypatch.setattr(
 		"licensecheck.io.cli.fmt.fmt",
-		lambda *args, **kwargs: "",
+		lambda *_args, **_kwargs: "",
 	)
 
 	assert main(config) == expected
@@ -148,7 +152,7 @@ def test_main_valid_hidden_parameters(
 
 	monkeypatch.setattr(
 		"licensecheck.io.cli.fmt.fmt",
-		lambda *args, **kwargs: "",
+		lambda *_args, **_kwargs: "",
 	)
 
 	assert main(config) == 0
@@ -160,7 +164,7 @@ def test_main_passes_args_to_checker(
 ) -> None:
 	called = {}
 
-	def fake_check(**kwargs):
+	def fake_check(**kwargs: dict[str, Any]) -> tuple[Literal[False], list[Any]]:
 		called.update(kwargs)
 		return False, []
 
@@ -176,7 +180,7 @@ def test_main_passes_args_to_checker(
 
 	monkeypatch.setattr(
 		"licensecheck.io.cli.fmt.fmt",
-		lambda *args, **kwargs: "",
+		lambda *_args, **_kwargs: "",
 	)
 
 	main(config)
@@ -189,7 +193,7 @@ def test_main_passes_args_to_checker(
 def test_main_closes_output_file(
 	config: LC_Config,
 	monkeypatch,
-	tmp_path,
+	tmp_path: Path,
 ) -> None:
 	output = tmp_path / "out.txt"
 
@@ -207,7 +211,7 @@ def test_main_closes_output_file(
 
 	monkeypatch.setattr(
 		"licensecheck.io.cli.fmt.fmt",
-		lambda *args, **kwargs: "hello",
+		lambda *_args, **_kwargs: "hello",
 	)
 
 	assert main(config) == 0
