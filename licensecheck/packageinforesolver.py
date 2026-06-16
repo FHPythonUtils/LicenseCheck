@@ -130,13 +130,14 @@ class LocalPackageInfo:
 	def __init__(self, package: PackageInfo) -> None:
 		self.package: PackageInfo = package
 		# email message appears to mostly conform to the protocol
+		# https://packaging.python.org/en/latest/specifications/core-metadata/#core-metadata
 		self.meta: PackageMetadata = Message()
 		with contextlib.suppress(metadata.PackageNotFoundError):
 			self.meta = metadata.metadata(package.name)
 
 	def get_license(self) -> str | None:
 		return (
-			self.meta.get("License_Expression")
+			self.meta.get("License-Expression")
 			or from_classifiers(self.meta.get_all("Classifier"))
 			or self.meta.get("License")
 		)
