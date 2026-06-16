@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from boolean.boolean import Expression
 import configparser
 import contextlib
 import re
@@ -16,6 +15,7 @@ from typing import Any
 import license_expression
 import requests
 import tomli
+from boolean.boolean import Expression
 from depgather.parse import gather
 from license_expression import Licensing
 from packaging.requirements import Requirement
@@ -115,14 +115,13 @@ def normalize_license(lice: str) -> str:
 	licensing = Licensing()
 	parsed = None
 	with contextlib.suppress(license_expression.ExpressionParseError):
-		parsed = licensing.parse(
-			re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", lice.splitlines()[0])
-		)
+		parsed = licensing.parse(re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", lice.splitlines()[0]))
 	if parsed is None:
 		return lice
 
 	tokens: list[Expression] = sorted(parsed.literals)
 	return str(JOINS.join(getattr(x, "key", str(x)) for x in tokens))
+
 
 class LocalPackageInfo:
 	"""Handles retrieval of package info from local installation."""

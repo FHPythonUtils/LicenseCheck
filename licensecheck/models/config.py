@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import field
+from typing import Any, Literal
 
-from licensecheck.models.defaultonnone import DefaultOnNoneModel
+from pydantic import field_validator
+
 from licensecheck.io.fmt import FMT
+from licensecheck.models.defaultonnone import DefaultOnNoneModel
+
 
 class LC_Config(DefaultOnNoneModel):
 	"""LC_Config type."""
@@ -25,3 +29,10 @@ class LC_Config(DefaultOnNoneModel):
 	only_licenses: set[str] = field(default_factory=set)
 	skip_dependencies: set[str] = field(default_factory=set)
 	hide_output_parameters: set[str] = field(default_factory=set)
+
+	@field_validator("format", mode="before")
+	@classmethod
+	def normalize_format(cls, value: Any) -> Any | Literal[FMT.simple]:
+		if value not in FMT:
+			return FMT.simple
+		return value

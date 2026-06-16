@@ -40,10 +40,10 @@ to show only packages that are not compatible with out license via the
 from __future__ import annotations
 
 import csv
-from enum import StrEnum, auto
 import json
 import re
 from collections import OrderedDict
+from enum import StrEnum, auto
 from importlib.metadata import PackageNotFoundError, version
 from io import StringIO
 from pathlib import Path
@@ -334,6 +334,7 @@ class FMT(StrEnum):
 	csv = auto()
 	ansi = auto()
 	simple = auto()
+
 
 formatMap = {
 	FMT.json: raw,

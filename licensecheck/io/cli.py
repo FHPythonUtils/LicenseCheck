@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 from dataclasses import fields
+from enum import Enum
 from pathlib import Path
 from sys import exit as sysexit
 from sys import stdin, stdout
@@ -18,6 +19,12 @@ from licensecheck.models.packageinfo import PackageInfo
 from licensecheck.packageinforesolver import PackageInfoManager, ProjectMetadata
 
 stdout.reconfigure(encoding="utf-8")  # type: ignore[general-type-issues]
+
+
+class ExitCode(Enum):
+	SUCCESS = 0
+	INCOMPATIBLE_LICENSE = 1
+	NO_PACKAGES = 3
 
 
 def cli() -> None:  # pragma: no cover
@@ -84,7 +91,7 @@ def cli() -> None:  # pragma: no cover
 	)
 	parser.add_argument(
 		"--skip-dependencies",
-		help="set of packages/dependencies to skip (this sets the 'compatibility' to True)",
+		help="set of packages/dependencies to skip resolving",
 		nargs="+",
 	)
 	parser.add_argument(
@@ -108,9 +115,6 @@ def cli() -> None:  # pragma: no cover
 		action="store_true",
 	)
 	args = vars(parser.parse_args())
-
-	if args.get("format", "simple") not in fmt.FMT:
-		args["format"] = "simple"
 
 	stdin_path = Path("__stdin__")
 	if not args.get("requirements_paths"):
@@ -139,12 +143,12 @@ def cli() -> None:  # pragma: no cover
 	ec = main(licensecheckConf)
 	stdin_path.unlink(missing_ok=True)
 
-	sysexit(ec)
+	sysexit(ec.value)
 
 
-def main(licensecheckConf: LC_Config) -> int:
+def main(licensecheckConf: LC_Config) -> ExitCode:
 	"""Test entry point."""
-	exitCode = 0
+	exitCode = ExitCode.SUCCESS
 
 	# File
 	requirements_paths = licensecheckConf.requirements_paths or {"__stdin__"}
@@ -185,23 +189,23 @@ def main(licensecheckConf: LC_Config) -> int:
 		)
 		raise ValueError(msg)
 
-	if licensecheckConf.format in fmt.FMT:
-		print(
-			fmt.fmt(
-				licensecheckConf.format,
-				this_license,
-				sorted(depsWithLicenses),
-				hide_output_parameters,
-				show_only_failing=licensecheckConf.show_only_failing,
-			),
-			file=output_file,
-		)
-	else:
-		exitCode = 2
+	print(
+		fmt.fmt(
+			licensecheckConf.format,
+			this_license,
+			sorted(depsWithLicenses),
+			hide_output_parameters,
+			show_only_failing=licensecheckConf.show_only_failing,
+		),
+		file=output_file,
+	)
 
 	# Exit code of 1 if args.zero
-	if licensecheckConf.zero and incompatible:
-		exitCode = 1
+	if licensecheckConf.zero:
+		if len(depsWithLicenses) == 0:
+			exitCode = ExitCode.NO_PACKAGES
+		if incompatible:
+			exitCode = ExitCode.INCOMPATIBLE_LICENSE
 
 	# Cleanup + exit
 	if licensecheckConf.file != "":

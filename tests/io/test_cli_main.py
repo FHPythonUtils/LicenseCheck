@@ -3,7 +3,7 @@ from typing import Any, Literal
 
 import pytest
 
-from licensecheck.io.cli import main
+from licensecheck.io.cli import ExitCode, main
 from licensecheck.models.config import LC_Config
 
 
@@ -29,6 +29,28 @@ def config() -> LC_Config:
 	)
 
 
+@pytest.fixture
+def config_invalid_fmt() -> LC_Config:
+	return LC_Config(
+		requirements_paths={"requirements.txt"},
+		file=None,
+		license="MIT",
+		pypi_api=None,
+		groups=set(),
+		extras=set(),
+		ignore_packages=set(),
+		fail_packages=set(),
+		ignore_licenses=set(),
+		fail_licenses=set(),
+		only_licenses=set(),
+		skip_dependencies=set(),
+		hide_output_parameters=set(),
+		format="invalid_format",
+		show_only_failing=False,
+		zero=False,
+	)
+
+
 def test_main_success(
 	config: LC_Config,
 	monkeypatch,
@@ -48,14 +70,13 @@ def test_main_success(
 		lambda *_args, **_kwargs: "output",
 	)
 
-	assert main(config) == 0
+	assert main(config) == ExitCode.SUCCESS
 
 
 def test_main_invalid_format(
-	config: LC_Config,
+	config_invalid_fmt: LC_Config,
 	monkeypatch,
 ) -> None:
-	config.format = "does-not-exist"
 
 	monkeypatch.setattr(
 		"licensecheck.io.cli.checker.check",
@@ -67,16 +88,16 @@ def test_main_invalid_format(
 		{},
 	)
 
-	assert main(config) == 2
+	assert main(config_invalid_fmt) == ExitCode.SUCCESS
 
 
 @pytest.mark.parametrize(
 	("zero", "incompatible", "expected"),
 	[
-		(False, False, 0),
-		(False, True, 0),
-		(True, False, 0),
-		(True, True, 1),
+		(False, False, ExitCode.SUCCESS),
+		(False, True, ExitCode.SUCCESS),
+		(True, False, ExitCode.NO_PACKAGES),
+		(True, True, ExitCode.INCOMPATIBLE_LICENSE),
 	],
 )
 def test_main_exit_code_zero_mode(
@@ -155,7 +176,7 @@ def test_main_valid_hidden_parameters(
 		lambda *_args, **_kwargs: "",
 	)
 
-	assert main(config) == 0
+	assert main(config) == ExitCode.SUCCESS
 
 
 def test_main_passes_args_to_checker(
@@ -214,5 +235,5 @@ def test_main_closes_output_file(
 		lambda *_args, **_kwargs: "hello",
 	)
 
-	assert main(config) == 0
+	assert main(config) == ExitCode.SUCCESS
 	assert output.read_text() == "hello\n"

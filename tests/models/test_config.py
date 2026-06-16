@@ -1,11 +1,11 @@
+import tomli
 
 from licensecheck.io.fmt import FMT
 from licensecheck.models.config import LC_Config
-import tomli
+
 
 def test_no_config() -> None:
 	LC_Config.model_validate({})
-
 
 
 def test_basic_config() -> None:
@@ -34,7 +34,6 @@ zero = false                  # Return non-zero exit code for incompatible licen
 	conf = LC_Config.model_validate(raw_conf["tool"]["licensecheck"])
 	assert conf.format == FMT.simple
 	assert conf.pypi_api == "https://pypi.org"
-
 
 
 def test_basic_config2() -> None:
