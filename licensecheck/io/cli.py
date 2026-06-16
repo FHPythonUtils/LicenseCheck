@@ -32,7 +32,7 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--format",
 		"-f",
-		help=f"Output format. one of: {', '.join(set(fmt.formatMap))}. default=simple",
+		help=f"Output format. one of: {', '.join(x.value for x in fmt.FMT)}. default=simple",
 	)
 	parser.add_argument(
 		"--requirements-paths",
@@ -84,7 +84,7 @@ def cli() -> None:  # pragma: no cover
 	)
 	parser.add_argument(
 		"--skip-dependencies",
-		help="set of packages/dependencies to skip (this sets the 'compatability' to True)",
+		help="set of packages/dependencies to skip (this sets the 'compatibility' to True)",
 		nargs="+",
 	)
 	parser.add_argument(
@@ -108,6 +108,9 @@ def cli() -> None:  # pragma: no cover
 		action="store_true",
 	)
 	args = vars(parser.parse_args())
+
+	if args.get("format", "simple") not in fmt.FMT:
+		args["format"] = "simple"
 
 	stdin_path = Path("__stdin__")
 	if not args.get("requirements_paths"):
@@ -182,11 +185,10 @@ def main(licensecheckConf: LC_Config) -> int:
 		)
 		raise ValueError(msg)
 
-	format_ = licensecheckConf.format or "simple"
-	if licensecheckConf.format in fmt.formatMap:
+	if licensecheckConf.format in fmt.FMT:
 		print(
 			fmt.fmt(
-				format_,
+				licensecheckConf.format,
 				this_license,
 				sorted(depsWithLicenses),
 				hide_output_parameters,

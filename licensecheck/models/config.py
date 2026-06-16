@@ -3,14 +3,14 @@ from __future__ import annotations
 from dataclasses import field
 
 from licensecheck.models.defaultonnone import DefaultOnNoneModel
-
+from licensecheck.io.fmt import FMT
 
 class LC_Config(DefaultOnNoneModel):
 	"""LC_Config type."""
 
 	file: str = ""
 	license: str = ""
-	format: str = ""
+	format: FMT = FMT.simple
 	pypi_api: str = ""
 	show_only_failing: bool = False
 	zero: bool = False

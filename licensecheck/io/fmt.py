@@ -40,6 +40,7 @@ to show only packages that are not compatible with out license via the
 from __future__ import annotations
 
 import csv
+from enum import StrEnum, auto
 import json
 import re
 from collections import OrderedDict
@@ -326,11 +327,19 @@ def fmt(
 	return formatMap.get(format_, plainText)(myLice, pkgs)
 
 
+class FMT(StrEnum):
+	json = auto()
+	markdown = auto()
+	html = auto()
+	csv = auto()
+	ansi = auto()
+	simple = auto()
+
 formatMap = {
-	"json": raw,
-	"markdown": markdown,
-	"html": html,
-	"csv": rawCsv,
-	"ansi": ansi,
-	"simple": plainText,
+	FMT.json: raw,
+	FMT.markdown: markdown,
+	FMT.html: html,
+	FMT.csv: rawCsv,
+	FMT.ansi: ansi,
+	FMT.simple: plainText,
 }
