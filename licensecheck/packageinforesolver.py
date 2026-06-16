@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from boolean.boolean import Expression
 import configparser
 import contextlib
 import re
@@ -103,21 +104,25 @@ class PackageInfoManager:
 			errorCode=rpi.http_code if rpi.http_code != HTTP_OK else 0,
 		)
 
+		# normailzing the license
 		if pkg_info.license:
-			licensing = Licensing()
-			parsed = None
-			with contextlib.suppress(license_expression.ExpressionParseError):
-				parsed = licensing.parse(
-					re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", pkg_info.license.splitlines()[0])
-				)
-			if parsed is None:
-				return pkg_info
-
-			tokens = sorted(parsed.literals)
-			pkg_info.license = str(JOINS.join(x.key for x in tokens))
+			pkg_info.license = normalize_license(pkg_info.license)
 
 		return pkg_info
 
+
+def normalize_license(lice: str) -> str:
+	licensing = Licensing()
+	parsed = None
+	with contextlib.suppress(license_expression.ExpressionParseError):
+		parsed = licensing.parse(
+			re.sub(r"[^a-zA-Z0-9_.:\- ]", "_", lice.splitlines()[0])
+		)
+	if parsed is None:
+		return lice
+
+	tokens: list[Expression] = sorted(parsed.literals)
+	return str(JOINS.join(getattr(x, "key", str(x)) for x in tokens))
 
 class LocalPackageInfo:
 	"""Handles retrieval of package info from local installation."""

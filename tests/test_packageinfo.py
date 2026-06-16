@@ -11,6 +11,7 @@ from licensecheck.packageinforesolver import (
 	PackageInfoManager,
 	RemotePackageInfo,
 	from_classifiers,
+	normalize_license,
 )
 
 THISDIR = str(Path(__file__).resolve().parent)
@@ -100,3 +101,19 @@ def test_licenseFromEmptyClassifierlist() -> None:
 def test_getModuleSize() -> None:
 	local_package_info = LocalPackageInfo(aux_packageinfo("this_package_does_not_exist"))
 	local_package_info.get_size()
+
+
+@pytest.mark.parametrize(
+	("lice", "normalized"),
+	[
+		("mit", "mit"),
+		("BSD-2-Clause", "BSD-2-Clause"),
+		("BSD-2-Clause AND Apache-2.0", "Apache-2.0;; BSD-2-Clause"),
+		(
+			"BSD-2-Clause AND Apache-2.0 WITH LLVM-exception",
+			"Apache-2.0 WITH LLVM-exception;; BSD-2-Clause",
+		),
+	],
+)
+def test_normalize_license(lice: str, normalized: str) -> None:
+	assert normalize_license(lice) == normalized
