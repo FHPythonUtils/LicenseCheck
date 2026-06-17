@@ -16,6 +16,7 @@ import license_expression
 import requests
 import tomli
 from boolean.boolean import Expression
+from depgather.models.pypijson import ProjectResponse
 from depgather.parse import gather
 from license_expression import Licensing
 from packaging.requirements import Requirement
@@ -23,7 +24,6 @@ from packaging.utils import canonicalize_name
 
 from licensecheck.models.constants import JOINS, UNKNOWN
 from licensecheck.models.packageinfo import PackageInfo
-from licensecheck.models.pypijson import ProjectResponse
 from licensecheck.session import session
 
 RAW_JOINS = " AND "

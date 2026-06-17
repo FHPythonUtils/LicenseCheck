@@ -53,7 +53,7 @@ def config_invalid_fmt() -> LC_Config:
 
 def test_main_success(
 	config: LC_Config,
-	monkeypatch,
+	monkeypatch: pytest.MonkeyPatch,
 ) -> None:
 	monkeypatch.setattr(
 		"licensecheck.io.cli.checker.check",
@@ -75,7 +75,7 @@ def test_main_success(
 
 def test_main_invalid_format(
 	config_invalid_fmt: LC_Config,
-	monkeypatch,
+	monkeypatch: pytest.MonkeyPatch,
 ) -> None:
 
 	monkeypatch.setattr(
@@ -102,7 +102,7 @@ def test_main_invalid_format(
 )
 def test_main_exit_code_zero_mode(
 	config: LC_Config,
-	monkeypatch,
+	monkeypatch: pytest.MonkeyPatch,
 	*,
 	zero: bool,
 	incompatible: bool,
@@ -130,7 +130,7 @@ def test_main_exit_code_zero_mode(
 
 def test_main_invalid_hidden_parameter(
 	config: LC_Config,
-	monkeypatch,
+	monkeypatch: pytest.MonkeyPatch,
 ) -> None:
 	config.hide_output_parameters = {"NOT_A_FIELD"}
 
@@ -156,7 +156,7 @@ def test_main_invalid_hidden_parameter(
 )
 def test_main_valid_hidden_parameters(
 	config: LC_Config,
-	monkeypatch,
+	monkeypatch: pytest.MonkeyPatch,
 	hidden: list[str],
 ) -> None:
 	config.hide_output_parameters = hidden
@@ -181,7 +181,7 @@ def test_main_valid_hidden_parameters(
 
 def test_main_passes_args_to_checker(
 	config: LC_Config,
-	monkeypatch,
+	monkeypatch: pytest.MonkeyPatch,
 ) -> None:
 	called = {}
 
@@ -213,7 +213,7 @@ def test_main_passes_args_to_checker(
 
 def test_main_closes_output_file(
 	config: LC_Config,
-	monkeypatch,
+	monkeypatch: pytest.MonkeyPatch,
 	tmp_path: Path,
 ) -> None:
 	output = tmp_path / "out.txt"

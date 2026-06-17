@@ -3,10 +3,10 @@ from __future__ import annotations
 from dataclasses import field
 from typing import Any, Literal
 
+from depgather.models.defaultonnone import DefaultOnNoneModel
 from pydantic import field_validator
 
 from licensecheck.io.fmt import FMT
-from licensecheck.models.defaultonnone import DefaultOnNoneModel
 
 
 class LC_Config(DefaultOnNoneModel):
