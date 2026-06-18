@@ -4,4 +4,7 @@ from platformdirs import PlatformDirs
 dirs = PlatformDirs("licensecheck", "fredhappyface")
 
 
-session = requests_cache.CachedSession(dirs.user_cache_dir)
+session = requests_cache.CachedSession(
+	dirs.user_cache_dir,
+	busy_timeout=5000,
+)
