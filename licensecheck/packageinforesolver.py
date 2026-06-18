@@ -78,12 +78,14 @@ class PackageInfoManager:
 		:param Requirement package: package info to unpack
 		:return PackageInfo: Information about the package.
 		"""
-		versions = {None}
-		try:
-			requirement_specs = package.specifier._specs
-			versions = {x._spec[1] for x in requirement_specs}
-		except AttributeError:
-			pass
+		versions: set[str | None] = {None}
+		package.name = canonicalize_name(package.name)
+
+		specifier = getattr(package, "specifier", None)
+		if specifier is not None:
+			parsed_versions = {item.version for item in specifier}
+			if parsed_versions:
+				versions = parsed_versions
 
 		package.name = canonicalize_name(package.name)
 

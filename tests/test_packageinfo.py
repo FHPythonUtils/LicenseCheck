@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pytest
+from packaging.requirements import Requirement
 
 from licensecheck.models.constants import UNKNOWN
 from licensecheck.models.packageinfo import PackageInfo
@@ -117,3 +118,13 @@ def test_getModuleSize() -> None:
 )
 def test_normalize_license(lice: str, normalized: str) -> None:
 	assert normalize_license(lice) == normalized
+
+
+def test_unpinned_requirement_does_not_crash(package_info_manager: PackageInfoManager) -> None:
+	package_info_manager.reqs = {Requirement("sample")}
+
+	packages = package_info_manager.getPackages()
+	package: PackageInfo = packages.pop()
+
+	assert package.name == "sample"
+	assert package.errorCode == 0

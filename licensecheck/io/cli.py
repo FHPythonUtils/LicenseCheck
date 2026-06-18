@@ -121,7 +121,11 @@ def cli() -> None:  # pragma: no cover
 		if stdin.isatty():
 			args["requirements_paths"] = ["pyproject.toml"]
 		else:
-			stdin_path.write_text("\n".join(stdin.readlines()), encoding="utf-8")
+			lines = stdin.readlines()
+			if lines:
+				stdin_path.write_text("\n".join(lines), encoding="utf-8")
+			else:
+				args["requirements_paths"] = ["pyproject.toml"]
 
 	config: ConfigNode = Config()
 

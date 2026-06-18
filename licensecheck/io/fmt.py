@@ -302,7 +302,7 @@ def rawCsv(
 
 
 def fmt(
-	format_: str,
+	format_: FMT,
 	myLice: License,
 	packages: list[PackageInfo],
 	hide_parameters: set[str] | None = None,
