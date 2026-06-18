@@ -7,7 +7,7 @@ from dataclasses import fields
 from enum import Enum
 from pathlib import Path
 from sys import exit as sysexit
-from sys import stdin, stdout
+from sys import stdout
 
 from configurator import Config
 from configurator.node import ConfigNode
@@ -44,7 +44,7 @@ def cli() -> None:  # pragma: no cover
 	parser.add_argument(
 		"--requirements-paths",
 		"-r",
-		help="Filenames to read from (omit for stdin if piping, else pyproject.toml)",
+		help="Filenames to read from (default=pyproject.toml)",
 		nargs="+",
 	)
 	parser.add_argument(
@@ -116,16 +116,8 @@ def cli() -> None:  # pragma: no cover
 	)
 	args = vars(parser.parse_args())
 
-	stdin_path = Path("__stdin__")
 	if not args.get("requirements_paths"):
-		if stdin.isatty():
-			args["requirements_paths"] = ["pyproject.toml"]
-		else:
-			lines = stdin.readlines()
-			if lines:
-				stdin_path.write_text("\n".join(lines), encoding="utf-8")
-			else:
-				args["requirements_paths"] = ["pyproject.toml"]
+		args["requirements_paths"] = ["pyproject.toml"]
 
 	config: ConfigNode = Config()
 
@@ -145,7 +137,6 @@ def cli() -> None:  # pragma: no cover
 	licensecheckConf: LC_Config = LC_Config.model_validate({**scopedData.data, **args})
 
 	ec = main(licensecheckConf)
-	stdin_path.unlink(missing_ok=True)
 
 	sysexit(ec.value)
 
@@ -155,7 +146,7 @@ def main(licensecheckConf: LC_Config) -> ExitCode:
 	exitCode = ExitCode.SUCCESS
 
 	# File
-	requirements_paths = licensecheckConf.requirements_paths or {"__stdin__"}
+	requirements_paths = licensecheckConf.requirements_paths
 	output_file = (
 		stdout
 		if licensecheckConf.file == ""
