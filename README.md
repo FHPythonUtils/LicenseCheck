@@ -4,7 +4,7 @@
 [![Commit activity](https://img.shields.io/github/commit-activity/m/FHPythonUtils/LicenseCheck.svg?style=for-the-badge&cacheSeconds=28800)](../../commits/master)
 [![Last commit](https://img.shields.io/github/last-commit/FHPythonUtils/LicenseCheck.svg?style=for-the-badge&cacheSeconds=28800)](../../commits/master)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/licensecheck.svg?style=for-the-badge&cacheSeconds=28800)](https://pypistats.org/packages/licensecheck)
-[![PyPI Total Downloads](https://img.shields.io/badge/dynamic/json?style=for-the-badge&label=total%20downloads&query=%24.total_downloads&url=https%3A%2F%2Fapi%2Epepy%2Etech%2Fapi%2Fv2%2Fprojects%2Flicensecheck)](https://pepy.tech/project/licensecheck)
+[![PyPI Total Downloads](https://img.shields.io/pepy/dt/licensecheck?style=for-the-badge&label=Total%20Downloads&cacheSeconds=28800)](https://pepy.tech/project/licensecheck)
 [![PyPI Version](https://img.shields.io/pypi/v/licensecheck.svg?style=for-the-badge&cacheSeconds=28800)](https://pypi.org/project/licensecheck)
 
 <!-- omit in toc -->
