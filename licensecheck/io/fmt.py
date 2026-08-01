@@ -163,6 +163,9 @@ def ansi(
 		table.add_column("Package", style="magenta")
 	if license_bool := "license" in packages[0]:
 		table.add_column("License(s)", style="magenta")
+	license_source_bool = any("licenseSource" in package for package in packages)
+	if license_source_bool:
+		table.add_column("License Source", style="magenta")
 	licenseCompat = (
 		"[red]✖[/]",
 		"[green]✔[/]",
@@ -173,6 +176,7 @@ def ansi(
 				([licenseCompat[x.get("licenseCompat", 0)]] if licensecompat_bool else [])
 				+ ([x.get("name")] if name_bool else [])
 				+ ([x.get("license")] if license_bool else [])
+				+ ([x.get("licenseSource", "")] if license_source_bool else [])
 			)
 		)
 		for x in packages
@@ -227,6 +231,7 @@ def markdown(
 		"homePage": "HomePage",
 		"author": "Author",
 		"license": "License",
+		"licenseSource": "License Source",
 		"licenseCompat": "Compatible",
 		"size": "Size",
 	}
@@ -295,7 +300,8 @@ def rawCsv(
 
 	_ = myLice
 	string = StringIO()
-	writer = csv.DictWriter(string, fieldnames=list(packages[0]), lineterminator="\n")
+	fieldnames = list(dict.fromkeys(key for package in packages for key in package))
+	writer = csv.DictWriter(string, fieldnames=fieldnames, lineterminator="\n")
 	writer.writeheader()
 	writer.writerows(packages)
 	return string.getvalue()

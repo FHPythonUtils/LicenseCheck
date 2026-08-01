@@ -1,3 +1,4 @@
+import pytest
 import tomli
 
 from licensecheck.io.fmt import FMT
@@ -19,8 +20,10 @@ groups = []                   # List of selected groups
 extras = []                   # List of selected extras
 file = ""                     # Output file (leave empty for stdout)
 ignore_packages = []          # Packages/dependencies to ignore
+license_overrides = { "sample==1.2.3" = "MIT" } # Reviewed exact-version licenses
 fail_packages = []            # Packages/dependencies that cause failure
 ignore_licenses = []          # Licenses to ignore
+allowed_license_references = [] # Exact LicenseRef identifiers to accept
 fail_licenses = []            # Licenses that cause failure
 only_licenses = []            # Allowed licenses (all others will fail)
 skip_dependencies = []        # Dependencies to skip (compatibility = True)
@@ -34,6 +37,7 @@ zero = false                  # Return non-zero exit code for incompatible licen
 	conf = LC_Config.model_validate(raw_conf["tool"]["licensecheck"])
 	assert conf.format == FMT.simple
 	assert conf.pypi_api == "https://pypi.org"
+	assert conf.license_overrides == {"sample==1.2.3": "MIT"}
 
 
 def test_basic_config2() -> None:
@@ -44,6 +48,7 @@ license = "mit"               # Specify the project license explicitly
 ignore_packages = []          # Packages/dependencies to ignore
 fail_packages = []            # Packages/dependencies that cause failure
 ignore_licenses = []          # Licenses to ignore
+allowed_license_references = [] # Exact LicenseRef identifiers to accept
 fail_licenses = []            # Licenses that cause failure
 only_licenses = []            # Allowed licenses (all others will fail)
 skip_dependencies = []        # Dependencies to skip (compatibility = True)
@@ -56,3 +61,22 @@ zero = false                  # Return non-zero exit code for incompatible licen
 	conf = LC_Config.model_validate(raw_conf["tool"]["licensecheck"])
 	assert conf.format == FMT.simple
 	assert conf.pypi_api == ""
+
+
+@pytest.mark.parametrize(
+	"package",
+	[
+		"sample",
+		"sample>=1.2.3",
+		"sample==1.*",
+		"sample==1.2.3; python_version > '3.11'",
+	],
+)
+def test_license_overrides_require_exact_versions(package: str) -> None:
+	with pytest.raises(ValueError, match="exact name==version"):
+		LC_Config.model_validate({"license_overrides": {package: "MIT"}})
+
+
+def test_license_overrides_require_nonempty_licenses() -> None:
+	with pytest.raises(ValueError, match="must not be empty"):
+		LC_Config.model_validate({"license_overrides": {"sample==1.2.3": " "}})

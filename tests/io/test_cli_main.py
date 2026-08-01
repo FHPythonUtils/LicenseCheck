@@ -209,6 +209,7 @@ def test_main_passes_args_to_checker(
 	assert called["groups"] == config.groups
 	assert called["extras"] == config.extras
 	assert called["skip_dependencies"] == config.skip_dependencies
+	assert called["license_overrides"] == config.license_overrides
 
 
 def test_main_closes_output_file(

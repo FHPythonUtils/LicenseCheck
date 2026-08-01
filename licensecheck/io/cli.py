@@ -66,17 +66,28 @@ def cli() -> None:  # pragma: no cover
 	)
 	parser.add_argument(
 		"--ignore-packages",
-		help="set of packages/dependencies to ignore (compat=True), globs are supported",
+		help=(
+			"set of packages/dependencies to ignore (compat=True); names, "
+			"name==version, and globs are supported"
+		),
 		nargs="+",
 	)
 	parser.add_argument(
 		"--fail-packages",
-		help="set of packages/dependencies to fail (compat=False), globs are supported",
+		help=(
+			"set of packages/dependencies to fail (compat=False); names, "
+			"name==version, and globs are supported"
+		),
 		nargs="+",
 	)
 	parser.add_argument(
 		"--ignore-licenses",
 		help="set of licenses to ignore (skipped, compat may still be False)",
+		nargs="+",
+	)
+	parser.add_argument(
+		"--allowed-license-references",
+		help="set of exact LicenseRef-* identifiers to accept",
 		nargs="+",
 	)
 	parser.add_argument(
@@ -164,10 +175,13 @@ def main(licensecheckConf: LC_Config) -> ExitCode:
 		groups=licensecheckConf.groups,
 		extras=licensecheckConf.extras,
 		this_license=this_license,
+		this_license_text=this_license_text,
 		package_info_manager=package_info_manager,
 		ignore_packages=licensecheckConf.ignore_packages,
+		license_overrides=licensecheckConf.license_overrides,
 		fail_packages=licensecheckConf.fail_packages,
 		ignore_licenses=licensecheckConf.ignore_licenses,
+		allowed_license_references=licensecheckConf.allowed_license_references,
 		fail_licenses=licensecheckConf.fail_licenses,
 		only_licenses=licensecheckConf.only_licenses,
 		skip_dependencies=licensecheckConf.skip_dependencies,

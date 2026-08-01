@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from licensecheck.io import fmt
+from licensecheck.io.fmt import FMT
 from licensecheck.models.license import License
 from licensecheck.models.packageinfo import PackageInfo
 
@@ -88,3 +89,15 @@ def assert_eq(actual_input: str, expected_output: str) -> bool:
 		return False
 
 	return [x.strip() for x in actual] == [x.strip() for x in expected]
+
+
+def test_override_source_is_visible() -> None:
+	package = PackageInfo(
+		name="example",
+		version="1.0.0",
+		license="BSD-3-Clause",
+		licenseSource="configured override",
+		licenseCompat=True,
+	)
+
+	assert "configured override" in fmt.fmt(FMT.simple, myLice, [package])

@@ -91,9 +91,11 @@ uv run licensecheck  --only-licenses mit apache --show-only-failing -g dev
 ## Supported tools/ standards
 
 Licensecheck supports a broad range of different tools and workflows. Though please note that
-for some of these tools, behaviour may differ from what is expected. We use `uv` for the dependency
-resolution due to the good performance across projects, with a fallback to a native parser in case of
-an error, which will be logged
+for some of these tools, behaviour may differ from what is expected. For a `pyproject.toml` with an
+adjacent `uv.lock`, Licensecheck exports the locked dependency graph. Otherwise it uses `uv` to
+resolve dependencies. Resolution errors for a `pyproject.toml` are reported directly instead of
+falling back to a less accurate dependency graph. Editable local projects emitted by `uv` are
+audited using the project metadata from their own `pyproject.toml` files.
 
 Note that `uv` supports requirements.in files. If a pyproject.toml, setup.py, or setup.cfg file is
 provided, `uv` will extract the requirements for the relevant project. In testing this seems to have
@@ -158,19 +160,20 @@ classifiers = [
 Previous versions of the licensecheck tool implemented a custom resolver to discover packages.
 Current versions look to move away from this for a number of reasons, such as correctness and
 reducing the maintenance burden. Over time many contributors helped out with the custom
-resolver which is very much appreciated. Now, we use `uv` to attempt to resolve deps before
-falling back to the legacy approach, which is needed in certain cases where uv fails
+resolver which is very much appreciated. Now, we use `uv` to export an adjacent lockfile or resolve
+dependencies from the supplied project file. The legacy parser remains for formats that `uv pip
+compile` does not accept directly.
 
 Q: Why doesn't this use packages from my lockfile?
-A: The answer to this somewhat depends on what resolver licensecheck ends up using to
-find all of the packages in use by your project. Ideally, `uv` is used which has pretty
-good support for pyproject.toml and some other standard requirements formats and will discover
-packages. The legacy resolver is deprecated and may result in funky output in some cases
+A: When a `uv.lock` is adjacent to a supplied `pyproject.toml`, Licensecheck uses `uv export
+--locked` and audits those exact versions. Without an adjacent lockfile it resolves the supplied
+requirements with `uv`.
 
 Q: The license for my dep has changed in v >1.0, so I'm using v < 1.0, why doesn't licensecheck report the correct license version?
-A: In some cases it will, for example if licensecheck can find the dep metadata via importlib. Otherwise we reach out to pypi.org for this metadata. There are no plans at present to resolve this
-
-[note to me: I 'might' look at this as we should have a copy of the package version ]
+A: Licensecheck requests the exact resolved version from the PyPI JSON API. If the package is not
+available from public PyPI or that response lacks usable license metadata, it asks `uv` to fetch
+the exact wheel from the indexes configured for the current project and reads the wheel metadata.
+Index credentials and source selection remain `uv`'s responsibility.
 
 ## License lookup format
 

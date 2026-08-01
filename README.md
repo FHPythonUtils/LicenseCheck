@@ -147,7 +147,9 @@ uv run licensecheck  --only-licenses mit apache --show-only-failing -g dev
 usage: licensecheck [-h] [--license LICENSE] [--format FORMAT] [--requirements-paths REQUIREMENTS_PATHS [REQUIREMENTS_PATHS ...]]
                     [--groups GROUPS [GROUPS ...]] [--extras EXTRAS [EXTRAS ...]] [--file FILE]
                     [--ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]] [--fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]]
-                    [--ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]] [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]]
+                    [--ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]]
+                    [--allowed-license-references ALLOWED_LICENSE_REFERENCES [ALLOWED_LICENSE_REFERENCES ...]]
+                    [--fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]]
                     [--only-licenses ONLY_LICENSES [ONLY_LICENSES ...]]
                     [--skip-dependencies SKIP_DEPENDENCIES [SKIP_DEPENDENCIES ...]]
                     [--hide-output-parameters HIDE_OUTPUT_PARAMETERS [HIDE_OUTPUT_PARAMETERS ...]] [--show-only-failing]
@@ -169,11 +171,13 @@ options:
                         Select extras from supported files
   --file FILE, -o FILE  Filename to write output to (omit this for stdout)
   --ignore-packages IGNORE_PACKAGES [IGNORE_PACKAGES ...]
-                        List of packages/dependencies to ignore (compat=True), globs are supported
+                        List of packages/dependencies to ignore (compat=True); names, name==version, and globs are supported
   --fail-packages FAIL_PACKAGES [FAIL_PACKAGES ...]
-                        List of packages/dependencies to fail (compat=False), globs are supported
+                        List of packages/dependencies to fail (compat=False); names, name==version, and globs are supported
   --ignore-licenses IGNORE_LICENSES [IGNORE_LICENSES ...]
                         List of licenses to ignore (skipped, compat may still be False)
+  --allowed-license-references ALLOWED_LICENSE_REFERENCES [ALLOWED_LICENSE_REFERENCES ...]
+                        List of exact LicenseRef-* identifiers to accept
   --fail-licenses FAIL_LICENSES [FAIL_LICENSES ...]
                         List of licenses to fail (compat=False)
   --only-licenses ONLY_LICENSES [ONLY_LICENSES ...]
@@ -210,9 +214,11 @@ requirements_paths = []       # List of filenames to read from
 groups = []                   # List of selected groups
 extras = []                   # List of selected extras
 file = ""                     # Output file (leave empty for stdout)
-ignore_packages = []          # Packages/dependencies to ignore
-fail_packages = []            # Packages/dependencies that cause failure
+ignore_packages = []          # Names, name==version entries, or globs to ignore
+license_overrides = { "sample==1.2.3" = "BSD-3-Clause" } # Reviewed licenses for exact versions
+fail_packages = []            # Names, name==version entries, or globs that fail
 ignore_licenses = []          # Licenses to ignore
+allowed_license_references = [] # Exact LicenseRef identifiers to accept
 fail_licenses = []            # Licenses that cause failure
 only_licenses = []            # Allowed licenses (all others will fail)
 skip_dependencies = []        # Dependencies to skip (compatibility = True)
@@ -237,7 +243,9 @@ zero = false                  # Return non-zero exit code for incompatible licen
       "groups": [],
       "hide_output_parameters": [],
       "ignore_licenses": [],
+      "allowed_license_references": [],
       "ignore_packages": [],
+      "license_overrides": {"sample==1.2.3": "BSD-3-Clause"},
       "license": "mit",
       "only_licenses": [],
       "pypi_api": "https://pypi.org",

@@ -16,6 +16,7 @@ class PackageInfo:
 	homePage: str | None = None
 	author: str | None = None
 	license: str | None = None
+	licenseSource: str | None = field(default=None, compare=False, hash=False)
 	licenseCompat: bool = False
 	errorCode: int = 0
 
@@ -35,4 +36,5 @@ class PackageInfo:
 			k: (v if v is not None else UNKNOWN)
 			for k, v in self.__dict__.items()
 			if k.upper() not in hide_output_parameters_upper
+			and not (k == "licenseSource" and v is None)
 		}

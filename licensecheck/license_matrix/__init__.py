@@ -52,6 +52,12 @@ THISDIR = Path(__file__).resolve().parent
 with Path(THISDIR / "matrix.csv").open(mode="r", newline="", encoding="utf-8") as csv_file:
 	LICENSE_MATRIX: list[list[str]] = list[list[str]](csv.reader(csv_file))
 
+# Look the matrix up by license name because the csv column/row order does not match.
+LICENSE_MATRIX_ROWS: dict[str, list[str]] = {row[0]: row for row in LICENSE_MATRIX[1:]}
+LICENSE_MATRIX_COLUMNS: dict[str, int] = {
+	name: index for index, name in enumerate(LICENSE_MATRIX[0])
+}
+
 
 termToLicenseData = {
 	"UNKNOWN": L.UNKNOWN,
@@ -183,6 +189,9 @@ def depCompatWMyLice(
 	ignoreLicenses = ignoreLicenses or set()
 	onlyLicenses = onlyLicenses or set()
 
+	if depLice & failLicenses:
+		return False
+
 	return any(
 		liceCompat(
 			myLicense,
@@ -218,11 +227,11 @@ def liceCompat(
 		return True
 	if len(onlyLicenses) > 0 and (lice not in onlyLicenses):
 		return False
-	licenses = list(L)
-	row, col = licenses.index(myLicense) + 1, licenses.index(lice) + 1
+	if myLicense in {L.UNKNOWN, L.NO_LICENSE} or lice in {L.UNKNOWN, L.NO_LICENSE}:
+		return False
 
 	try:
-		return LICENSE_MATRIX[row][col] == "1"
-	except KeyError:
+		return LICENSE_MATRIX_ROWS[myLicense.name][LICENSE_MATRIX_COLUMNS[lice.name]] == "1"
+	except (IndexError, KeyError):
 		logger.warning(f"Licenses {myLicense} and {lice} cannot be compared")
 		return False
