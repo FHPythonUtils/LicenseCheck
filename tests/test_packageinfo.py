@@ -67,6 +67,28 @@ def test_getPackagePypiLocalNotFound() -> None:
 	assert pkg.get_size() is None
 
 
+def test_unpinned_remote_package_skips_versioned_request(
+	monkeypatch: pytest.MonkeyPatch,
+) -> None:
+	pkg = RemotePackageInfo("https://pypi.org", aux_packageinfo("sample"))
+	requested_urls: list[str] = []
+
+	def make_req(_self: RemotePackageInfo, url: str) -> tuple[int, dict[str, object]]:
+		requested_urls.append(url)
+		return 200, {}
+
+	class ProjectResponseStub:
+		@staticmethod
+		def model_validate(data: dict[str, object]) -> dict[str, object]:
+			return data
+
+	monkeypatch.setattr("licensecheck.packageinforesolver.RemotePackageInfo.make_req", make_req)
+	monkeypatch.setattr("licensecheck.packageinforesolver.ProjectResponse", ProjectResponseStub)
+	pkg.lazy_fetch()
+
+	assert requested_urls == ["https://pypi.org/pypi/sample/json"]
+
+
 def test_getPackages(package_info_manager: PackageInfoManager) -> None:
 	package_info_manager.reqs = {aux_packageinfo("requests")}
 	packages = package_info_manager.getPackages()

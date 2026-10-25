@@ -7,6 +7,7 @@ import contextlib
 import re
 from concurrent.futures import ThreadPoolExecutor
 from email.message import Message
+from functools import lru_cache
 from importlib import metadata
 from importlib.metadata._meta import PackageMetadata
 from pathlib import Path
@@ -113,6 +114,7 @@ class PackageInfoManager:
 		return pkg_info
 
 
+@lru_cache(maxsize=128)
 def normalize_license(lice: str) -> str:
 	licensing = Licensing()
 	parsed = None
@@ -182,9 +184,11 @@ class RemotePackageInfo:
 	def lazy_fetch(self) -> None:
 		if self.resp is None:
 			# Attempt to get versioned info first
-			rc, raw_resp = self.make_req(
-				url=f"{self.pypi_api_pypi}{self.package.name}/{self.package.version}/json"
-			)
+			rc, raw_resp = -1, {}
+			if self.package.version is not None:
+				rc, raw_resp = self.make_req(
+					url=f"{self.pypi_api_pypi}{self.package.name}/{self.package.version}/json"
+				)
 			# Otherwise just get the latest
 			if rc != HTTP_OK:
 				rc, raw_resp = self.make_req(url=f"{self.pypi_api_pypi}/{self.package.name}/json")
