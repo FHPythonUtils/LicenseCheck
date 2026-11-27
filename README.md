@@ -284,7 +284,7 @@ Using python 3.12, to 3.14
 Clone, the repo with
 
 ```bash
-git clone https://github.com/FHPythonUtils/DepGather
+git clone https://github.com/FHPythonUtils/LicenseCheck
 ```
 
 Format
